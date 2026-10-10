@@ -1,0 +1,10 @@
+outer_fold,variant,stage,inner_fold,C,macro_f1
+2,availability_observed,initial,0,0.01,0.8908421844944384
+2,availability_observed,initial,1,0.01,0.8891496631537807
+2,availability_observed,initial,2,0.01,0.8814684920077697
+2,availability_observed,initial,0,0.1,0.8909789508853994
+2,availability_observed,initial,1,0.1,0.8959037589828232
+2,availability_observed,initial,2,0.1,0.8877317082729161
+2,availability_observed,initial,0,1.0,0.8823318953683007
+2,availability_observed,initial,1,1.0,0.886984350579526
+2,availability_observed,initial,2,1.0,0.882542726187457

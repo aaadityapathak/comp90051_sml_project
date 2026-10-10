@@ -1,0 +1,10 @@
+outer_fold,variant,stage,inner_fold,C,macro_f1
+7,ridge,initial,0,0.01,0.8914565361645654
+7,ridge,initial,1,0.01,0.8900858771713885
+7,ridge,initial,2,0.01,0.883333527858335
+7,ridge,initial,0,0.1,0.896385916162079
+7,ridge,initial,1,0.1,0.8947221826418505
+7,ridge,initial,2,0.1,0.8874757735288863
+7,ridge,initial,0,1.0,0.8859849250025654
+7,ridge,initial,1,1.0,0.8920076017576151
+7,ridge,initial,2,1.0,0.8809276559045667

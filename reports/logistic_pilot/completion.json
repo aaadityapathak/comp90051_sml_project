@@ -1,0 +1,25 @@
+{
+  "complete_logistic_plan": false,
+  "classifiers_completed": [
+    "logistic_regression"
+  ],
+  "other_classifiers_pending": true,
+  "n_fits": 10,
+  "all_fits_converged": true,
+  "max_gradient": 9.861646699909341e-06,
+  "middle_selection_counts": {
+    "A": {
+      "sum": 1,
+      "count": 1
+    }
+  },
+  "all_variants": [
+    "A"
+  ],
+  "outer_folds": [
+    0
+  ],
+  "stress_repeats": 1,
+  "error_bars": "sample SD of outer-fold means; descriptive, not clinical confidence intervals",
+  "data_unchanged": true
+}

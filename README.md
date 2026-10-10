@@ -7,7 +7,9 @@ COMP90051 Statistical Machine Learning
 We will compare logistic regression, histogram gradient boosting and TabM to
 find whether feature construction and training augmentation improve AFIB
 classification when extracted ECG measurements are incomplete or noisy.
-Data preparation is implemented; classifier training and final results are pending.
+Data preparation and the logistic-regression implementation are available.
+See `algorithms/logistic_regression/README.md` for running and checking its results.
+The other two classifiers and the full three-model comparison remain pending.
 
 ## Start here
 

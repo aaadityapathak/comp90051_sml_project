@@ -1,0 +1,29 @@
+{
+  "model": "logistic_regression",
+  "variant": "availability_augmented",
+  "feature_set": "enhanced",
+  "training_arm": "augmented",
+  "outer_fold": 4,
+  "C": 1.0,
+  "initial_grid": [
+    0.01,
+    0.1,
+    1.0
+  ],
+  "final_grid": [
+    0.1,
+    1.0,
+    10.0
+  ],
+  "refined": true,
+  "selected_middle": true,
+  "inner_mean_macro_f1": 0.896751481644531,
+  "secondary_threshold": {
+    "threshold": 0.6730508370527397,
+    "status": "selected_on_inner_oof",
+    "target_sensitivity": 0.9,
+    "inner_sensitivity": 0.9005120702267739,
+    "inner_specificity": 0.9776017481562415
+  },
+  "seconds": 346.25693529998534
+}

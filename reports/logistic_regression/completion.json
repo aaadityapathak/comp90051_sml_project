@@ -1,0 +1,74 @@
+{
+  "complete_logistic_plan": true,
+  "classifiers_completed": [
+    "logistic_regression"
+  ],
+  "other_classifiers_pending": true,
+  "n_fits": 933,
+  "all_fits_converged": true,
+  "max_gradient": 9.999847232146937e-06,
+  "middle_selection_counts": {
+    "A": {
+      "sum": 10,
+      "count": 10
+    },
+    "B": {
+      "sum": 10,
+      "count": 10
+    },
+    "C": {
+      "sum": 10,
+      "count": 10
+    },
+    "D": {
+      "sum": 10,
+      "count": 10
+    },
+    "availability_augmented": {
+      "sum": 10,
+      "count": 10
+    },
+    "availability_observed": {
+      "sum": 10,
+      "count": 10
+    },
+    "duplicate_enhanced": {
+      "sum": 10,
+      "count": 10
+    },
+    "duplicate_original": {
+      "sum": 10,
+      "count": 10
+    },
+    "ridge": {
+      "sum": 10,
+      "count": 10
+    }
+  },
+  "all_variants": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "availability_observed",
+    "availability_augmented",
+    "duplicate_original",
+    "duplicate_enhanced",
+    "ridge"
+  ],
+  "outer_folds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "stress_repeats": 3,
+  "error_bars": "sample SD of outer-fold means; descriptive, not clinical confidence intervals",
+  "data_unchanged": true
+}

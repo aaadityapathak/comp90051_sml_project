@@ -1,0 +1,6 @@
+# Uses the repository requirements.txt only; no scikit-learn dependency.
+# scipy.optimize is a numerical optimizer, not a CV/search/metric helper.
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+matplotlib>=3.8

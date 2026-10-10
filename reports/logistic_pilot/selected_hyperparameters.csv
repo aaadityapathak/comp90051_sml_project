@@ -1,0 +1,2 @@
+model,variant,feature_set,training_arm,outer_fold,C,initial_grid,final_grid,refined,selected_middle,inner_mean_macro_f1,secondary_threshold,seconds
+logistic_regression,A,original,observed,0,0.1,"[0.01, 0.1, 1.0]","[0.01, 0.1, 1.0]",False,True,0.8968202169880732,"{'threshold': 0.772282525266949, 'status': 'selected_on_inner_oof', 'target_sensitivity': 0.9, 'inner_sensitivity': 0.9006574141709277, 'inner_specificity': 0.9816875925215198}",101.342896200018

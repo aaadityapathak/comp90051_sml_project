@@ -1,0 +1,10 @@
+outer_fold,variant,stage,inner_fold,C,macro_f1
+0,duplicate_enhanced,initial,0,0.01,0.8985958667725453
+0,duplicate_enhanced,initial,1,0.01,0.8928136795670563
+0,duplicate_enhanced,initial,2,0.01,0.9078374632740174
+0,duplicate_enhanced,initial,0,0.1,0.8993243831621194
+0,duplicate_enhanced,initial,1,0.1,0.8989921567049524
+0,duplicate_enhanced,initial,2,0.1,0.9146209021434093
+0,duplicate_enhanced,initial,0,1.0,0.8896622612742158
+0,duplicate_enhanced,initial,1,1.0,0.8954868100392297
+0,duplicate_enhanced,initial,2,1.0,0.9104825925696789

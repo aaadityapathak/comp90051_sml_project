@@ -1,0 +1,29 @@
+{
+  "model": "logistic_regression",
+  "variant": "ridge",
+  "feature_set": "original",
+  "training_arm": "observed",
+  "outer_fold": 6,
+  "C": 0.1,
+  "initial_grid": [
+    0.01,
+    0.1,
+    1.0
+  ],
+  "final_grid": [
+    0.01,
+    0.1,
+    1.0
+  ],
+  "refined": false,
+  "selected_middle": true,
+  "inner_mean_macro_f1": 0.8926904613261911,
+  "secondary_threshold": {
+    "threshold": 0.7320641453539751,
+    "status": "selected_on_inner_oof",
+    "target_sensitivity": 0.9,
+    "inner_sensitivity": 0.9003690036900369,
+    "inner_specificity": 0.9793447293447294
+  },
+  "seconds": 85.81788770001731
+}

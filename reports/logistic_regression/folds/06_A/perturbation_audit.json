@@ -1,0 +1,1183 @@
+{
+  "training": [],
+  "test": [
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "observed",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_1",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 89748,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 619542,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24112,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_1",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 89748,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 619542,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24112,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_1",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 89748,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 619542,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24112,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_3",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_3",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_3",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_6",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 538488,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337932,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13152,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_6",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 538488,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337932,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13152,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "missing_6",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 538488,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337932,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13152,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.05",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 4617,
+      "clipping_fraction": 0.008843811056200437,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.049787182248893634
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.049787182248893634
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.05",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 4697,
+      "clipping_fraction": 0.008997050147492625,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.04980285940261775
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.04980285940261775
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.05",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 4700,
+      "clipping_fraction": 0.009002796613416082,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.04976019507245467
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.04976019507245467
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.10",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9579,
+      "clipping_fraction": 0.018348465693598437,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09905947420363133
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09905947420363133
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.10",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9661,
+      "clipping_fraction": 0.01850553576217293,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09908604757742302
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09908604757742302
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.10",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9684,
+      "clipping_fraction": 0.018549592000919435,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09898738258466505
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09898738258466505
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.20",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 19314,
+      "clipping_fraction": 0.036995747615216644,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19617175381170734
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19617175381170734
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.20",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 19526,
+      "clipping_fraction": 0.03740183120714094,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19621726717640942
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19621726717640942
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "noise_0.20",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 19516,
+      "clipping_fraction": 0.03738267632072942,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19599642246939888
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.19599642246939888
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.05",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06699280460167882
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06699280460167882
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.05",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06782202367574693
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06782202367574693
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.05",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06836609145091342
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.06836609145091342
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.10",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.1347986690018259
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.1347986690018259
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.10",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.13656516860277604
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.13656516860277604
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.10",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.13745478562674698
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.13745478562674698
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.20",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.2764802118113064
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.2764802118113064
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.20",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.28036857287142347
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.28036857287142347
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "gain_0.20",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.2817084641734633
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.2817084641734633
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 0,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9579,
+      "clipping_fraction": 0.018348465693598437,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09905947420363133
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.09907990859912483
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 1,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9661,
+      "clipping_fraction": 0.01850553576217293,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09908604757742302
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.09908196202110073
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "logistic_regression",
+      "variant": "A",
+      "feature_set": "original",
+      "training_arm": "observed",
+      "outer_fold": 6,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 2,
+      "n_ecgs": 2192,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 27792,
+      "newly_masked_observed_cells": 269244,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 522060,
+      "clipped_nonnegative_cells": 9684,
+      "clipping_fraction": 0.018549592000919435,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 675864,
+        "rms_in_training_iqr": 0.09898738258466505
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 506898,
+        "rms_in_training_iqr": 0.09904479459505583
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26304,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19728,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    }
+  ]
+}
