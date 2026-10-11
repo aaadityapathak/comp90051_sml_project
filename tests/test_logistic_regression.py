@@ -2,11 +2,16 @@
 from pathlib import Path
 import sys
 import unittest
+import tempfile
+from types import SimpleNamespace
+from unittest.mock import patch
 import numpy as np
 import pandas as pd
 sys.path.insert(0,str(Path(__file__).absolute().parents[1]/'algorithms/logistic_regression'))
 from model import LogisticRegression, objective_gradient
 from run_experiment import select_C, refinement_grid, patient_weighted_metrics, split_ids
+from run_experiment import prediction_export_directory, export_predictions, VARIANTS
+from source_verification import calculation_tree
 
 
 class LogisticTests(unittest.TestCase):
@@ -64,6 +69,47 @@ class LogisticTests(unittest.TestCase):
                             'inner_fold_when_outer_0':[-1,-1,0,1,2]},index=[10,11,12,13,14])
         training,validation=split_ids({'folds':frame},0,0)
         self.assertEqual(set(training),{13,14});self.assertEqual(set(validation),{12})
+
+    def test_public_exports_require_complete_canonical_run(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            project = Path(temp)
+            full = SimpleNamespace(outer_folds=list(range(10)), repeats=3, variants=VARIANTS)
+            pilot = SimpleNamespace(outer_folds=[0], repeats=1, variants=['A'])
+            canonical = project / 'reports/logistic_regression'
+            with patch('run_experiment.PROJECT', project):
+                self.assertEqual(prediction_export_directory(canonical, full), project / 'models/predictions/logistic_regression')
+                self.assertEqual(prediction_export_directory(canonical, pilot), canonical / 'predictions/logistic_regression')
+                custom = project / 'reports/pilot'
+                self.assertEqual(prediction_export_directory(custom, full), custom / 'predictions/logistic_regression')
+
+    def test_pilot_export_preserves_public_predictions(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            project = Path(temp)
+            public = project / 'models/predictions/logistic_regression'
+            public.mkdir(parents=True)
+            names = ['inner_oof_predictions', 'outer_predictions']
+            for name in names:
+                (public / f'{name}.csv.gz').write_bytes(b'official prediction sentinel')
+            output = project / 'reports/pilot'
+            location = output / 'folds/00_A'
+            location.mkdir(parents=True)
+            for name in names:
+                pd.DataFrame({'ecg_id': [1], 'probability': [.7]}).to_csv(location / f'{name}.csv.gz', index=False)
+            args = SimpleNamespace(outer_folds=[0], repeats=1, variants=['A'])
+            with patch('run_experiment.PROJECT', project):
+                export_predictions([location], prediction_export_directory(output, args))
+            for name in names:
+                self.assertEqual((public / f'{name}.csv.gz').read_bytes(), b'official prediction sentinel')
+                self.assertEqual(len(pd.read_csv(output / f'predictions/logistic_regression/{name}.csv.gz')), 1)
+
+    def test_source_comparison_rejects_calculation_changes(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            first, second = Path(temp) / 'first.py', Path(temp) / 'second.py'
+            first.write_text('"""Before."""\ndef f(x):\n    return x + 1\n')
+            second.write_text('"""After."""\n# Comment\ndef f(x):\n    return x + 1\n')
+            self.assertEqual(calculation_tree(first), calculation_tree(second))
+            second.write_text('def f(x):\n    return x + 2\n')
+            self.assertNotEqual(calculation_tree(first), calculation_tree(second))
 
 
 if __name__=='__main__':unittest.main()

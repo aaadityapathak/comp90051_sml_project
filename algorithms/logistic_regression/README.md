@@ -46,6 +46,21 @@ software versions and configuration match. Incomplete checkpoints are rerun.
 Each process uses one BLAS thread; `--workers 1` uses less RAM. Do not run two
 invocations against the same output directory simultaneously.
 
+Pilot runs and runs using a custom output folder export predictions into
+`<output>/predictions/logistic_regression/`. Only a complete run in the default
+`reports/logistic_regression/` folder exports to the shared
+`models/predictions/logistic_regression/` directory.
+
+The existing results predate the documentation and export-routing changes.
+`reports/logistic_regression/source_provenance/` preserves the original training
+sources/configuration and the earlier reviewed configuration. `check_results.py`
+checks the original source hashes, compares the calculation syntax trees (allowing
+documentation and the isolated export block only), and independently recalculates
+the saved metrics. The saved `run_config.json` has not been rewritten to match
+the repaired runner. Use the checker to inspect existing results; the runner's
+strict signature guard intentionally refuses to resume these results with the
+changed source. A genuinely new experiment requires a fresh output folder.
+
 ## Method and safeguards
 
 `model.py` implements stable weighted binary cross-entropy, its analytic gradient,

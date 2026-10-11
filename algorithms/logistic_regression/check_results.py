@@ -13,6 +13,7 @@ sys.path.insert(0, str(PROJECT / 'src'))
 from afib.data_preparation import load_processed_data
 from afib.evaluation import choose_sensitivity_threshold
 from afib.preprocessing import SCENARIOS
+from source_verification import verify_sources
 
 
 def reference_metrics(y, scores, threshold):
@@ -62,10 +63,7 @@ def check(output):
     config = json.loads((output / 'run_config.json').read_text())
     assert completion['complete_logistic_plan'] and completion['data_unchanged']
     assert package['manifest'] == config['manifest']
-    for path in [Path(__file__).with_name('model.py'), Path(__file__).with_name('run_experiment.py'),
-                 PROJECT / 'src/afib/preprocessing.py', PROJECT / 'src/afib/imputation.py',
-                 PROJECT / 'src/afib/evaluation.py']:
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == config['code'][path.name], path.name
+    source_check = verify_sources(PROJECT, output, config)
 
     checked_conditions = 0
     fitted_models = 0
@@ -130,7 +128,7 @@ def check(output):
                                 level=['variant', 'scenario', 'threshold_policy'])[row.metric].to_numpy()
         assert len(values) == row.n_folds == 10
         np.testing.assert_allclose([values.mean(), values.std(ddof=1)], [row.mean, row.sd], atol=1e-12, equal_nan=True)
-    return {'status': 'passed', 'model_training_performed': False,
+    return {'status': 'passed', 'model_training_performed': False, 'source_verification': source_check,
             'checkpoints': 90, 'outer_conditions': checked_conditions,
             'fitted_models_in_saved_run': fitted_models,
             'metric_values_independently_recalculated': True,

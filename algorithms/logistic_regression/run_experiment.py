@@ -315,6 +315,29 @@ def run_variant(package, outer, variant, args, output):
     gc.collect()
 
 
+def prediction_export_directory(output, args):
+    official = PROJECT / 'reports/logistic_regression'
+    complete = (set(args.outer_folds) == set(range(10)) and args.repeats == 3
+                and set(args.variants) == set(VARIANTS))
+    if Path(output).resolve() == official.resolve() and complete:
+        return PROJECT / 'models/predictions/logistic_regression'
+    return Path(output) / 'predictions/logistic_regression'
+
+
+def export_predictions(locations, export):
+    export.mkdir(parents=True, exist_ok=True)
+    import gzip
+    for name in ['inner_oof_predictions', 'outer_predictions']:
+        with gzip.open(export / f'{name}.csv.gz', 'wt', encoding='utf-8', newline='') as dest:
+            first = True
+            for path in locations:
+                if path.name.split('_', 1)[1] not in ARMS:
+                    continue
+                for chunk in pd.read_csv(path / f'{name}.csv.gz', chunksize=50000):
+                    chunk.to_csv(dest, index=False, header=first)
+                    first = False
+
+
 def summarise(output, args, package):
     locations = [output/'folds'/f'{fold:02d}_{variant}' for fold in args.outer_folds for variant in args.variants]
     selections = pd.DataFrame([json.loads((p/'selection.json').read_text()) for p in locations])
@@ -376,17 +399,7 @@ def summarise(output, args, package):
         result.columns=['_'.join(c) for c in result.columns]
         result.to_csv(output/f'{kind}_summary.csv')
     # Export A-D predictions for the team's three-model evaluation notebook.
-    export=PROJECT/'models/predictions/logistic_regression'
-    export.mkdir(parents=True,exist_ok=True)
-    import gzip
-    for name in ['inner_oof_predictions','outer_predictions']:
-        with gzip.open(export/f'{name}.csv.gz','wt',encoding='utf-8',newline='') as dest:
-            first=True
-            for path in locations:
-                if path.name.split('_',1)[1] not in ARMS: continue
-                for chunk in pd.read_csv(path/f'{name}.csv.gz',chunksize=50000):
-                    chunk.to_csv(dest,index=False,header=first)
-                    first=False
+    export_predictions(locations, prediction_export_directory(output, args))
     if 'ridge' in args.variants:
         paths=[p for p in locations if p.name.endswith('_ridge')]
         for name in ['recovery','recovery_by_feature','recovery_by_subgroup']:
