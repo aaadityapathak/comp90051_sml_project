@@ -260,25 +260,28 @@ def _figures(reports, config, summary, reliability, progress, histories, locatio
     axis.legend()
     save(fig, 'progress.png')
 
-    fig, axis = plt.subplots(figsize=(11, 5))
-    selected = summary[(summary.threshold_policy.eq('fixed_0.50')) & summary.metric.eq('macro_f1')]
-    if selected.empty:
-        empty(axis, 'No completed outer-fold model results yet.\nTuning results are not test performance.')
-    else:
-        for variant in config['variants']:
-            rows = selected[selected.variant.eq(variant)].set_index('scenario').reindex(list(SCENARIOS))
-            if rows['mean'].notna().any():
-                axis.plot(range(len(SCENARIOS)), rows['mean'], marker='o', label=variant)
-                defined = rows['sd'].notna() & rows['mean'].notna()
-                if defined.any():
-                    positions = np.arange(len(SCENARIOS))[defined]
-                    axis.errorbar(positions, rows.loc[defined, 'mean'], yerr=rows.loc[defined, 'sd'], fmt='none', capsize=3)
-        axis.set_xticks(range(len(SCENARIOS)), list(SCENARIOS), rotation=35, ha='right')
-        axis.set_ylabel('Macro-F1 at threshold 0.50')
-        if axis.lines:
-            axis.legend(fontsize=8)
-    axis.set_title('TabM completed-fold means; error bars are sample SD, not confidence intervals')
-    save(fig, 'robustness_macro_f1.png')
+    for metric, ylabel in [('macro_f1', 'Macro-F1 at threshold 0.50'),
+                           ('sensitivity', 'Sensitivity at threshold 0.50'),
+                           ('brier', 'Brier score (lower is better)')]:
+        fig, axis = plt.subplots(figsize=(11, 5))
+        selected = summary[summary.threshold_policy.eq('fixed_0.50') & summary.metric.eq(metric)]
+        if selected.empty:
+            empty(axis, 'No completed outer-fold model results yet.\nTuning results are not test performance.')
+        else:
+            for variant in config['variants']:
+                rows = selected[selected.variant.eq(variant)].set_index('scenario').reindex(list(SCENARIOS))
+                if rows['mean'].notna().any():
+                    axis.plot(range(len(SCENARIOS)), rows['mean'], marker='o', label=variant)
+                    defined = rows['sd'].notna() & rows['mean'].notna()
+                    if defined.any():
+                        positions = np.arange(len(SCENARIOS))[defined]
+                        axis.errorbar(positions, rows.loc[defined, 'mean'], yerr=rows.loc[defined, 'sd'], fmt='none', capsize=3)
+            axis.set_xticks(range(len(SCENARIOS)), list(SCENARIOS), rotation=35, ha='right')
+            axis.set_ylabel(ylabel)
+            if axis.lines:
+                axis.legend(fontsize=8)
+        axis.set_title('TabM completed-fold means; error bars are sample SD, not confidence intervals')
+        save(fig, f'robustness_{metric}.png')
 
     fig, axis = plt.subplots(figsize=(7, 6))
     if reliability.empty:
@@ -457,7 +460,11 @@ Majority baseline: {baseline_status}. It can be computed before any model finish
 
 ![Outer-fold progress](progress.png)
 
-![Robustness](robustness_macro_f1.png)
+![Macro-F1 robustness](robustness_macro_f1.png)
+
+![Sensitivity robustness](robustness_sensitivity.png)
+
+![Brier-score robustness](robustness_brier.png)
 
 ![Calibration](calibration.png)
 

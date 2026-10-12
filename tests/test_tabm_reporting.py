@@ -149,7 +149,9 @@ class ReportingTests(unittest.TestCase):
             self.assertEqual(status['n_fits'], 0)
             self.assertEqual(status['completed_outer_fold_variants'], 0)
             self.assertTrue(pd.read_csv(output / 'output_data' / 'metrics.csv').empty)
-            self.assertEqual(len(list((output / 'reports').glob('*.png'))), 4)
+            self.assertEqual({path.name for path in (output / 'reports').glob('*.png')},
+                             {'progress.png', 'robustness_macro_f1.png', 'robustness_sensitivity.png',
+                              'robustness_brier.png', 'calibration.png', 'training_loss.png'})
             self.assertIn('INCOMPLETE TABM PLAN', (output / 'reports' / 'report.md').read_text(encoding='utf-8'))
             with self.assertRaisesRegex(ValueError, 'Run incomplete'):
                 check_results.check(output, package=package)

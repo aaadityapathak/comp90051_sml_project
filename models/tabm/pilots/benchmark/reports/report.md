@@ -1,6 +1,6 @@
 # TabM experiment report — INCOMPLETE TABM PLAN
 
-Generated 2026-10-12T13:43:16.623733+00:00. Requested scope: **complete**.
+Generated 2026-10-12T13:46:36.920197+00:00. Requested scope: **complete**.
 **1/1 outer-fold/variant checkpoints** and **1/1 complete outer folds** are available.
 There are **12 completed inner fits**, **1 outer refits**, and **4 fully evaluated tuning candidates**.
 The initial grid requires 9 inner fits; endpoint refinement can require more.
@@ -62,7 +62,11 @@ Majority baseline: computed from training labels only; current data manifest ver
 
 ![Outer-fold progress](progress.png)
 
-![Robustness](robustness_macro_f1.png)
+![Macro-F1 robustness](robustness_macro_f1.png)
+
+![Sensitivity robustness](robustness_sensitivity.png)
+
+![Brier-score robustness](robustness_brier.png)
 
 ![Calibration](calibration.png)
 

@@ -1,8 +1,8 @@
 # TabM experiment report — INCOMPLETE TABM PLAN
 
-Generated 2026-10-12T13:42:24.642106+00:00. Requested scope: **incomplete**.
-**0/80 outer-fold/variant checkpoints** and **0/10 complete outer folds** are available.
-There are **1 completed inner fits**, **0 outer refits**, and **0 fully evaluated tuning candidates**.
+Generated 2026-10-12T13:49:58.020380+00:00. Requested scope: **incomplete**.
+**1/80 outer-fold/variant checkpoints** and **0/10 complete outer folds** are available.
+There are **13 completed inner fits**, **1 outer refits**, and **4 fully evaluated tuning candidates**.
 The initial grid requires 720 inner fits; endpoint refinement can require more.
 Completing a reduced run does not establish completion of the project plan.
 
@@ -14,7 +14,7 @@ Requested variants: A, B, C, D, availability_observed, availability_augmented, d
 Initial block grid: [2, 3, 4]; one-step endpoint refinement: True.
 Every fit requests 100 epochs and batch size 256; stress repeats: 3 (31 conditions per outer checkpoint).
 Device: cuda; seed: 20261008.
-Sum of completed-fold wall times: 0.0 seconds (not total elapsed experiment time).
+Sum of completed-fold wall times: 354.5 seconds (not total elapsed experiment time).
 
 ```json
 {
@@ -41,7 +41,12 @@ Sum of completed-fold wall times: 0.0 seconds (not total elapsed experiment time
 
 ## Observed performance at the fixed 0.50 threshold
 
-No completed results are available yet.
+| variant | metric | mean | sd | n_folds | n_defined |
+| --- | --- | --- | --- | --- | --- |
+| A | macro_f1 | 0.9070 | undefined | 1 | 1 |
+| A | sensitivity | 0.9103 | undefined | 1 | 1 |
+| A | specificity | 0.9795 | undefined | 1 | 1 |
+| A | brier | 0.0191 | undefined | 1 | 1 |
 
 ## Protocol and interpretation
 
@@ -57,7 +62,11 @@ Majority baseline: computed from training labels only; current data manifest ver
 
 ![Outer-fold progress](progress.png)
 
-![Robustness](robustness_macro_f1.png)
+![Macro-F1 robustness](robustness_macro_f1.png)
+
+![Sensitivity robustness](robustness_sensitivity.png)
+
+![Brier-score robustness](robustness_brier.png)
 
 ![Calibration](calibration.png)
 
