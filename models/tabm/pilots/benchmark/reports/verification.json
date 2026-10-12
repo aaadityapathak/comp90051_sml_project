@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_tabm_plan": false,
+  "requested_scope_complete": true,
+  "model_training_performed": false,
+  "completed_outer_fold_variants_verified": 1,
+  "pending_outer_fold_variants": 0,
+  "outer_conditions_verified": 31,
+  "completed_inner_checkpoints_verified": 12,
+  "n_fits": 13,
+  "source_files_verified": 6,
+  "processed_data_manifest_verified": true,
+  "patient_separation_verified": true,
+  "prediction_coverage_and_metrics_recomputed": true,
+  "inner_selection_and_thresholds_verified": true,
+  "fold_mean_and_sd_verified": true
+}

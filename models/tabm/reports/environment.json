@@ -1,0 +1,35 @@
+{
+  "recorded_utc": "2026-10-12T13:38:00.244718+00:00",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "torch": "2.7.1+cu128",
+    "tabm": "0.0.3",
+    "rtdl-num-embeddings": "0.0.12",
+    "numpy": "2.5.1",
+    "pandas": "3.0.6",
+    "scipy": "1.18.0",
+    "matplotlib": "3.11.1",
+    "ipython": "9.16.1",
+    "ipykernel": "7.3.0",
+    "nbformat": "5.10.4",
+    "nbclient": "0.10.2",
+    "filelock": "4.1.1",
+    "sympy": "1.14.0",
+    "networkx": "3.7",
+    "jinja2": "3.1.6",
+    "fsspec": "2026.9.0",
+    "jupyterlab": "4.6.4"
+  },
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+  "official_source_sha256": {
+    "tabm": "fc654af6a16bac53d893a8265c79d7af4ebddcb95ad0d600cc6b6bc6b7317ade",
+    "rtdl_num_embeddings": "48dfc019d447e0cd225deb8b8145b3efa8b42cde9aa314772d6e234753e1cee1"
+  },
+  "pytorch_wheel": {
+    "url": "https://download.pytorch.org/whl/cu128/torch-2.7.1%2Bcu128-cp312-cp312-win_amd64.whl",
+    "sha256": "2bb8c05d48ba815b316879a18195d53a6472a03e297d971e916753f8e1053d30",
+    "bytes": 3273024349
+  }
+}

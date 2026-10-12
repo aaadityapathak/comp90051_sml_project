@@ -7,7 +7,16 @@
 
 # Exclude generated reports and document working files.
 /reports/
-/models/
+/models/*
+!/models/tabm/
+# TabM results are published; resumable binary checkpoints stay local.
+/models/tabm/checkpoints/
+/models/tabm/pilots/*/checkpoints/
+/models/tabm/.run.lock
+/models/tabm/pilots/*/.run.lock
+/models/tabm/logs/
+/models/tabm/pipeline_status.json
+*.tmp
 /tools/
 /docs/reference/
 /requirements-documents.txt

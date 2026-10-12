@@ -1,0 +1,49 @@
+{
+  "kind": "three_epoch_runtime_benchmark",
+  "complete_project_protocol": false,
+  "outer_fold": 0,
+  "inner_fold": 0,
+  "variant": "A",
+  "epochs": 3,
+  "initial_settings": [
+    2,
+    3,
+    4
+  ],
+  "results": [
+    {
+      "n_blocks": 2,
+      "epochs": 3,
+      "n_train_views": 13085,
+      "n_features": 1393,
+      "train_seconds": 11.953528700047173,
+      "steady_epoch_seconds": 0.2721683499985374,
+      "validation_macro_f1_at_0_5": 0.8421413236888553,
+      "device": "cuda",
+      "data_device": "cuda"
+    },
+    {
+      "n_blocks": 3,
+      "epochs": 3,
+      "n_train_views": 13085,
+      "n_features": 1393,
+      "train_seconds": 1.0892450999235734,
+      "steady_epoch_seconds": 0.33781559998169536,
+      "validation_macro_f1_at_0_5": 0.856400660429279,
+      "device": "cuda",
+      "data_device": "cuda"
+    },
+    {
+      "n_blocks": 4,
+      "epochs": 3,
+      "n_train_views": 13085,
+      "n_features": 1393,
+      "train_seconds": 1.0524049999658018,
+      "steady_epoch_seconds": 0.32831159996567294,
+      "validation_macro_f1_at_0_5": 0.862254061668542,
+      "device": "cuda",
+      "data_device": "cuda"
+    }
+  ],
+  "interpretation": "Runtime and integration pilot only. Three epochs on one inner split are not final validation or tuning results. The same pilot will be extended separately to all inner splits and stress scenarios."
+}

@@ -1,6 +1,8 @@
 # Selected algorithms
 
-Each folder owns one planned classifier. Training and model results are pending.
+Each folder owns one classifier. Logistic regression and TabM training are
+implemented; use their generated completion reports to check actual run status.
+Histogram gradient boosting remains pending.
 
 | Folder | Purpose | Tuning candidates |
 | --- | --- | --- |

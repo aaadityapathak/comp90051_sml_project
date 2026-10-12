@@ -1,0 +1,2 @@
+outer_fold,variant,n_blocks,inner_fold,completed,epochs_recorded,seconds,macro_f1
+0,A,2,0,True,100,27.86816720000934,0.9314828197608463

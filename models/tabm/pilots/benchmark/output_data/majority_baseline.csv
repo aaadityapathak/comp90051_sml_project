@@ -1,0 +1,2 @@
+outer_fold,n,n_positive,n_negative,tp,tn,fp,fn,accuracy,sensitivity,specificity,precision,npv,positive_f1,negative_f1,macro_f1,balanced_accuracy,auroc,average_precision,brier,threshold,training_prevalence,majority_label
+0,2191,145,2046,0,2046,0,145,0.9338201734367868,0.0,1.0,,0.9338201734367868,0.0,0.965777672881756,0.482888836440878,0.5,0.5,0.06617982656321314,0.06181329663758848,0.5000000000000001,0.06981844145246838,0

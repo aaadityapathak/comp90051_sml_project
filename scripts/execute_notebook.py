@@ -29,7 +29,7 @@ def main():
             cell['execution_count'] = None
     os.chdir(project)
     shell = TerminalInteractiveShell.instance()
-    shell.display_formatter.active_types = ['text/plain', 'text/html', 'image/png', 'image/svg+xml']
+    shell.display_formatter.active_types = ['text/plain', 'text/html', 'text/markdown', 'image/png', 'image/svg+xml']
     # The inline backend captures figures as standard notebook MIME output.
     shell.run_line_magic('matplotlib', 'inline')
     count = 0

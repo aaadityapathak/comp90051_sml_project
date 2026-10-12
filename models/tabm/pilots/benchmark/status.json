@@ -1,0 +1,9 @@
+{
+  "state": "completed",
+  "phase": "tune",
+  "pid": 28564,
+  "updated_utc": "2026-10-12T13:42:13.693274+00:00",
+  "completed_inner_fits": 12,
+  "completed_outer_evaluations": 1,
+  "complete_tabm_plan": false
+}

@@ -1,0 +1,13 @@
+{
+  "state": "running",
+  "phase": "inner_fit",
+  "pid": 10784,
+  "updated_utc": "2026-10-12T13:44:37.726686+00:00",
+  "completed_inner_fits": 6,
+  "completed_outer_evaluations": 0,
+  "outer_fold": 0,
+  "variant": "A",
+  "n_blocks": 4,
+  "inner_fold": 0,
+  "epochs": 100
+}

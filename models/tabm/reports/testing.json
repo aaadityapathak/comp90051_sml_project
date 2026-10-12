@@ -1,0 +1,13 @@
+{
+  "checked_utc": "2026-10-12T13:44:35.976322+00:00",
+  "command": ".venv/Scripts/python -m unittest discover -s tests -v",
+  "tests_run": 87,
+  "failures": 0,
+  "errors": 0,
+  "result": "passed",
+  "notebook": "notebooks/05_tabm_tuning.ipynb",
+  "notebook_executed_code_cells": 10,
+  "notebook_execution_mode": "inspection: training workflow cells skip fits; reports and checks run",
+  "individual_parameter_scripts": "all three executed successfully against verified matching pilot cache",
+  "full_experiment": "running separately at 100 epochs; this engineering verification is not a completion claim"
+}
