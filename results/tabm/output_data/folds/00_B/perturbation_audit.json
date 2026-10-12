@@ -1,0 +1,1183 @@
+{
+  "training": [],
+  "test": [
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "observed",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_1",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 89628,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 618420,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24101,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_1",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 89628,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 618420,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24101,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_1",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 1,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 89628,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 618420,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 24101,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_3",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_3",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_3",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_6",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 537768,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337320,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13146,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_6",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 537768,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337320,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13146,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "missing_6",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 6,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 537768,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 337320,
+        "rms_in_training_iqr": 0.0
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 13146,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.05",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 4425,
+      "clipping_fraction": 0.008487352406380187,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0497037162179247
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0497037162179247
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.05",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 4568,
+      "clipping_fraction": 0.00876163294742253,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0498491556921161
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0498491556921161
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.05",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.05,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 4636,
+      "clipping_fraction": 0.00889206005784826,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.04974770546297626
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.04974770546297626
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.10",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9373,
+      "clipping_fraction": 0.01797784273559356,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09890281821968357
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09890281821968357
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.10",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9487,
+      "clipping_fraction": 0.018196499950130812,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0991770884506463
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0991770884506463
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.10",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9486,
+      "clipping_fraction": 0.018194581904389256,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09897109068948522
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09897109068948522
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.20",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 19222,
+      "clipping_fraction": 0.036868675244167225,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19583521036577448
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19583521036577448
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.20",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 19365,
+      "clipping_fraction": 0.03714295578520956,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19637423539962656
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19637423539962656
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "noise_0.20",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.2,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 19350,
+      "clipping_fraction": 0.03711418509908624,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19596401325896978
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.19596401325896978
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.05",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07212830927027003
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07212830927027003
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.05",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07324820569755724
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07324820569755724
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.05",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.05,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07041832168498816
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.07041832168498816
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.10",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14472786395653112
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14472786395653112
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.10",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14757085500855527
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14757085500855527
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.10",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.1,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14135200328533498
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.14135200328533498
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.20",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.29487182245204385
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.29487182245204385
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.20",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.3033613519109308
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.3033613519109308
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "gain_0.20",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 0,
+      "noise_sigma": 0.0,
+      "gain_sigma": 0.2,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 0,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 0,
+      "clipped_nonnegative_cells": 0,
+      "clipping_fraction": 0.0,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.2882864810111136
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.2882864810111136
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 0,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9373,
+      "clipping_fraction": 0.01797784273559356,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09890281821968357
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.09888861398591409
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 1,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9487,
+      "clipping_fraction": 0.018196499950130812,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.0991770884506463
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.09924637093012648
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    },
+    {
+      "model": "tabm",
+      "variant": "B",
+      "feature_set": "enhanced",
+      "training_arm": "observed",
+      "outer_fold": 0,
+      "scenario": "combined_3lead_noise0.10",
+      "repeat": 2,
+      "n_ecgs": 2191,
+      "stream": "evaluation",
+      "missing_leads": 3,
+      "noise_sigma": 0.1,
+      "gain_sigma": 0.0,
+      "natural_missing_cells": 28728,
+      "newly_masked_observed_cells": 268884,
+      "zero_iqr_fields_without_additive_noise": [],
+      "clip_eligible_observed_nonnegative_cells": 521364,
+      "clipped_nonnegative_cells": 9486,
+      "clipping_fraction": 0.018194581904389256,
+      "numeric_dose_before_mask": {
+        "n_comparable_cells": 674640,
+        "rms_in_training_iqr": 0.09897109068948522
+      },
+      "numeric_dose_after_mask": {
+        "n_comparable_cells": 505980,
+        "rms_in_training_iqr": 0.09903847031580085
+      },
+      "qt_qrs_before": {
+        "observed_pairs": 26292,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      },
+      "qt_qrs_after": {
+        "observed_pairs": 19719,
+        "qt_below_qrs_pairs": 0,
+        "fraction": 0.0
+      }
+    }
+  ]
+}

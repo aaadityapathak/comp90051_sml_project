@@ -21,19 +21,20 @@ https://physionet.org/content/ptb-xl-plus/1.0.1/
 https://physionet.org/content/ptb-xl/1.0.3/
 Both datasets are CC BY 4.0. Keep data local and exclude it from submission.
 
-Submit the code, notebooks, docs, requirements.txt and this Readme.txt without
-data/, processed_data/, models/, reports/ or local environments.
+The repository includes code, notebooks, docs and preserved experiment results.
+Keep data/, processed_data/, reports/ and local environments local. TabM binary
+checkpoints and live logs are also excluded. See results/README.md for layout.
 
 Logistic regression:
 python algorithms/logistic_regression/run_experiment.py --workers 2
-Open notebooks/04_logistic_regression_results.ipynb after completion.
-Check reports/logistic_regression/completion.json for actual completion status.
+Open algorithms/logistic_regression/notebooks/04_logistic_regression_results.ipynb.
+Check results/logistic_regression/reports/completion.json for completion status.
 
 TabM:
 Install algorithms/tabm/requirements.txt (see its README for GPU installation),
 then run: python algorithms/tabm/run_experiment.py
-Open notebooks/05_tabm_tuning.ipynb for individual parameter runs and reports.
-Published TabM outputs are in models/tabm/output_data/ and models/tabm/reports/.
+Open algorithms/tabm/notebooks/05_tabm_tuning.ipynb for parameter runs and reports.
+Published TabM outputs are in results/tabm/output_data/ and results/tabm/reports/.
 Binary checkpoints and live logs remain local. Short pilots are separate from
 the full 100-epoch nested experiment.
 

@@ -39,13 +39,13 @@ def main():
     import pandas as pd
     from IPython.display import display, Markdown, Image
 
-    PROJECT = Path.cwd()
-    if PROJECT.name == 'notebooks':
-        PROJECT = PROJECT.parent
-    if not (PROJECT / 'algorithms/tabm/run_experiment.py').exists():
-        raise RuntimeError('Open Jupyter from the repository root or notebooks directory.')
+    HERE = Path.cwd().resolve()
+    PROJECT = next((path for path in (HERE, *HERE.parents)
+                    if (path / 'algorithms/tabm/run_experiment.py').is_file()), None)
+    if PROJECT is None:
+        raise RuntimeError('Open Jupyter from the repository or one of its notebook directories.')
     sys.path.insert(0, str(PROJECT))
-    OUTPUT = PROJECT / 'models/tabm'
+    OUTPUT = PROJECT / 'results/tabm'
     RUN_TRAINING = os.environ.get('TABM_RUN_TRAINING', '1') == '1'
     print('Training enabled:', RUN_TRAINING)
     print('Python:', sys.executable)
@@ -101,9 +101,9 @@ def main():
     cell('markdown', '''
     ## Refresh reports and inspect completion
 
-    Predictions, histories and audits live in `models/tabm/output_data/`;
-    aggregate tables also live there; figures and the written report live in `models/tabm/reports/`.
-    Binary resume checkpoints stay locally in `models/tabm/checkpoints/`.
+    Predictions, histories and audits live in `results/tabm/output_data/`;
+    aggregate tables also live there; figures and the written report live in `results/tabm/reports/`.
+    Binary resume checkpoints stay locally in `results/tabm/checkpoints/`.
     Reports label partial results explicitly. Repeats are averaged within each
     outer fold before calculating fold means and sample SD.
     ''')
@@ -175,7 +175,8 @@ def main():
                 'metadata': {'kernelspec': {'display_name': 'Python 3 (TabM)',
                                             'language': 'python', 'name': 'tabm'},
                              'language_info': {'name': 'python', 'version': '3.12.10'}}}
-    path = PROJECT / 'notebooks/05_tabm_tuning.ipynb'
+    path = PROJECT / 'algorithms/tabm/notebooks/05_tabm_tuning.ipynb'
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(notebook, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     print(path)
 

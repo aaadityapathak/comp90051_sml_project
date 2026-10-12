@@ -13,6 +13,8 @@ from run_experiment import select_C, refinement_grid, patient_weighted_metrics, 
 from run_experiment import prediction_export_directory, export_predictions, VARIANTS
 from source_verification import calculation_tree
 
+PROJECT = Path(__file__).absolute().parents[1]
+
 
 class LogisticTests(unittest.TestCase):
     def setUp(self):
@@ -75,23 +77,24 @@ class LogisticTests(unittest.TestCase):
             project = Path(temp)
             full = SimpleNamespace(outer_folds=list(range(10)), repeats=3, variants=VARIANTS)
             pilot = SimpleNamespace(outer_folds=[0], repeats=1, variants=['A'])
-            canonical = project / 'reports/logistic_regression'
+            canonical = project / 'results/logistic_regression'
             with patch('run_experiment.PROJECT', project):
-                self.assertEqual(prediction_export_directory(canonical, full), project / 'models/predictions/logistic_regression')
-                self.assertEqual(prediction_export_directory(canonical, pilot), canonical / 'predictions/logistic_regression')
-                custom = project / 'reports/pilot'
-                self.assertEqual(prediction_export_directory(custom, full), custom / 'predictions/logistic_regression')
+                self.assertEqual(prediction_export_directory(canonical, full), canonical / 'predictions')
+                self.assertEqual(prediction_export_directory(canonical, pilot), canonical / 'pilots/incomplete_run/predictions')
+                custom = canonical / 'pilots/pilot'
+                self.assertEqual(prediction_export_directory(custom, full), custom / 'predictions')
+                self.assertEqual(prediction_export_directory(custom, pilot), custom / 'predictions')
 
     def test_pilot_export_preserves_public_predictions(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
             project = Path(temp)
-            public = project / 'models/predictions/logistic_regression'
+            public = project / 'results/logistic_regression/predictions'
             public.mkdir(parents=True)
             names = ['inner_oof_predictions', 'outer_predictions']
             for name in names:
                 (public / f'{name}.csv.gz').write_bytes(b'official prediction sentinel')
-            output = project / 'reports/pilot'
-            location = output / 'folds/00_A'
+            output = project / 'results/logistic_regression/pilots/pilot'
+            location = output / 'output_data/folds/00_A'
             location.mkdir(parents=True)
             for name in names:
                 pd.DataFrame({'ecg_id': [1], 'probability': [.7]}).to_csv(location / f'{name}.csv.gz', index=False)
@@ -100,7 +103,7 @@ class LogisticTests(unittest.TestCase):
                 export_predictions([location], prediction_export_directory(output, args))
             for name in names:
                 self.assertEqual((public / f'{name}.csv.gz').read_bytes(), b'official prediction sentinel')
-                self.assertEqual(len(pd.read_csv(output / f'predictions/logistic_regression/{name}.csv.gz')), 1)
+                self.assertEqual(len(pd.read_csv(output / f'predictions/{name}.csv.gz')), 1)
 
     def test_source_comparison_rejects_calculation_changes(self):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
@@ -110,6 +113,30 @@ class LogisticTests(unittest.TestCase):
             self.assertEqual(calculation_tree(first), calculation_tree(second))
             second.write_text('def f(x):\n    return x + 2\n')
             self.assertNotEqual(calculation_tree(first), calculation_tree(second))
+
+    def test_source_comparison_accepts_only_known_output_relocations(self):
+        source = PROJECT / 'algorithms/logistic_regression/run_experiment.py'
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            relocated = Path(temp) / 'run_experiment.py'
+            text = source.read_text(encoding='utf-8')
+            relocated.write_text(text.replace("output/'output_data'/'summary.csv'", "output/'summary.csv'"), encoding='utf-8')
+            self.assertEqual(calculation_tree(source), calculation_tree(relocated))
+            relocated.write_text(text.replace("output/'output_data'/'summary.csv'", "output/'elsewhere'/'summary.csv'"), encoding='utf-8')
+            self.assertNotEqual(calculation_tree(source), calculation_tree(relocated))
+            relocated.write_text(text.replace("'mean':float(np.mean(values))", "'mean':float(np.median(values))"), encoding='utf-8')
+            self.assertNotEqual(calculation_tree(source), calculation_tree(relocated))
+
+    def test_source_comparison_checks_export_logic_instead_of_ignoring_it(self):
+        source = PROJECT / 'algorithms/logistic_regression/run_experiment.py'
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            changed = Path(temp) / 'run_experiment.py'
+            text = source.read_text(encoding='utf-8')
+            changed.write_text(text.replace('chunksize=50000', 'chunksize=1'), encoding='utf-8')
+            with self.assertRaisesRegex(AssertionError, 'export_predictions: export code changed'):
+                calculation_tree(changed)
+            changed.write_text(text.replace('and complete:', 'and not complete:'), encoding='utf-8')
+            with self.assertRaisesRegex(AssertionError, 'prediction_export_directory: export code changed'):
+                calculation_tree(changed)
 
 
 if __name__=='__main__':unittest.main()

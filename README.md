@@ -23,8 +23,9 @@ three-model comparison remain pending.
 | [Preprocessing notebook](notebooks/01_preprocessing.ipynb) | Validate and package data into `processed_data/` |
 | [Data insights notebook](notebooks/00_data_insights.ipynb) | Reproduce descriptive findings and display their plots |
 | [Algorithms](algorithms/) | Separate work folders for the three selected classifiers |
-| [TabM tuning notebook](notebooks/05_tabm_tuning.ipynb) | Run individual block settings, complete nested tuning and inspect TabM results |
-| [TabM outputs](models/tabm/) | Dedicated prediction data, tuning histories and reports |
+| [Logistic regression notebook](algorithms/logistic_regression/notebooks/04_logistic_regression_results.ipynb) | Inspect saved baseline results |
+| [TabM tuning notebook](algorithms/tabm/notebooks/05_tabm_tuning.ipynb) | Run individual block settings, complete nested tuning and inspect TabM results |
+| [Results](results/) | One results folder per algorithm, including saved predictions, tuning histories and reports |
 | [Evaluation notebook](notebooks/02_noise_evaluation.ipynb) | Check saved predictions and calculate results after training |
 | [Imputation check](notebooks/03_imputation_reliability.ipynb) | Separate engineering check for the optional learned-filling experiment |
 | `src/afib/` and `tests/` | Shared preparation, evaluation and imputation code and checks |
@@ -95,13 +96,42 @@ The separate ridge-filling experiment uses logistic regression only.
 
 ## Repository contents
 
-Commit `docs/`, `notebooks/`, `algorithms/`, `src/`, `tests/`, `scripts/`,
-`requirements.txt`, `.gitignore`, this README and `Readme.txt` to the new GitHub
-repository. Generated data, trained models, reports, local backups and caches
-are excluded by `.gitignore` by default. TabM prediction data and reports under
-`models/tabm/` are an explicit tracked exception; its binary resume checkpoints
-and live logs remain local. Previously committed experiment artifacts are also
-retained. Original source data is read from `data/`.
+```text
+algorithms/
+  logistic_regression/          # model, runner, checker, requirements, README
+    notebooks/                 # algorithm-specific result notebook
+  histogram_gradient_boosting/  # reserved implementation; see its README
+    notebooks/
+  tabm/                        # model, runners, checker, requirements, README
+    notebooks/                 # algorithm-specific tuning notebook
+results/
+  logistic_regression/
+  histogram_gradient_boosting/  # reserved until implemented
+  tabm/
+  comparison/                  # combined three-model evaluation inputs
+notebooks/                     # shared preprocessing, EDA and evaluation
+src/afib/                      # shared data preparation and evaluation code
+tests/                         # shared and algorithm-specific checks
+scripts/                       # shared notebook execution and audits
+docs/                          # project plan and guides
+data/                          # original source data, local
+processed_data/                # shared prepared data, local
+reports/                       # shared analysis, document work and legacy files
+```
+
+Every algorithm uses the same code-folder convention and a matching folder in
+`results/`. Within each results folder, `output_data/` holds tables and fold
+artifacts, `reports/` holds figures and completion reports, `predictions/` holds
+exports, and `pilots/` isolates smaller runs. Run configuration and preserved
+source provenance stay at the run root. TabM keeps binary resume models in
+`checkpoints/`; existing logistic regression pipeline pickles stay with their
+fold artifacts. See the [results layout and old-to-new paths](results/README.md).
+
+Existing published experiment artifacts remain available under `results/`.
+TabM binary resume checkpoints and live logs stay local. Original source data,
+prepared data, local environments, shared reports and caches remain excluded
+by `.gitignore`. The existing data packages and saved experiment contents are
+preserved; this organization changes paths, not calculations or results.
 
 Previous mixed notebooks, generated evidence and one-off editing scripts are
 preserved locally under `reports/legacy/`; they are not part of the active

@@ -1,2 +1,0 @@
-model,variant,feature_set,training_arm,outer_fold,n_blocks,initial_grid,final_grid,refined,selected_middle,inner_mean_macro_f1,secondary_threshold,seconds
-tabm,A,original,observed,0,3,"[2, 3, 4]","[2, 3, 4]",False,True,0.9344110447065557,"{'threshold': 0.54462730884552, 'status': 'selected_on_inner_oof', 'target_sensitivity': 0.9, 'inner_sensitivity': 0.9006574141709277, 'inner_specificity': 0.988431383299523}",354.4920362000121

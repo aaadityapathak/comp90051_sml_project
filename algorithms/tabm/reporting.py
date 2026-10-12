@@ -484,6 +484,6 @@ These report-generation coverage checks do not replace the independent `check_re
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=PROJECT / 'models' / 'tabm')
+    parser.add_argument('--output', type=Path, default=PROJECT / 'results' / 'tabm')
     args = parser.parse_args()
     print(json.dumps(generate_reports(args.output), indent=2))

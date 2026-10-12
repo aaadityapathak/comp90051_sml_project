@@ -3,6 +3,7 @@
 from pathlib import Path
 from types import SimpleNamespace
 import json
+import hashlib
 import os
 import subprocess
 import sys
@@ -24,6 +25,37 @@ from algorithms.tabm.run_experiment import (
     refinement_grid, run_signature, run_variant, select_blocks, source_sha256,
 )
 from afib.preprocessing import CATEGORY_COLUMNS, RAW_COLUMNS
+from algorithms.tabm.source_verification import RUNNER_SOURCE, compatible_signature
+
+
+def layout_source_fixture(project):
+    """A runner-shaped fixture with observable training and signature guards."""
+    original = """import json
+CANONICAL_OUTPUT = PROJECT / 'models/tabm'
+def fit_model(weight):
+    return weight * 2
+def main():
+    parser.error('Reduced runs require a separate --output, for example models/tabm/pilots/smoke.')
+    if json.loads(config.read_text(encoding='utf-8')) != signature:
+        raise ValueError('Different experiment')
+"""
+    current = original.replace('models/tabm', 'results/tabm').replace(
+        'import json\n', 'import json\nfrom algorithms.tabm.source_verification import compatible_signature\n').replace(
+        "json.loads(config.read_text(encoding='utf-8')) != signature",
+        "not compatible_signature(PROJECT, args.output, json.loads(config.read_text(encoding='utf-8')), signature)")
+    path = Path(project) / RUNNER_SOURCE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(current, encoding='utf-8', newline='\n')
+    output = Path(project) / 'results/tabm'
+    snapshot = output / 'source_provenance/layout_v1' / RUNNER_SOURCE
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.write_text(original, encoding='utf-8', newline='\n')
+    saved = {'epochs': 100, 'versions': {'torch': 'test'}, 'source_hash_normalization': 'LF',
+             'code': {RUNNER_SOURCE: hashlib.sha256(original.encode()).hexdigest(),
+                      'algorithms/tabm/model.py': 'unchanged-model-hash'}}
+    signature = json.loads(json.dumps(saved))
+    signature['code'][RUNNER_SOURCE] = source_sha256(path)
+    return output, path, snapshot, saved, signature
 
 
 def package_fixture():
@@ -239,6 +271,37 @@ class TabMExperimentTests(unittest.TestCase):
     def test_pilot_cannot_write_canonical_output(self):
         with self.assertRaises(SystemExit):
             main(['--epochs', '1'])
+
+    def test_layout_migration_preserves_signature_and_supports_nested_pilot(self):
+        output, path, snapshot, saved, signature = layout_source_fixture(self.output)
+        original_saved = json.dumps(saved)
+        self.assertTrue(compatible_signature(self.output, output, saved, signature))
+        self.assertTrue(compatible_signature(self.output, output / 'pilots/benchmark', saved, signature))
+        self.assertEqual(json.dumps(saved), original_saved)
+        snapshot.write_bytes(b'tampered source evidence')
+        self.assertFalse(compatible_signature(self.output, output, saved, signature))
+
+    def test_layout_migration_rejects_training_configuration_and_other_source_changes(self):
+        output, path, snapshot, saved, signature = layout_source_fixture(self.output)
+        for key, value in [('epochs', 1), ('versions', {'torch': 'different'})]:
+            changed = signature | {key: value}
+            self.assertFalse(compatible_signature(self.output, output, saved, changed))
+        changed = json.loads(json.dumps(signature))
+        changed['code']['algorithms/tabm/model.py'] = 'changed-model-hash'
+        self.assertFalse(compatible_signature(self.output, output, saved, changed))
+        path.write_text(path.read_text().replace('weight * 2', 'weight * 3'), encoding='utf-8')
+        signature['code'][RUNNER_SOURCE] = source_sha256(path)
+        self.assertFalse(compatible_signature(self.output, output, saved, signature))
+
+    def test_layout_migration_requires_original_evidence_and_exact_guard_call(self):
+        output, path, snapshot, saved, signature = layout_source_fixture(self.output)
+        path.write_text(path.read_text().replace('if not compatible_signature(', 'if compatible_signature('),
+                        encoding='utf-8')
+        signature['code'][RUNNER_SOURCE] = source_sha256(path)
+        self.assertFalse(compatible_signature(self.output, output, saved, signature))
+        output, path, snapshot, saved, signature = layout_source_fixture(self.output)
+        snapshot.unlink()
+        self.assertFalse(compatible_signature(self.output, output, saved, signature))
 
     def test_os_lock_prevents_second_process_then_allows_resume(self):
         source = (

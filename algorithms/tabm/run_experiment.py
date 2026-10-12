@@ -40,9 +40,10 @@ from afib.evaluation import (
     quality_subgroup_metrics, source_quality_groups, validate_scenario_repeats,
 )
 from afib.preprocessing import SCENARIOS
+from algorithms.tabm.source_verification import compatible_signature
 
 INITIAL_GRID = [2, 3, 4]
-CANONICAL_OUTPUT = PROJECT / 'models/tabm'
+CANONICAL_OUTPUT = PROJECT / 'results/tabm'
 
 
 def _json_default(value):
@@ -477,7 +478,7 @@ def main(argv=None):
     args.outer_folds = sorted(args.outer_folds)
     args.variants = [variant for variant in VARIANTS if variant in args.variants]
     if args.output == CANONICAL_OUTPUT.resolve() and not _full_protocol(args):
-        parser.error('Reduced runs require a separate --output, for example models/tabm/pilots/smoke.')
+        parser.error('Reduced runs require a separate --output, for example results/tabm/pilots/smoke.')
     for variable, folder in [('MPLCONFIGDIR', 'matplotlib'), ('IPYTHONDIR', 'ipython')]:
         os.environ.setdefault(variable, str(PROJECT / '.runtime' / folder))
     with output_lock(args.output):
@@ -486,7 +487,7 @@ def main(argv=None):
             signature = run_signature(args, package)
             config = args.output / 'run_config.json'
             if config.exists():
-                if json.loads(config.read_text(encoding='utf-8')) != signature:
+                if not compatible_signature(PROJECT, args.output, json.loads(config.read_text(encoding='utf-8')), signature):
                     raise ValueError('Existing output has different code/data/configuration. Use a new --output folder.')
             else:
                 json_write(config, signature)

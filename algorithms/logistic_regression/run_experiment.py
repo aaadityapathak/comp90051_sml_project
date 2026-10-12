@@ -245,7 +245,7 @@ def recovery_experiment(package, train_ids, test_ids, outer):
 
 
 def run_variant(package, outer, variant, args, output):
-    location = output / 'folds' / f'{outer:02d}_{variant}'
+    location = output / 'output_data' / 'folds' / f'{outer:02d}_{variant}'
     location.mkdir(parents=True, exist_ok=True)
     if (location / 'complete.json').exists():
         print(f'Resume: fold {outer} {variant} already complete', flush=True)
@@ -316,12 +316,14 @@ def run_variant(package, outer, variant, args, output):
 
 
 def prediction_export_directory(output, args):
-    official = PROJECT / 'reports/logistic_regression'
+    official = PROJECT / 'results/logistic_regression'
     complete = (set(args.outer_folds) == set(range(10)) and args.repeats == 3
                 and set(args.variants) == set(VARIANTS))
     if Path(output).resolve() == official.resolve() and complete:
-        return PROJECT / 'models/predictions/logistic_regression'
-    return Path(output) / 'predictions/logistic_regression'
+        return official / 'predictions'
+    if Path(output).resolve() == official.resolve():
+        return Path(output) / 'pilots/incomplete_run/predictions'
+    return Path(output) / 'predictions'
 
 
 def export_predictions(locations, export):
@@ -339,13 +341,15 @@ def export_predictions(locations, export):
 
 
 def summarise(output, args, package):
-    locations = [output/'folds'/f'{fold:02d}_{variant}' for fold in args.outer_folds for variant in args.variants]
+    (output / 'output_data').mkdir(parents=True, exist_ok=True)
+    (output / 'reports').mkdir(parents=True, exist_ok=True)
+    locations = [output/'output_data'/'folds'/f'{fold:02d}_{variant}' for fold in args.outer_folds for variant in args.variants]
     selections = pd.DataFrame([json.loads((p/'selection.json').read_text()) for p in locations])
-    selections.to_csv(output/'selected_hyperparameters.csv', index=False)
+    selections.to_csv(output/'output_data'/'selected_hyperparameters.csv', index=False)
     combined = {}
     for name in ['metrics','patient_weighted_metrics','quality_subgroups','reliability','tuning']:
         combined[name] = pd.concat([pd.read_csv(p/f'{name}.csv') for p in locations], ignore_index=True)
-        combined[name].to_csv(output/f'{name}.csv', index=False)
+        combined[name].to_csv(output/'output_data'/f'{name}.csv', index=False)
     metrics = combined['metrics']
     for (variant, fold), group in metrics.groupby(['variant','outer_fold']):
         expected = SCENARIOS if variant != 'ridge' else ['observed','missing_3']
@@ -353,7 +357,7 @@ def summarise(output, args, package):
     summaries = []
     # Average stress repeats within folds, then compute SD across folds.
     fold_means = metrics.groupby(['variant','outer_fold','scenario','threshold_policy'])[METRICS].mean().reset_index()
-    fold_means.to_csv(output/'fold_mean_metrics.csv', index=False)
+    fold_means.to_csv(output/'output_data'/'fold_mean_metrics.csv', index=False)
     for keys, group in fold_means.groupby(['variant','scenario','threshold_policy']):
         for metric in METRICS:
             values = group[metric].to_numpy()
@@ -361,14 +365,14 @@ def summarise(output, args, package):
                 'metric':metric,'mean':float(np.mean(values)), 'sd':float(np.std(values,ddof=1)) if len(values)>1 else np.nan,
                 'n_folds':len(values),'n_defined':int(np.isfinite(values).sum())})
     summary = pd.DataFrame(summaries)
-    summary.to_csv(output/'summary.csv', index=False)
+    summary.to_csv(output/'output_data'/'summary.csv', index=False)
     if len(args.outer_folds) == 10:
         drops = []
         for (variant, policy), group in metrics.groupby(['variant','threshold_policy']):
             for metric in METRICS:
                 _, result = summarise_paired_drops(group, metric, higher_is_better=metric!='brier')
                 drops.append(result.assign(variant=variant,threshold_policy=policy))
-        pd.concat(drops,ignore_index=True).to_csv(output/'paired_stress_drops.csv',index=False)
+        pd.concat(drops,ignore_index=True).to_csv(output/'output_data'/'paired_stress_drops.csv',index=False)
     comparisons=[]
     for left,right in [('B','A'),('D','C'),('C','A'),('D','B'),
                        ('B','availability_observed'),('D','availability_augmented'),
@@ -384,12 +388,12 @@ def summarise(output, args, package):
                 comparisons.append({'comparison':f'{left} minus {right}','scenario':scenario,'metric':metric,
                     'mean_difference':float(np.mean(delta)),'sd_difference':float(np.std(delta,ddof=1)) if len(delta)>1 else np.nan,
                     'n_folds':len(delta),'direction':'lower better' if metric=='brier' else 'higher better'})
-    pd.DataFrame(comparisons).to_csv(output/'paired_method_differences.csv',index=False)
+    pd.DataFrame(comparisons).to_csv(output/'output_data'/'paired_method_differences.csv',index=False)
     baseline=[]
     for outer in args.outer_folds:
         train,test=split_ids(package,outer)
         baseline.append({'outer_fold':outer,**majority_baseline(package['targets'].loc[train,'target_afib'],package['targets'].loc[test,'target_afib'])})
-    pd.DataFrame(baseline).to_csv(output/'majority_baseline.csv',index=False)
+    pd.DataFrame(baseline).to_csv(output/'output_data'/'majority_baseline.csv',index=False)
     for kind in ['patient_weighted_metrics','quality_subgroups']:
         frame=combined[kind]
         labels=['variant','scenario','threshold_policy']+(['subgroup'] if kind=='quality_subgroups' else [])
@@ -397,16 +401,16 @@ def summarise(output, args, package):
         per_fold=frame.groupby(labels+['outer_fold'])[values].mean().reset_index()
         result=per_fold.groupby(labels)[values].agg(['mean','std','count'])
         result.columns=['_'.join(c) for c in result.columns]
-        result.to_csv(output/f'{kind}_summary.csv')
+        result.to_csv(output/'output_data'/f'{kind}_summary.csv')
     # Export A-D predictions for the team's three-model evaluation notebook.
     export_predictions(locations, prediction_export_directory(output, args))
     if 'ridge' in args.variants:
         paths=[p for p in locations if p.name.endswith('_ridge')]
         for name in ['recovery','recovery_by_feature','recovery_by_subgroup']:
-            pd.concat([pd.read_csv(p/f'{name}.csv') for p in paths],ignore_index=True).to_csv(output/f'{name}.csv',index=False)
-        recovery=pd.read_csv(output/'recovery.csv')
+            pd.concat([pd.read_csv(p/f'{name}.csv') for p in paths],ignore_index=True).to_csv(output/'output_data'/f'{name}.csv',index=False)
+        recovery=pd.read_csv(output/'output_data'/'recovery.csv')
         means=recovery.groupby(['method','scenario','outer_fold']).cell_mean_mae_in_training_iqr.mean().reset_index()
-        means.groupby(['method','scenario']).cell_mean_mae_in_training_iqr.agg(['mean','std','count']).to_csv(output/'recovery_summary.csv')
+        means.groupby(['method','scenario']).cell_mean_mae_in_training_iqr.agg(['mean','std','count']).to_csv(output/'output_data'/'recovery_summary.csv')
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -421,11 +425,11 @@ def summarise(output, args, package):
         axis.set_xticks(np.arange(len(scenarios)),scenarios,rotation=35,ha='right')
         axis.set_ylabel(metric); axis.set_title('Logistic regression: outer-fold mean +/- sample SD')
         axis.legend(title='Arm');axis.grid(alpha=.2);fig.tight_layout()
-        fig.savefig(output/f'{metric}.png',dpi=160);plt.close(fig)
+        fig.savefig(output/'reports'/f'{metric}.png',dpi=160);plt.close(fig)
     audits=[row for p in locations for row in json.loads((p/'fit_audit.json').read_text())]
     tuning_status=selections.groupby('variant').selected_middle.agg(['sum','count']).to_dict('index')
     full=set(args.outer_folds)==set(range(10)) and args.repeats==3 and set(args.variants)==set(VARIANTS)
-    json_write(output/'completion.json',{'complete_logistic_plan':full,'classifiers_completed':['logistic_regression'],
+    json_write(output/'reports'/'completion.json',{'complete_logistic_plan':full,'classifiers_completed':['logistic_regression'],
         'other_classifiers_pending':True,'n_fits':len(audits),'all_fits_converged':all(x['converged'] for x in audits),
         'max_gradient':max(x['max_abs_gradient'] for x in audits),'middle_selection_counts':tuning_status,
         'all_variants':args.variants,'outer_folds':args.outer_folds,'stress_repeats':args.repeats,
@@ -450,7 +454,7 @@ def main():
     parser.add_argument('--no-refine',action='store_true')
     parser.add_argument('--repeats',type=int,default=3)
     parser.add_argument('--workers',type=int,default=1,choices=[1,2])
-    parser.add_argument('--output',type=Path,default=PROJECT/'reports/logistic_regression')
+    parser.add_argument('--output',type=Path,default=PROJECT/'results/logistic_regression')
     args=parser.parse_args()
     if (len(set(args.outer_folds))!=len(args.outer_folds) or not set(args.outer_folds).issubset(range(10))
         or len(set(args.variants))!=len(args.variants) or args.repeats<1 or args.repeats>3

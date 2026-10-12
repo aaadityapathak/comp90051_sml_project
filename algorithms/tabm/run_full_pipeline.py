@@ -23,7 +23,7 @@ def main():
     parser.add_argument('--device', choices=['auto', 'cpu', 'cuda'], default='auto')
     parser.add_argument('--publish', action='store_true', help='Commit verified generated results and push the current branch.')
     args = parser.parse_args()
-    output = PROJECT / 'models/tabm'
+    output = PROJECT / 'results/tabm'
     output.mkdir(parents=True, exist_ok=True)
     branch = command(['git', 'branch', '--show-current'], capture_output=True, text=True).stdout.strip()
     if args.publish and not branch:
@@ -43,11 +43,11 @@ def main():
     try:
         command([sys.executable, '-u', 'algorithms/tabm/run_experiment.py', '--device', args.device])
         command([sys.executable, 'algorithms/tabm/check_results.py',
-                 '--save', 'models/tabm/reports/validation.json'])
+                 '--save', 'results/tabm/reports/validation.json'])
         environment = dict(os.environ, TABM_RUN_TRAINING='0',
                            MPLCONFIGDIR=str(PROJECT / '.runtime/matplotlib'),
                            IPYTHONDIR=str(PROJECT / '.runtime/ipython'))
-        notebook = 'notebooks/05_tabm_tuning.ipynb'
+        notebook = 'algorithms/tabm/notebooks/05_tabm_tuning.ipynb'
         command([sys.executable, 'scripts/execute_notebook.py', notebook, notebook], env=environment)
         completion = json.loads((output / 'reports/completion.json').read_text(encoding='utf-8'))
         if not completion.get('complete_tabm_plan'):
@@ -57,8 +57,8 @@ def main():
             current = command(['git', 'branch', '--show-current'], capture_output=True, text=True).stdout.strip()
             if current != branch:
                 raise RuntimeError('Git branch changed during training; publish the verified results manually.')
-            paths = ['models/tabm/output_data', 'models/tabm/reports',
-                     'models/tabm/run_config.json', 'models/tabm/status.json', notebook]
+            paths = ['results/tabm/output_data', 'results/tabm/reports',
+                     'results/tabm/run_config.json', 'results/tabm/status.json', notebook]
             command(['git', 'add', '--', *paths])
             changes = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', *paths], cwd=PROJECT)
             if changes.returncode == 1:

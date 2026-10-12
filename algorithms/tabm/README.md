@@ -23,10 +23,10 @@ on one GPU. Completed candidate fits are cached; rerun the identical command to
 resume. An interrupted fit restarts that fit from epoch one. Changes to data,
 training code or configuration require a different output directory.
 
-The notebook [05_tabm_tuning.ipynb](../../notebooks/05_tabm_tuning.ipynb) contains
+The notebook [05_tabm_tuning.ipynb](notebooks/05_tabm_tuning.ipynb) contains
 the same runnable tuning workflow and result displays. Set `RUN_TRAINING=False`
 to refresh reports while another trainer is active. Open Jupyter with
-`.venv/Scripts/python -m jupyterlab notebooks/05_tabm_tuning.ipynb` and select
+`.venv/Scripts/python -m jupyterlab algorithms/tabm/notebooks/05_tabm_tuning.ipynb` and select
 the registered `Python 3 (TabM)` kernel.
 
 ## Individual parameter scripts
@@ -78,7 +78,7 @@ with cached refinements. This is a substantial GPU run.
 ## Output locations
 
 ```text
-models/tabm/
+results/tabm/
   run_config.json           # frozen experiment identity
   status.json               # current progress
   output_data/
@@ -88,11 +88,20 @@ models/tabm/
   checkpoints/              # local fitted models and preprocessing
   pilots/                   # clearly separated engineering runs
   logs/                     # local live process logs
+  source_provenance/        # preserved source evidence for the path migration
 ```
 
 Output data and reports here are committed to GitHub. Binary resume checkpoints
 and live logs remain local. No source data is copied into this folder. Full
 experiments and short pilots cannot silently overwrite one another.
+
+The former `models/tabm/` directory has moved intact to `results/tabm/`.
+Existing configurations, predictions, checkpoints and histories are preserved.
+The runner and independent checker validate the recorded source hash against
+`source_provenance/layout_v1/`, then compare the current runner's syntax with
+that source, allowing only the exact output-path changes and compatibility
+call. Training code, data, runtime and configuration changes still fail the
+signature guard. Existing runs can resume without rewriting their configuration.
 
 ```powershell
 .venv/Scripts/python algorithms/tabm/run_experiment.py --phase report

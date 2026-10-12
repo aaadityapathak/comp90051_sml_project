@@ -2,7 +2,7 @@
 
 This folder contains the linear baseline and its patient-grouped experiments.
 
-The completed local run is recorded in `reports/logistic_regression/completion.json`.
+The completed local run is recorded in `results/logistic_regression/reports/completion.json`.
 
 | Setting | Planned value |
 | --- | --- |
@@ -37,7 +37,7 @@ continuous cells or 1/3/6 leads with three repeats in each outer-held-out fold.
 For a small pilot, use a separate output directory:
 
 ```powershell
-python algorithms/logistic_regression/run_experiment.py --variants A --outer-folds 0 --repeats 1 --output reports/logistic_pilot_new
+python algorithms/logistic_regression/run_experiment.py --variants A --outer-folds 0 --repeats 1 --output results/logistic_regression/pilots/logistic_pilot_new
 ```
 
 Pilot scores are not final ten-fold results. The full run can take substantial
@@ -47,15 +47,17 @@ Each process uses one BLAS thread; `--workers 1` uses less RAM. Do not run two
 invocations against the same output directory simultaneously.
 
 Pilot runs and runs using a custom output folder export predictions into
-`<output>/predictions/logistic_regression/`. Only a complete run in the default
-`reports/logistic_regression/` folder exports to the shared
-`models/predictions/logistic_regression/` directory.
+`<output>/predictions/`. A complete run in the default
+`results/logistic_regression/` folder exports to its `predictions/` directory.
+Incomplete runs explicitly aimed at that default folder export into
+`pilots/incomplete_run/predictions/` to protect canonical predictions.
 
 The existing results predate the documentation and export-routing changes.
-`reports/logistic_regression/source_provenance/` preserves the original training
+`results/logistic_regression/source_provenance/` preserves the original training
 sources/configuration and the earlier reviewed configuration. `check_results.py`
 checks the original source hashes, compares the calculation syntax trees (allowing
-documentation and the isolated export block only), and independently recalculates
+documentation, exact reviewed export code and explicitly listed output path
+relocations only), and independently recalculates
 the saved metrics. The saved `run_config.json` has not been rewritten to match
 the repaired runner. Use the checker to inspect existing results; the runner's
 strict signature guard intentionally refuses to resume these results with the
@@ -95,7 +97,26 @@ only from selected inner OOF predictions and frozen for all outer stresses.
 
 ## Results
 
-`reports/logistic_regression/` contains:
+Each run uses the same layout below its output root. The saved full run is in
+`results/logistic_regression/`; the existing pilot is in
+`results/logistic_regression/pilots/logistic_pilot/`.
+
+```text
+results/logistic_regression/
+  run_config.json
+  source_provenance/       # preserved evidence for the historical full run
+  output_data/
+    *.csv
+    folds/                # predictions, fitted pipelines and per-fold audits
+  reports/
+    completion.json
+    *.png
+  predictions/            # combined A-D predictions
+  pilots/
+    logistic_pilot/        # same per-run layout
+```
+
+`output_data/` contains:
 
 - `summary.csv`: outer-fold mean and sample SD for every metric/condition.
 - `metrics.csv`: confusion counts and metrics for each fold/repeat/threshold.
@@ -106,12 +127,15 @@ only from selected inner OOF predictions and frozen for all outer stresses.
 - `selected_hyperparameters.csv`, `tuning.csv`: grid searches and middle selections.
 - `recovery*.csv`: eligible-field MAE, training-IQR-scaled errors, coverage and groups.
 - `folds/`: inner/outer predictions, model/preprocessor pickles and audits.
-- `macro_f1.png`, `sensitivity.png`, `brier.png`: means with outer-fold SD bars.
+
+`reports/` contains `completion.json` and `macro_f1.png`, `sensitivity.png`,
+`brier.png`: means with outer-fold SD bars. The existing `run_config.json` and
+source snapshots retain their original contents.
 
 Main A-D predictions are exported separately into
-`models/predictions/logistic_regression/*_predictions.csv.gz` with the group
+`results/logistic_regression/predictions/*_predictions.csv.gz` with the group
 notebook's required columns. Merge them with the other two classifiers before
-running `02_noise_evaluation.ipynb`: that notebook correctly requires all three
+running `notebooks/02_noise_evaluation.ipynb`: that notebook correctly requires all three
 models. Control/filler predictions remain in their own variant checkpoints.
 Never load pickle files from untrusted sources.
 
@@ -130,5 +154,6 @@ python algorithms/logistic_regression/check_results.py
 
 This command checks saved probabilities, patient separation, tuning choices,
 thresholds, metrics and fold summaries. It does not fit a classifier. To view the
-results, open `notebooks/04_logistic_regression_results.ipynb` and run its cells.
+results, open `algorithms/logistic_regression/notebooks/04_logistic_regression_results.ipynb`
+and run its cells.
 The bilingual handover report is in the parent `outputs` folder.

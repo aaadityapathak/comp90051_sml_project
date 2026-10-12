@@ -219,6 +219,24 @@ class ReportingTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'Training source changed'):
                     check_results.check(output, allow_partial=True, package=package)
 
+    def test_checker_reports_preserved_layout_sources_and_rejects_training_changes(self):
+        from test_tabm_experiment import layout_source_fixture
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
+            project = Path(temp)
+            output, source, snapshot, saved, signature = layout_source_fixture(project)
+            package = fixture(output)
+            config = reporting.read_json(output / 'run_config.json')
+            config.update(source_hash_normalization='LF', code={
+                'algorithms/tabm/run_experiment.py': saved['code']['algorithms/tabm/run_experiment.py']})
+            write_json(output / 'run_config.json', config)
+            with patch.object(check_results, 'PROJECT', project):
+                result = check_results.check(output, allow_partial=True, package=package)
+                self.assertEqual(result['source_verification']['mode'], 'preserved_layout_v1_sources')
+                self.assertEqual(result['source_files_verified'], 1)
+                source.write_text(source.read_text().replace('weight * 2', 'weight * 3'), encoding='utf-8')
+                with self.assertRaisesRegex(ValueError, 'Training source changed'):
+                    check_results.check(output, allow_partial=True, package=package)
+
 
 if __name__ == '__main__':
     unittest.main()

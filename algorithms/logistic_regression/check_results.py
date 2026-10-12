@@ -59,7 +59,7 @@ def reference_metrics(y, scores, threshold):
 def check(output):
     package = load_processed_data(PROJECT / 'processed_data')
     folds = package['folds']
-    completion = json.loads((output / 'completion.json').read_text())
+    completion = json.loads((output / 'reports' / 'completion.json').read_text())
     config = json.loads((output / 'run_config.json').read_text())
     assert completion['complete_logistic_plan'] and completion['data_unchanged']
     assert package['manifest'] == config['manifest']
@@ -72,7 +72,7 @@ def check(output):
         train_ids = folds.index[folds.outer_fold.ne(outer)]
         assert set(folds.loc[test_ids, 'patient_id']).isdisjoint(folds.loc[train_ids, 'patient_id'])
         for variant in completion['all_variants']:
-            location = output / 'folds' / f'{outer:02d}_{variant}'
+            location = output / 'output_data' / 'folds' / f'{outer:02d}_{variant}'
             assert json.loads((location / 'complete.json').read_text())['completed']
             selection = json.loads((location / 'selection.json').read_text())
             audit = json.loads((location / 'fit_audit.json').read_text())
@@ -118,11 +118,11 @@ def check(output):
                 checked_conditions += 1
     assert fitted_models == completion['n_fits']
 
-    metrics = pd.read_csv(output / 'metrics.csv')
+    metrics = pd.read_csv(output / 'output_data' / 'metrics.csv')
     metric_names = ['macro_f1', 'sensitivity', 'specificity', 'precision', 'npv',
                     'balanced_accuracy', 'accuracy', 'auroc', 'average_precision', 'brier']
     per_fold = metrics.groupby(['variant', 'outer_fold', 'scenario', 'threshold_policy'])[metric_names].mean()
-    summary = pd.read_csv(output / 'summary.csv')
+    summary = pd.read_csv(output / 'output_data' / 'summary.csv')
     for row in summary.itertuples():
         values = per_fold.xs((row.variant, row.scenario, row.threshold_policy),
                                 level=['variant', 'scenario', 'threshold_policy'])[row.metric].to_numpy()
@@ -139,7 +139,7 @@ def check(output):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=PROJECT / 'reports/logistic_regression')
+    parser.add_argument('--output', type=Path, default=PROJECT / 'results/logistic_regression')
     parser.add_argument('--save', type=Path)
     args = parser.parse_args()
     result = check(args.output)

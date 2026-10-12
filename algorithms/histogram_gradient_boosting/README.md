@@ -4,6 +4,25 @@
 
 **Status:** selected; training and results are pending.
 
+Follow the same layout as the other algorithms: keep Python source and any
+algorithm-specific requirements directly in `algorithms/histogram_gradient_boosting/`,
+and place algorithm-specific notebooks in its `notebooks/` subfolder when added.
+Shared data preparation and cross-model evaluation notebooks remain in `notebooks/`
+at the repository root.
+
+Reserve `results/histogram_gradient_boosting/` for this algorithm's results:
+
+| Subfolder | Contents when generated |
+| --- | --- |
+| `output_data/` | Fold outputs, metrics, tuning tables and audits |
+| `reports/` | Figures, written reports and completion summaries |
+| `checkpoints/` | Local model and resume checkpoints |
+| `predictions/` | Published prediction tables for comparison |
+| `pilots/` | Separate pilot and diagnostic runs |
+
+Run configuration and source provenance belong at the algorithm's results root.
+These locations are reserved; no training outputs have been generated yet.
+
 | Setting | Planned value |
 | --- | --- |
 | Tuned parameter | Maximum depth = 2, 3, 4 |

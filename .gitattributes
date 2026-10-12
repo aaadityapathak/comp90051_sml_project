@@ -1,2 +1,2 @@
 # Preserve recorded artifact bytes so checksums survive cross-platform clones.
-/models/tabm/** -text whitespace=cr-at-eol
+/results/tabm/** -text whitespace=cr-at-eol

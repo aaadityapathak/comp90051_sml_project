@@ -4,6 +4,14 @@ Each folder owns one classifier. Logistic regression and TabM training are
 implemented; use their generated completion reports to check actual run status.
 Histogram gradient boosting remains pending.
 
+Each algorithm keeps its implementation, runner, result checker, dependencies
+and README directly in its folder, with algorithm-specific notebooks in a
+`notebooks/` subfolder. Shared notebooks stay in the repository's `notebooks/`.
+Save outputs under the matching `results/<algorithm>/` folder using
+`output_data/`, `reports/`, `predictions/` and `pilots/` as described in the
+[results layout](../results/README.md). Create optional folders when needed;
+the histogram gradient boosting folder is a placeholder until implemented.
+
 | Folder | Purpose | Tuning candidates |
 | --- | --- | --- |
 | [logistic_regression](logistic_regression/) | Linear baseline | C: 0.01, 0.1, 1 |

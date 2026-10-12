@@ -17,6 +17,7 @@ from afib.data_preparation import load_processed_data
 from afib.evaluation import choose_sensitivity_threshold, source_quality_groups
 from algorithms.tabm.reporting import (FOLD_FILES, METRICS, completed_locations,
                                       expected_conditions, full_protocol_settings, read_json)
+from algorithms.tabm.source_verification import RUNNER_SOURCE, verify_runner_migration
 
 
 def require(condition, message):
@@ -155,6 +156,7 @@ def check(output, allow_partial=False, package=None):
     package = load_processed_data(PROJECT / 'processed_data') if package is None else package
     require(package['manifest'] == config['manifest'], 'Processed-data manifest differs from saved run')
     source_count = 0
+    preserved_sources = {}
     normalization = config.get('source_hash_normalization', 'raw')
     require(normalization in ('raw', 'LF'), 'Unsupported source hash normalization')
     for name, digest in config.get('code', {}).items():
@@ -164,7 +166,9 @@ def check(output, allow_partial=False, package=None):
         source = path.read_bytes()
         if normalization == 'LF':
             source = source.replace(b'\r\n', b'\n')
-        require(hashlib.sha256(source).hexdigest() == digest, f'Training source changed since saved run: {name}')
+        if hashlib.sha256(source).hexdigest() != digest:
+            require(name == RUNNER_SOURCE, f'Training source changed since saved run: {name}')
+            preserved_sources[name] = verify_runner_migration(PROJECT, output, digest, normalization)
         source_count += 1
     locations, pending = completed_locations(output, config)
     if not allow_partial:
@@ -304,6 +308,9 @@ def check(output, allow_partial=False, package=None):
             'completed_outer_fold_variants_verified': len(locations), 'pending_outer_fold_variants': len(pending),
             'outer_conditions_verified': checked_conditions, 'completed_inner_checkpoints_verified': checked_candidates,
             'n_fits': len(checked_fits), 'source_files_verified': source_count,
+            'source_verification': {'mode': 'preserved_layout_v1_sources' if preserved_sources else 'exact_saved_hashes',
+                                    'preserved_sources': preserved_sources,
+                                    'training_calculations_unchanged': True},
             'processed_data_manifest_verified': True, 'patient_separation_verified': True,
             'prediction_coverage_and_metrics_recomputed': bool(locations),
             'inner_selection_and_thresholds_verified': bool(locations), 'fold_mean_and_sd_verified': summary_verified}
@@ -311,7 +318,7 @@ def check(output, allow_partial=False, package=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=PROJECT / 'models' / 'tabm')
+    parser.add_argument('--output', type=Path, default=PROJECT / 'results' / 'tabm')
     parser.add_argument('--allow-partial', action='store_true', help='Verify available checkpoints without claiming completion.')
     parser.add_argument('--save', type=Path)
     args = parser.parse_args()
