@@ -1,8 +1,8 @@
 # TabM experiment report — INCOMPLETE TABM PLAN
 
-Generated 2026-10-12T13:55:13.749161+00:00. Requested scope: **incomplete**.
-**2/80 outer-fold/variant checkpoints** and **0/10 complete outer folds** are available.
-There are **21 completed inner fits**, **2 outer refits**, and **7 fully evaluated tuning candidates**.
+Generated 2026-10-12T14:18:02.062837+00:00. Requested scope: **incomplete**.
+**3/80 outer-fold/variant checkpoints** and **0/10 complete outer folds** are available.
+There are **33 completed inner fits**, **3 outer refits**, and **11 fully evaluated tuning candidates**.
 The initial grid requires 720 inner fits; endpoint refinement can require more.
 Completing a reduced run does not establish completion of the project plan.
 
@@ -14,7 +14,7 @@ Requested variants: A, B, C, D, availability_observed, availability_augmented, d
 Initial block grid: [2, 3, 4]; one-step endpoint refinement: True.
 Every fit requests 100 epochs and batch size 256; stress repeats: 3 (31 conditions per outer checkpoint).
 Device: cuda; seed: 20261008.
-Sum of completed-fold wall times: 818.4 seconds (not total elapsed experiment time).
+Sum of completed-fold wall times: 1176.0 seconds (not total elapsed experiment time).
 
 ```json
 {
@@ -51,6 +51,10 @@ Sum of completed-fold wall times: 818.4 seconds (not total elapsed experiment ti
 | B | sensitivity | 0.8966 | undefined | 1 | 1 |
 | B | specificity | 0.9824 | undefined | 1 | 1 |
 | B | brier | 0.0181 | undefined | 1 | 1 |
+| C | macro_f1 | 0.9085 | undefined | 1 | 1 |
+| C | sensitivity | 0.9103 | undefined | 1 | 1 |
+| C | specificity | 0.9800 | undefined | 1 | 1 |
+| C | brier | 0.0185 | undefined | 1 | 1 |
 
 ## Protocol and interpretation
 
