@@ -29,8 +29,9 @@ def main():
     A–D and four availability/duplicate controls are included. A full run requires
     at least 800 fits and can take several days on a laptop GPU.
 
-    Select the repository's `.venv` Python kernel. `RUN_TRAINING` defaults to true;
-    set it to false to inspect results while the background runner is active.
+    Select the repository's `.venv` Python kernel. `RUN_TRAINING` defaults to false,
+    so Run All inspects saved results. Set `TABM_RUN_TRAINING=1` before launching
+    Jupyter, or explicitly set `RUN_TRAINING=True`, to start/resume training.
     The saved outputs are a dated snapshot, not evidence that missing folds have completed.
     ''')
     cell('code', '''
@@ -39,14 +40,20 @@ def main():
     import pandas as pd
     from IPython.display import display, Markdown, Image
 
-    HERE = Path.cwd().resolve()
-    PROJECT = next((path for path in (HERE, *HERE.parents)
-                    if (path / 'algorithms/tabm/run_experiment.py').is_file()), None)
+    PROJECT = next(
+        (candidate for candidate in (Path.cwd().resolve(), *Path.cwd().resolve().parents)
+         if (candidate / 'requirements.txt').is_file()
+         and (candidate / 'src' / 'afib').is_dir()
+         and (candidate / 'algorithms').is_dir()),
+        None,
+    )
     if PROJECT is None:
-        raise RuntimeError('Open Jupyter from the repository or one of its notebook directories.')
+        raise FileNotFoundError('Run this notebook from the repository root or a directory inside it.')
+    if not (PROJECT / 'algorithms/tabm/run_experiment.py').exists():
+        raise RuntimeError('Open Jupyter from the repository root or a directory inside it.')
     sys.path.insert(0, str(PROJECT))
     OUTPUT = PROJECT / 'results/tabm'
-    RUN_TRAINING = os.environ.get('TABM_RUN_TRAINING', '1') == '1'
+    RUN_TRAINING = os.environ.get('TABM_RUN_TRAINING', '0') == '1'
     print('Training enabled:', RUN_TRAINING)
     print('Python:', sys.executable)
     print('Output:', OUTPUT)

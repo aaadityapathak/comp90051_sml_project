@@ -1,0 +1,28 @@
+{
+  "completed": true,
+  "model": "tabm",
+  "variant": "D",
+  "feature_set": "enhanced",
+  "training_arm": "augmented",
+  "outer_fold": 8,
+  "n_blocks": 3,
+  "checkpoints": {
+    "checkpoints\\folds\\08_D\\model.pt": "69a10cd06524f79dc86b805679b667b87c72e50f0058b72ef8de9059f8213b90",
+    "checkpoints\\folds\\08_D\\preprocessing.pkl": "ad80f71d8e39cf6e04e54bf7bcbf86b294125478eb3a5e349f8459c7ff145cf3"
+  },
+  "files": {
+    "metrics.csv": "83b26e67d6477ad5af7269454d7d43d9686a45f24910f9000c30a3605e3c3e06",
+    "patient_weighted_metrics.csv": "40c45bd20e244955e47a3dd8d98601fd01ce4ebf58e7577290fc3de8616f783c",
+    "quality_subgroups.csv": "81d5f766680a5f2228e61643d01607a1fb87ad52f03bdeb9a37fb276d313d055",
+    "reliability.csv": "6ed55c7384076f765127ce44a68df73312a1b8d6361afd7a57f83b55c393b855",
+    "inner_oof_predictions.csv.gz": "f829ec573f328493c3cea32978feaa7ae14c096ccddcb29242ba91fa84b65e87",
+    "outer_predictions.csv.gz": "3794866677c354f241f5043bc11d54f3fde67ca762960bf001803469e31d367b",
+    "tuning.csv": "cbff937bfca27c15e86d1da8cd6ef79a1aa66dccbcfbdb7c5d43cae249457050",
+    "fit_audit.json": "c882b106417a335142ee285ebc18915ea7d625b99e5473882a66ac79a6bd37d9",
+    "perturbation_audit.json": "4188edada71b1e50930b8e018eac43459fa56b26caf1890b3169b249572f2044",
+    "selection.json": "30fea637084df812e28f6f1c76dd434745e66bc991d8da2225629a4861376b05",
+    "training_history.csv": "8de5776e965572ea7bb2cd381357a3bbc53484809ae7a3b2280a122de1865558",
+    "outer_fit_audit.json": "3f5d7063a2094dc1271f8e5738e37b4c91e38a05f8c9467b57cc5ed652cea4b3",
+    "majority_baseline.json": "d889f72a1a6e0a90f3db30f964b2637921bbee88c304afcc20918d9c396b9a8f"
+  }
+}

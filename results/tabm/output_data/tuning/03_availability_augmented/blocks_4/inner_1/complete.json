@@ -1,0 +1,18 @@
+{
+  "completed": true,
+  "outer_fold": 3,
+  "variant": "availability_augmented",
+  "inner_fold": 1,
+  "n_blocks": 4,
+  "macro_f1": 0.9183437859421454,
+  "seed": 20261309,
+  "checkpoints": {
+    "checkpoints\\tuning\\03_availability_augmented\\blocks_4\\inner_1\\model.pt": "bb24881d13c50823148cc9016d257f376823a8bfc399e35ab134cc71cdf913d1",
+    "checkpoints\\tuning\\03_availability_augmented\\blocks_4\\inner_1\\preprocessing.pkl": "cac3e49254ce1ad37d4d90a7bb33d5b87d8b2434d2e7bdd533de3101bb894f59"
+  },
+  "files": {
+    "predictions.csv.gz": "8a09e5955e7229480f9b668f85cd8bfe455a4a6a8c2767cd2a9249167a83e199",
+    "history.csv": "ee25d0773a4fb2bfe17ec1d4a7394336c8d5e825be1cd125f97c1fdd036f04d5",
+    "audit.json": "8888ec41a0723e3c9b164617475e58897da86f7d9d14f60c2256a4c56caccc47"
+  }
+}

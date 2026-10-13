@@ -1,0 +1,10 @@
+outer_fold,variant,stage,inner_fold,n_blocks,macro_f1
+8,duplicate_original,initial,0,2,0.9306516852946725
+8,duplicate_original,initial,1,2,0.9392606181860155
+8,duplicate_original,initial,2,2,0.9321403207173926
+8,duplicate_original,initial,0,3,0.9316376911877063
+8,duplicate_original,initial,1,3,0.9408706600783079
+8,duplicate_original,initial,2,3,0.9301739116376011
+8,duplicate_original,initial,0,4,0.9338748950262739
+8,duplicate_original,initial,1,4,0.9354362363671813
+8,duplicate_original,initial,2,4,0.9309013130944077

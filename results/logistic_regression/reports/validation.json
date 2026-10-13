@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "model_training_performed": false,
+  "source_verification": {
+    "mode": "preserved_training_sources",
+    "files_checked": [
+      "run_experiment.py",
+      "model.py",
+      "preprocessing.py",
+      "imputation.py",
+      "evaluation.py"
+    ],
+    "allowed_changes": "documentation, exact reviewed prediction export code, and explicit output path relocations only",
+    "training_and_metric_calculations_unchanged": true
+  },
+  "checkpoints": 90,
+  "outer_conditions": 2520,
+  "fitted_models_in_saved_run": 933,
+  "metric_values_independently_recalculated": true,
+  "patient_separation_and_oof_coverage": true,
+  "selection_and_thresholds_verified": true,
+  "fold_mean_and_sd_verified": true,
+  "processed_data_hashes_verified": true
+}

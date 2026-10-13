@@ -1,0 +1,6 @@
+# Scientific package versions recorded in results/logistic_regression/run_config.json.
+# Historical interpreter: Python 3.12.15. Keep separate from the TabM environment.
+# Plotting/notebook dependencies are optional for fitting and are not captured here.
+numpy==2.5.3
+pandas==3.0.6
+scipy==1.18.1

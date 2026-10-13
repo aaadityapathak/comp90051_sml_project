@@ -20,12 +20,23 @@ main A-D comparison and follow the project plan.
 
 ## Run
 
-From the project root using its Python 3.12 environment:
+From the project root using Python 3.12. The historical fit used Python 3.12.15,
+NumPy 2.5.3, pandas 3.0.6 and SciPy 1.18.1; these differ from TabM's environment.
+For a new run matching those recorded scientific package versions:
 
 ```powershell
+python -m pip install -r algorithms/logistic_regression/requirements-recorded.txt
+python scripts/check_environment.py --model logistic_regression
 python -m unittest discover -s tests -v
-python algorithms/logistic_regression/run_experiment.py --workers 2
+python algorithms/logistic_regression/run_experiment.py --workers 2 --output results/logistic_regression_reproduction
 ```
+
+The package pins capture the versions recorded by the historical fit, not a
+complete transitive environment lock. Install the repository's plotting/notebook
+requirements if using those features; rerun the version check after installation.
+Use a separate environment from TabM and install its dependencies separately when
+running the complete cross-model test suite. A matching environment is distinct
+from independently recomputing metrics from saved predictions.
 
 Default: all ten outer patient folds, all three inner folds, four A-D arms,
 31 outer conditions (observed once and ten stress scenarios three times),
@@ -156,4 +167,6 @@ This command checks saved probabilities, patient separation, tuning choices,
 thresholds, metrics and fold summaries. It does not fit a classifier. To view the
 results, open `algorithms/logistic_regression/notebooks/04_logistic_regression_results.ipynb`
 and run its cells.
-The bilingual handover report is in the parent `outputs` folder.
+The detailed findings and proposed evaluations are in
+[Model observations](../../docs/Model_Observations.docx). The repository README
+links the reproducible report generator and the completed results inventory.

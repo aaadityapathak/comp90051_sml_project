@@ -1,6 +1,19 @@
 # Experiment results
 
-Each algorithm owns a matching folder here and in `algorithms/`.
+Each algorithm owns a matching folder here and in `algorithms/`. Logistic
+regression and TabM are complete; histogram gradient boosting is pending.
+
+| Model | Outer fold/variant results | Model fits | Validation |
+| --- | ---: | ---: | --- |
+| Logistic regression | 90 | 933 | [Passed: 2,520 test conditions](logistic_regression/reports/validation.json) |
+| TabM | 80 | 971 | [Passed: 2,480 test conditions](tabm/reports/validation.json) |
+
+The logistic ridge-imputation control accounts for the additional ten
+fold/variant results. Both runs contain the same eight principal/control
+variants over ten patient-grouped outer folds. See the
+[TabM result index](tabm/README.md), [comparison index](comparison/README.md) and
+[detailed observations](../docs/Model_Observations.md)
+([Word copy](../docs/Model_Observations.docx)).
 
 ```text
 results/<algorithm>/
@@ -21,6 +34,73 @@ The completed logistic regression fold artifacts retain their original pipeline
 pickles beside the saved predictions. TabM stores binary checkpoints separately
 and keeps them local. Saved run configurations, source snapshots, predictions,
 tables and figures retain their original contents.
+
+## Integrity and numerical reproduction
+
+From the repository root, verify the published bundle without datasets or
+training dependencies:
+
+```powershell
+python scripts/verify_result_artifacts.py
+```
+
+The per-model `reports/artifact_manifest.json` files record relative paths,
+byte sizes and SHA-256 checksums for all canonical tables, fold predictions,
+reports, source evidence and existing logistic pipeline files. Pilots, local
+TabM checkpoints, live status/logs and README navigation are outside this
+manifest. TabM's 971 original completion markers are checked as well. Git
+attributes preserve recorded result bytes across platform checkouts.
+
+With the original prepared data and dependencies available, independently
+recalculate saved prediction metrics, thresholds, patient separation and fold
+summaries without retraining:
+
+```powershell
+python algorithms/logistic_regression/check_results.py
+python algorithms/tabm/check_results.py
+```
+
+These checks were rerun successfully after training completed. They establish
+consistency of the saved evidence; they do not claim a fresh fit on different
+hardware will be bitwise identical. Training requires the source data
+and processed data described in the repository README. Some data files were
+tracked before ignore rules were added; `.gitignore` does not untrack them.
+Original source hashes,
+versions and manifests are retained in each `run_config.json` and
+`source_provenance/`; do not edit those records to make a changed run appear
+compatible.
+
+After intentionally refreshing generated outputs, run both numerical checkers
+with their `--save` option, then explicitly record and recheck the new bundle:
+
+```powershell
+python scripts/verify_result_artifacts.py --write-manifests
+python scripts/verify_result_artifacts.py
+```
+
+The canonical evidence totals about 479 MiB across both models, excluding
+pilots and the roughly 1.12 GiB of ignored TabM checkpoint files. Keep compressed
+prediction files compressed. Individual result files are below 50 MiB. The
+user can stage and push the verified outputs; none of these checks publishes
+or trains anything.
+
+Before pushing, the repository's existing tracked data and result files need
+to retain their recorded byte contents under the current Git attributes. After
+reviewing the changes, stage those bytes and the intended new files, then check
+the index that will actually be committed:
+
+```powershell
+git add --renormalize -- data processed_data results
+git add -- .gitattributes .gitignore README.md Readme.txt algorithms docs scripts tests requirements-docs.txt results
+python scripts/verify_result_artifacts.py --check-git-index
+```
+
+The optional index check checks `.gitattributes`, both manifests, all inventoried result files
+and any already tracked input data against their verified working-tree bytes.
+Tracked raw/prepared data must also match the saved run hashes. It reports
+missing or different staged files and never stages, commits or pushes anything.
+The ordinary integrity check works before staging; the index check is expected
+to fail until the intended changes have been staged.
 
 ## Path migration
 

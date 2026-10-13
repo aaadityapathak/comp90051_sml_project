@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "model_training_performed": false,
+  "existing_processed_data_modified": false,
+  "rows": 21799,
+  "patients": 18869,
+  "source_files": {
+    "features": {
+      "path": "data/ptb-xl-plus/features/ecgdeli_features.csv",
+      "sha256": "84143735682f727201cc7f2825c047f98898f9756c6a21729af993b516221556"
+    },
+    "labels": {
+      "path": "data/ptb-xl-plus/labels/ptbxl_statements.csv",
+      "sha256": "f7f36f19a21cccd05f357a80109e4fff2134dd439f68022d19db26d18bd885d9"
+    },
+    "metadata": {
+      "path": "data/reference/ptbxl_database.csv",
+      "sha256": "7600de9c1b27d181d850b3c6038a35d7c3ddb6bb33b702e3a20252a6859d216b"
+    }
+  },
+  "rebuilt_files": {
+    "lead_features.npz": {
+      "sha256": "92048d8ec27f15510e57d34db64814de9b565d3d3654047470658f6eb01032bd"
+    },
+    "targets.csv": {
+      "sha256": "d400ecaf937a4ab57a86bb51ccebfaedd5ae4c720726701cbe8d8dc78923db72"
+    },
+    "folds.csv": {
+      "sha256": "9eb912f638cef462dc664059dc6447916b350884da237473c43b77539762c786"
+    },
+    "metadata.csv": {
+      "sha256": "deb274b6c72ff2579640e568f7b580288a357954a652bce6e5c0f7ae8ccdb2f7"
+    }
+  },
+  "comparisons": {
+    "processed_data": {
+      "matches": true,
+      "different_manifest_fields": []
+    },
+    "logistic_regression": {
+      "matches": true,
+      "different_manifest_fields": []
+    },
+    "tabm": {
+      "matches": true,
+      "different_manifest_fields": []
+    }
+  }
+}

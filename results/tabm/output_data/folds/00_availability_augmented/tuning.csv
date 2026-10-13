@@ -1,0 +1,13 @@
+outer_fold,variant,stage,inner_fold,n_blocks,macro_f1
+0,availability_augmented,initial,0,2,0.933873839714076
+0,availability_augmented,initial,1,2,0.9355563499217723
+0,availability_augmented,initial,2,2,0.9291046938467145
+0,availability_augmented,initial,0,3,0.932227401855229
+0,availability_augmented,initial,1,3,0.9296320886254049
+0,availability_augmented,initial,2,3,0.9333879293596279
+0,availability_augmented,initial,0,4,0.9310787137510803
+0,availability_augmented,initial,1,4,0.9303458768206143
+0,availability_augmented,initial,2,4,0.9317323531148602
+0,availability_augmented,refinement,0,1,0.9292334074133093
+0,availability_augmented,refinement,1,1,0.9353063241106719
+0,availability_augmented,refinement,2,1,0.9334880601335642

@@ -1,4 +1,4 @@
-# Keep datasets and course materials local.
+# Ignore additional datasets and course materials; existing tracked inputs remain.
 /data/
 /processed_data/
 /reference_modules/
@@ -11,6 +11,8 @@
 # TabM results are published; resumable binary checkpoints stay local.
 /results/tabm/checkpoints/
 /results/tabm/pilots/*/checkpoints/
+/results/**/checkpoints/
+/results/**/worker_status/
 /results/**/.run.lock
 /results/**/logs/
 /results/**/pipeline_status.json

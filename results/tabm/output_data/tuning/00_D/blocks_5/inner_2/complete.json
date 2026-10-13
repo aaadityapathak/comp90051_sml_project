@@ -1,0 +1,18 @@
+{
+  "completed": true,
+  "outer_fold": 0,
+  "variant": "D",
+  "inner_fold": 2,
+  "n_blocks": 5,
+  "macro_f1": 0.9388898039861637,
+  "seed": 20261010,
+  "checkpoints": {
+    "checkpoints\\tuning\\00_D\\blocks_5\\inner_2\\model.pt": "ee9a004a2254059f356969835d197c38efdfddd51789fa0e518dd64c12051580",
+    "checkpoints\\tuning\\00_D\\blocks_5\\inner_2\\preprocessing.pkl": "db2267f1f5c27de6353152015eaec5e910453cb7e0e51dd1e9b2c7e31b39b1be"
+  },
+  "files": {
+    "predictions.csv.gz": "f646f42ac4d8f97e979e91752eb1b73aed6a3795ee41fe2df8ae233180d062ff",
+    "history.csv": "86e6fbaba57d735c8d2e95c088449951ef1ac8d7138930add56093ef889981a7",
+    "audit.json": "721c2c350753bedb85031481dba18a1c5b1072c2ac01c67bd4f60faa5562d29d"
+  }
+}

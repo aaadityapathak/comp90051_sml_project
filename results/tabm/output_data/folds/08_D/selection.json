@@ -1,0 +1,29 @@
+{
+  "model": "tabm",
+  "variant": "D",
+  "feature_set": "enhanced",
+  "training_arm": "augmented",
+  "outer_fold": 8,
+  "n_blocks": 3,
+  "initial_grid": [
+    2,
+    3,
+    4
+  ],
+  "final_grid": [
+    2,
+    3,
+    4
+  ],
+  "refined": false,
+  "selected_middle": true,
+  "inner_mean_macro_f1": 0.938237358108355,
+  "secondary_threshold": {
+    "threshold": 0.5638529658317566,
+    "status": "selected_on_inner_oof",
+    "target_sensitivity": 0.9,
+    "inner_sensitivity": 0.9017595307917888,
+    "inner_specificity": 0.9900426742532006
+  },
+  "seconds": 688.0001549000153
+}

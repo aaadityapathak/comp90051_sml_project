@@ -1,14 +1,21 @@
 {
-  "status": "passed_available_outputs_run_incomplete",
-  "complete_tabm_plan": false,
-  "requested_scope_complete": false,
+  "status": "passed",
+  "complete_tabm_plan": true,
+  "requested_scope_complete": true,
   "model_training_performed": false,
-  "completed_outer_fold_variants_verified": 1,
-  "pending_outer_fold_variants": 79,
-  "outer_conditions_verified": 31,
-  "completed_inner_checkpoints_verified": 14,
-  "n_fits": 15,
+  "completed_outer_fold_variants_verified": 80,
+  "pending_outer_fold_variants": 0,
+  "outer_conditions_verified": 2480,
+  "completed_inner_checkpoints_verified": 891,
+  "n_fits": 971,
   "source_files_verified": 6,
+  "source_verification": {
+    "mode": "preserved_layout_v1_sources",
+    "preserved_sources": {
+      "algorithms/tabm/run_experiment.py": "C:\\Users\\aaadi\\Desktop\\sml_project\\comp90051_sml_project\\results\\tabm\\source_provenance\\layout_v1\\algorithms\\tabm\\run_experiment.py"
+    },
+    "training_calculations_unchanged": true
+  },
   "processed_data_manifest_verified": true,
   "patient_separation_verified": true,
   "prediction_coverage_and_metrics_recomputed": true,

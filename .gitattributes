@@ -1,2 +1,6 @@
 # Preserve recorded artifact bytes so checksums survive cross-platform clones.
-/results/tabm/** -text whitespace=cr-at-eol
+/results/** -text whitespace=cr-at-eol
+# These inputs were already tracked before .gitignore excluded new datasets.
+# Their raw byte hashes are part of the saved experiment identity.
+/data/** -text whitespace=cr-at-eol
+/processed_data/** -text whitespace=cr-at-eol

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "shared_prepared_manifest": true,
+  "fold_variants_compared": 80,
+  "conditions_compared": 2480,
+  "excluded_metadata_fields": [
+    "model"
+  ],
+  "scope": "Exact equality of saved test perturbation diagnostics; no models refitted."
+}

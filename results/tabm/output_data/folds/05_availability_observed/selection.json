@@ -1,0 +1,29 @@
+{
+  "model": "tabm",
+  "variant": "availability_observed",
+  "feature_set": "enhanced",
+  "training_arm": "observed",
+  "outer_fold": 5,
+  "n_blocks": 4,
+  "initial_grid": [
+    2,
+    3,
+    4
+  ],
+  "final_grid": [
+    3,
+    4,
+    5
+  ],
+  "refined": true,
+  "selected_middle": true,
+  "inner_mean_macro_f1": 0.929574350454125,
+  "secondary_threshold": {
+    "threshold": 0.5184675455093384,
+    "status": "selected_on_inner_oof",
+    "target_sensitivity": 0.9,
+    "inner_sensitivity": 0.9020618556701031,
+    "inner_specificity": 0.9872911531087374
+  },
+  "seconds": 468.1286591999233
+}

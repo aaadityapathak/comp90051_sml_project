@@ -1,0 +1,44 @@
+{
+  "review_date": "2026-10-13",
+  "status": "passed",
+  "full_study_retrained": false,
+  "tests": {
+    "command": ".venv/Scripts/python -m unittest discover -s tests -v",
+    "passed": 133,
+    "seconds": 53.637,
+    "scope": "Shared preprocessing/evaluation, logistic regression, synthetic CPU TabM fits, resume/reporting, parallel scheduling, environment and artifact integrity checks."
+  },
+  "saved_result_validation": {
+    "logistic_regression": "results/logistic_regression/reports/validation.json",
+    "tabm": "results/tabm/reports/validation.json",
+    "both_passed": true
+  },
+  "tabm_report_only_integration": {
+    "command": ".venv/Scripts/python algorithms/tabm/run_full_pipeline.py --report-only --skip-notebook",
+    "exit_code": 0,
+    "model_training_performed": false
+  },
+  "preprocessing": {
+    "report": "results/comparison/reports/preprocessing_validation.json",
+    "rebuilt_file_hashes_match_both_runs": true,
+    "existing_processed_data_modified": false
+  },
+  "observations": {
+    "input_manifest": "results/comparison/output_data/observations_input_manifest.json",
+    "source_hashes_verified": 183,
+    "regeneration": "Byte-identical Markdown, DOCX and four comparison outputs.",
+    "word_structure_and_accessibility": "passed",
+    "word_visual_review": "Unavailable: bundled LibreOffice and Microsoft Word are absent. Markdown is the primary reading copy."
+  },
+  "publication": {
+    "working_file_manifests": "passed",
+    "git_staging_performed": false,
+    "commit_or_push_performed": false,
+    "next_step": "Follow results/README.md to renormalize/stage intended files and run verify_result_artifacts.py --check-git-index before committing."
+  },
+  "limitations": [
+    "No full model retraining or GPU throughput benchmark was performed during cleanup.",
+    "The active environment matches TabM recorded versions; logistic regression's historical version differences are documented separately.",
+    "Numerical reproducibility across different hardware, memory residency and dependency versions is not established by artifact verification."
+  ]
+}

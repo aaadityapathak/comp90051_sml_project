@@ -1,0 +1,50 @@
+{
+  "n_blocks": 2,
+  "epochs": 100,
+  "epochs_completed": 100,
+  "seed": 20261107,
+  "batch_size": 256,
+  "n_train_views": 19608,
+  "n_features": 1527,
+  "weight_sum": 19608.0,
+  "normalized_weight_mean": 1.0000000049123372,
+  "weight_normalization": "training_dataset_mean",
+  "objective": "memberwise BCE mean, then sample-weighted record mean",
+  "prediction": "mean member sigmoid probabilities",
+  "early_stopping": false,
+  "mixed_precision": false,
+  "deterministic_algorithms": true,
+  "device": "cuda",
+  "data_device": "cuda",
+  "device_name": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+  "train_seconds": 26.144133600057103,
+  "final_training_weighted_bce": 0.009965267963707447,
+  "architecture": {
+    "arch_type": "tabm",
+    "n_num_features": 1527,
+    "d_out": 1,
+    "n_blocks": 2,
+    "d_block": 128,
+    "k": 16,
+    "dropout": 0.1,
+    "num_embeddings": null,
+    "cat_cardinalities": null
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "versions": {
+    "torch": "2.7.1+cu128",
+    "tabm": "0.0.3",
+    "numpy": "2.5.1",
+    "cuda": "12.8"
+  },
+  "phase": "outer_refit",
+  "model": "tabm",
+  "variant": "availability_observed",
+  "feature_set": "enhanced",
+  "training_arm": "observed",
+  "outer_fold": 0
+}
