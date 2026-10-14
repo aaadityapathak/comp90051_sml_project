@@ -1,36 +1,86 @@
-# Shallow histogram gradient boosting
+# Shallow Histogram Gradient Boosting
 
-**Purpose:** test nonlinear relationships and interactions with shallow trees.
+## Purpose
 
-**Status:** selected; training and results are pending.
+Evaluate nonlinear relationships and feature interactions
+for binary AFIB classification using histogram gradient boosting.
 
-Follow the same layout as the other algorithms: keep Python source and any
-algorithm-specific requirements directly in `algorithms/histogram_gradient_boosting/`,
-and place algorithm-specific notebooks in its `notebooks/` subfolder when added.
-Shared data preparation and cross-model evaluation notebooks remain in `notebooks/`
-at the repository root.
+## Status
 
-Reserve `results/histogram_gradient_boosting/` for this algorithm's results:
+Completed: four experimental arms (A-D), with ten outer
+patient-grouped folds and three inner folds per outer fold.
 
-| Subfolder | Contents when generated |
+## Model
+
+Estimator: HistGradientBoostingClassifier
+
+Fixed hyperparameters:
+- max_iter: 150
+- learning_rate: 0.05
+- max_leaf_nodes: 16
+- min_samples_leaf: 30
+- l2_regularization: 1.0
+- early_stopping: False
+- random_state: 42
+
+Tuned parameter:
+- Initial max_depth grid: [2, 3, 4]
+- Permitted inner-CV boundary refinement: depth 5
+- Selection metric: mean inner-validation macro-F1
+
+Prediction identifier: hist_gradient_boosting
+
+## Experimental arms
+
+- A: Original ECG features, no augmentation
+- B: Original and engineered features, no augmentation
+- C: Original features with training augmentation
+- D: Original and engineered features with training augmentation
+
+All arms use shared patient-grouped folds, fold-specific
+preprocessing, and shared sample weights.
+
+## Execution
+
+From the project root:
+
+python algorithms/histogram_gradient_boosting/run_experiment.py --arms A B C D --outer-folds 0 1 2 3 4 5 6 7 8 9
+
+The script reads processed_data through the shared input workflow.
+See ../README.md for the shared algorithm instructions.
+
+## Results
+
+Completed results are stored under:
+
+reports/histogram_gradient_boosting/formal/
+
+Each completed arm/fold directory contains:
+- complete.json
+- inner_tuning.csv
+- metrics.csv
+- predictions.csv
+
+Observed-data macro-F1, mean +/- sample SD across ten outer folds:
+
+| Arm | Macro-F1 |
 | --- | --- |
-| `output_data/` | Fold outputs, metrics, tuning tables and audits |
-| `reports/` | Figures, written reports and completion summaries |
-| `checkpoints/` | Local model and resume checkpoints |
-| `predictions/` | Published prediction tables for comparison |
-| `pilots/` | Separate pilot and diagnostic runs |
+| A | 0.9213 +/- 0.0158 |
+| B | 0.9230 +/- 0.0143 |
+| C | 0.9156 +/- 0.0122 |
+| D | 0.9179 +/- 0.0126 |
 
-Run configuration and source provenance belong at the algorithm's results root.
-These locations are reserved; no training outputs have been generated yet.
+Arm B achieved the highest observed-data mean macro-F1.
+Training augmentation improved robustness under simulated
+missing ECG leads, especially when six leads were hidden.
 
-| Setting | Planned value |
-| --- | --- |
-| Tuned parameter | Maximum depth = 2, 3, 4 |
-| Fixed settings | 150 boosting iterations; learning rate 0.05; at most 16 leaves; at least 30 rows per leaf; L2 = 1 |
-| Early stopping | Disabled; use the supplied patient folds |
-| Prediction identifier | `hist_gradient_boosting` |
+## Reproducibility
 
-Load each training/validation partition from `processed_data/` through the
-[shared input workflow](../README.md). Use its finite encoded matrices and
-sample weights for all four A-D arms. Keep the prediction identifier above
-when saving outputs so the evaluation code can recognise this model.
+Use the same processed_data package, patient folds, and
+software dependencies. Hyperparameters are selected using
+inner-validation data only; outer-test results are reserved
+for evaluation.
+
+Predictions, per-fold metrics, and tuning decisions are
+saved for analysis. Do not include the dataset in the final
+code ZIP unless the assignment instructions permit it.
