@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT))
-from algorithms.tabm import run_full_pipeline as pipeline
+from models.tabm import run_full_pipeline as pipeline
 
 
 class PipelineTests(unittest.TestCase):
@@ -33,8 +33,8 @@ class PipelineTests(unittest.TestCase):
         calls = self.run_refresh(['--skip-notebook']).call_args_list
         self.assertEqual(len(calls), 2)
         self.assertEqual(calls[0].args[0][2:], [
-            'algorithms/tabm/run_experiment.py', '--phase', 'report', '--device', 'auto'])
-        self.assertEqual(calls[1].args[0][1:3], ['algorithms/tabm/check_results.py', '--save'])
+            'models/tabm/run_experiment.py', '--phase', 'report', '--device', 'auto'])
+        self.assertEqual(calls[1].args[0][1:3], ['models/tabm/check_results.py', '--save'])
         status = json.loads((self.output / 'pipeline_status.json').read_text())
         self.assertEqual(status['state'], 'completed_and_verified')
         self.assertFalse(status['publish_on_completion'])

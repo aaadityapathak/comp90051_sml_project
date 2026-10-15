@@ -20,8 +20,8 @@ from unittest.mock import Mock, patch
 
 PROJECT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(PROJECT), str(PROJECT / 'src')]
-from algorithms.tabm import parallel_runtime as runtime
-from algorithms.tabm import run_parallel as parallel
+from models.tabm import parallel_runtime as runtime
+from models.tabm import run_parallel as parallel
 
 
 class ParallelTests(unittest.TestCase):
@@ -92,10 +92,10 @@ class NoTorch(importlib.abc.MetaPathFinder):
         if fullname == 'torch' or fullname.startswith('torch.'):
             raise AssertionError('Dry-run attempted to import torch')
 sys.meta_path.insert(0, NoTorch())
-from algorithms.tabm.run_parallel import main
+from models.tabm.run_parallel import main
 main(['--dry-run', '--output', sys.argv[1]])
 assert 'torch' not in sys.modules
-assert 'algorithms.tabm.model' not in sys.modules
+assert 'models.tabm.model' not in sys.modules
 assert not pathlib.Path(sys.argv[1]).exists()
 """
         environment = dict(os.environ, PYTHONDONTWRITEBYTECODE='1')
@@ -327,14 +327,14 @@ assert not pathlib.Path(sys.argv[1]).exists()
         # Avoid serial.run_signature importing torch: only extension semantics
         # are under test here; the scientific signature has separate coverage.
         with patch.object(parallel.serial, 'run_signature', side_effect=lambda *a: {
-                'model': 'tabm', 'code': {'algorithms/tabm/model.py': 'fixture-hash'}}):
+                'model': 'tabm', 'code': {'models/tabm/model.py': 'fixture-hash'}}):
             return parallel.parallel_signature(args, {'manifest': {'seed': 1}})
 
     def test_signature_tracks_scheduler_sources_devices_and_threads(self):
         original = self.signature(self.args())
         for name in ('run_parallel.py', 'parallel_runtime.py'):
-            source = PROJECT / 'algorithms/tabm' / name
-            self.assertEqual(original['code'][f'algorithms/tabm/{name}'], parallel.serial.source_sha256(source))
+            source = PROJECT / 'models/tabm' / name
+            self.assertEqual(original['code'][f'models/tabm/{name}'], parallel.serial.source_sha256(source))
         changed_resources = self.signature(self.args(workers=1, parallel_level='outer', gpu_memory_fraction=.2))
         self.assertEqual(original, changed_resources)
         self.assertNotEqual(original, self.signature(self.args(threads_per_worker=2)))
@@ -350,7 +350,7 @@ assert not pathlib.Path(sys.argv[1]).exists()
             with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'different'):
                 parallel.ensure_signature(args, changed)
         changed = copy.deepcopy(signature)
-        changed['code']['algorithms/tabm/parallel_runtime.py'] = 'modified-source'
+        changed['code']['models/tabm/parallel_runtime.py'] = 'modified-source'
         with self.assertRaisesRegex(ValueError, 'different'):
             parallel.ensure_signature(args, changed)
         orphan = self.args(output=self.output / 'orphan')

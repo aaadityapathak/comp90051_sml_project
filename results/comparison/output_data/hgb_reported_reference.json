@@ -1,0 +1,104 @@
+{
+  "source": "results/histogram_gradient_boosting/source_provenance/reported_summary.docx",
+  "status": "reported_only_raw_bundle_absent",
+  "observed": {
+    "A": {
+      "macro_f1": [
+        0.9213,
+        0.0158
+      ],
+      "sensitivity": [
+        0.9514,
+        0.0243
+      ],
+      "specificity": [
+        0.9795,
+        0.0035
+      ],
+      "auroc": [
+        0.993,
+        0.0032
+      ]
+    },
+    "B": {
+      "macro_f1": [
+        0.923,
+        0.0143
+      ],
+      "sensitivity": [
+        0.9496,
+        0.0198
+      ],
+      "specificity": [
+        0.9803,
+        0.0037
+      ],
+      "auroc": [
+        0.9935,
+        0.0035
+      ]
+    },
+    "C": {
+      "macro_f1": [
+        0.9156,
+        0.0122
+      ],
+      "sensitivity": [
+        0.9549,
+        0.0209
+      ],
+      "specificity": [
+        0.9771,
+        0.0034
+      ],
+      "auroc": [
+        0.9931,
+        0.004
+      ]
+    },
+    "D": {
+      "macro_f1": [
+        0.9179,
+        0.0126
+      ],
+      "sensitivity": [
+        0.9583,
+        0.019
+      ],
+      "specificity": [
+        0.9776,
+        0.0031
+      ],
+      "auroc": [
+        0.9934,
+        0.0041
+      ]
+    }
+  },
+  "missing_lead_f1": {
+    "A": {
+      "observed": 0.9213,
+      "missing_1": 0.9226,
+      "missing_3": 0.8524,
+      "missing_6": 0.5912
+    },
+    "B": {
+      "observed": 0.923,
+      "missing_1": 0.9237,
+      "missing_3": 0.8935,
+      "missing_6": 0.7356
+    },
+    "C": {
+      "observed": 0.9156,
+      "missing_1": 0.9119,
+      "missing_3": 0.9069,
+      "missing_6": 0.8892
+    },
+    "D": {
+      "observed": 0.9179,
+      "missing_1": 0.9149,
+      "missing_3": 0.9035,
+      "missing_6": 0.8771
+    }
+  }
+}

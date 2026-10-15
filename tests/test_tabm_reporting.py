@@ -13,8 +13,8 @@ import pandas as pd
 PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT))
 sys.path.insert(0, str(PROJECT / 'src'))
-from algorithms.tabm import reporting
-from algorithms.tabm import check_results
+from models.tabm import reporting
+from models.tabm import check_results
 from afib.evaluation import binary_metrics, choose_sensitivity_threshold, majority_baseline, quality_subgroup_metrics
 
 

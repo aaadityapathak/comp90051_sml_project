@@ -1,2 +1,2 @@
-# Rebuild docs/Model_Observations.docx and .md without training dependencies.
+# Rebuild the four per-model/comparison Word and Markdown reports without training.
 python-docx==1.2.0

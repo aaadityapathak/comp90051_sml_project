@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import numpy as np
 import pandas as pd
-sys.path.insert(0,str(Path(__file__).absolute().parents[1]/'algorithms/logistic_regression'))
+sys.path.insert(0,str(Path(__file__).absolute().parents[1]/'models/logistic_regression'))
 from model import LogisticRegression, objective_gradient
 from run_experiment import select_C, refinement_grid, patient_weighted_metrics, split_ids
 from run_experiment import prediction_export_directory, export_predictions, VARIANTS
@@ -115,7 +115,7 @@ class LogisticTests(unittest.TestCase):
             self.assertNotEqual(calculation_tree(first), calculation_tree(second))
 
     def test_source_comparison_accepts_only_known_output_relocations(self):
-        source = PROJECT / 'algorithms/logistic_regression/run_experiment.py'
+        source = PROJECT / 'models/logistic_regression/run_experiment.py'
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
             relocated = Path(temp) / 'run_experiment.py'
             text = source.read_text(encoding='utf-8')
@@ -127,7 +127,7 @@ class LogisticTests(unittest.TestCase):
             self.assertNotEqual(calculation_tree(source), calculation_tree(relocated))
 
     def test_source_comparison_checks_export_logic_instead_of_ignoring_it(self):
-        source = PROJECT / 'algorithms/logistic_regression/run_experiment.py'
+        source = PROJECT / 'models/logistic_regression/run_experiment.py'
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temp:
             changed = Path(temp) / 'run_experiment.py'
             text = source.read_text(encoding='utf-8')

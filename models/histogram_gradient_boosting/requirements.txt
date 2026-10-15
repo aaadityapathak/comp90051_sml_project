@@ -1,0 +1,3 @@
+# Fresh-run dependencies. The historical HGB report did not record versions.
+-r ../../requirements.txt
+scikit-learn==1.9.1

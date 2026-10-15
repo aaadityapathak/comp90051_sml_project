@@ -67,7 +67,7 @@ def validate_folds(folds):
 def run_audit(output_dir=None, validation_limit=256, *, processed_dir=None):
     if int(validation_limit) != validation_limit or validation_limit < 1:
         raise ValueError('Choose a positive number of diagnostic validation ECGs.')
-    output = Path(output_dir or PROJECT / 'reports' / 'imputation').resolve()
+    output = Path(output_dir or PROJECT / 'results' / 'imputation').resolve()
     prepared = Path(processed_dir or PROJECT / 'processed_data').resolve()
     package = load_processed_data(prepared)
     package_hashes = {name: digest(prepared / name)

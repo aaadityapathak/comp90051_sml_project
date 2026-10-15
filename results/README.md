@@ -1,7 +1,9 @@
 # Experiment results
 
-Each algorithm owns a matching folder here and in `algorithms/`. Logistic
-regression and TabM are complete; histogram gradient boosting is pending.
+Each algorithm owns a matching folder here and in `models/`. Logistic
+regression and TabM have complete saved bundles. Histogram gradient boosting
+has implemented code and reported scores, but its raw result bundle is unavailable
+in this checkout.
 
 | Model | Outer fold/variant results | Model fits | Validation |
 | --- | ---: | ---: | --- |
@@ -12,8 +14,8 @@ The logistic ridge-imputation control accounts for the additional ten
 fold/variant results. Both runs contain the same eight principal/control
 variants over ten patient-grouped outer folds. See the
 [TabM result index](tabm/README.md), [comparison index](comparison/README.md) and
-[detailed observations](../docs/Model_Observations.md)
-([Word copy](../docs/Model_Observations.docx)).
+[model comparison](../docs/Model_Comparison.md)
+([Word copy](../docs/Model_Comparison.docx)) and per-model observations in `docs/`.
 
 ```text
 results/<algorithm>/
@@ -29,7 +31,8 @@ results/<algorithm>/
   pilots/<run>/         # smaller runs using the same layout
 ```
 
-Folders are created as needed. Histogram gradient boosting has no results yet.
+Folders are created as needed. Histogram gradient boosting expects its missing
+raw bundle at `results/histogram_gradient_boosting/formal/`.
 The completed logistic regression fold artifacts retain their original pipeline
 pickles beside the saved predictions. TabM stores binary checkpoints separately
 and keeps them local. Saved run configurations, source snapshots, predictions,
@@ -56,8 +59,8 @@ recalculate saved prediction metrics, thresholds, patient separation and fold
 summaries without retraining:
 
 ```powershell
-python algorithms/logistic_regression/check_results.py
-python algorithms/tabm/check_results.py
+python models/logistic_regression/check_results.py
+python models/tabm/check_results.py
 ```
 
 These checks were rerun successfully after training completed. They establish
@@ -91,7 +94,7 @@ the index that will actually be committed:
 
 ```powershell
 git add --renormalize -- data processed_data results
-git add -- .gitattributes .gitignore README.md Readme.txt algorithms docs scripts tests requirements-docs.txt results
+git add -- .gitattributes .gitignore README.md Readme.txt models notebooks docs scripts tests requirements-docs.txt results
 python scripts/verify_result_artifacts.py --check-git-index
 ```
 
@@ -106,6 +109,8 @@ to fail until the intended changes have been staged.
 
 | Previous location | Current location |
 | --- | --- |
+| `algorithms/` source code | `models/` source code |
+| `algorithms/<model>/notebooks/*.ipynb` | `notebooks/` |
 | `reports/logistic_regression/*.csv` | `results/logistic_regression/output_data/` |
 | `reports/logistic_regression/folds/` | `results/logistic_regression/output_data/folds/` |
 | `reports/logistic_regression/*.png` and `completion.json` | `results/logistic_regression/reports/` |
@@ -121,7 +126,8 @@ The comparison folder does not imply those results have been produced.
 Historical logs, notebook outputs and source snapshots can mention the old
 paths: they are retained as evidence of the original runs. Active code and
 notebook cells use the current paths. TabM's source compatibility check verifies
-the preserved runner snapshot and allows only this layout migration when
+the preserved runner snapshot and permits only documented output paths and
+package imports changed by these migrations when
 resuming existing fits. Changes to training calculations or configuration still
 require a new output folder. Logistic regression retains its existing strict
 resume guard; inspect its historical results with `check_results.py`.
@@ -129,3 +135,8 @@ resume guard; inspect its historical results with `check_results.py`.
 `data/` and `processed_data/` remain at the repository root so the shared data
 manifest and all recorded input hashes remain valid. Shared analysis and legacy
 work remain under `reports/`.
+
+Generated shared reports (`results/data_insights/`, `results/imputation/`,
+`results/comparison/evaluation/`, `results/comparison/reports/`) stay local through
+Git ignore rules. Existing tracked artifacts remain tracked. Historical reports
+and results were retained; no training or regeneration is needed to read them.

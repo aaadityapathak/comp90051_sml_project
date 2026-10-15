@@ -8,7 +8,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from algorithms.tabm.model import TabMClassifier, memberwise_weighted_loss
+from models.tabm.model import TabMClassifier, memberwise_weighted_loss
 
 
 class TabMTests(unittest.TestCase):

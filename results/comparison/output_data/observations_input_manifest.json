@@ -1,37 +1,27 @@
 {
-  "schema_version": 1,
-  "report_date": "2026-10-13",
-  "models": [
+  "schema_version": 2,
+  "report_date": "2026-10-15",
+  "models_with_raw_artifacts": [
     "logistic_regression",
     "tabm"
   ],
-  "aggregation": "Three stress repeats averaged within each fold; mean and sample SD across ten folds.",
-  "inference": "Descriptive comparisons only; SD is not a confidence interval.",
-  "schema_normalization": "Logistic paired tables record fixed_0.50 only; n_defined is blank because the source omits it.",
+  "hgb_status": "Historical report only; raw model outputs were not regenerated.",
+  "documents": [
+    "Logistic_Regression_Observations",
+    "TabM_Observations",
+    "Histogram_Gradient_Boosting_Observations",
+    "Model_Comparison"
+  ],
+  "aggregation": "Stress repeats averaged within fold; mean and sample SD across ten folds.",
+  "inference": "Descriptive comparisons; SD is not a confidence interval.",
   "sources": {
-    "algorithms/logistic_regression/requirements-recorded.txt": {
-      "sha256": "70801dfabad7d24cb8482b290bd1c3fa4880e61d978f5e774f7633e46616d927",
-      "bytes": 296
+    "results/histogram_gradient_boosting/source_provenance/reported_summary.docx": {
+      "sha256": "f14a75181e7be9c59acdd772b9c284bf650a8dd417b719d1fe5d432bcf5eff1e",
+      "bytes": 96054
     },
-    "algorithms/tabm/parallel_runtime.py": {
-      "sha256": "9c9058fcafa581ef3a237a7fd25276adf549ce569d0b491be777fa63aadd3653",
-      "bytes": 8816
-    },
-    "algorithms/tabm/requirements.txt": {
-      "sha256": "656e304099f9be370b13714556c011017c639258c162c546fa7e79deee09fc2d",
-      "bytes": 300
-    },
-    "algorithms/tabm/run_full_pipeline.py": {
-      "sha256": "715f8727943312d7cb10bc47d3139e888c5cb43fbd943f3353b352f2af90f33a",
-      "bytes": 4885
-    },
-    "algorithms/tabm/run_parallel.py": {
-      "sha256": "7cdff76d52f10991ba3c1a752f563f57c091909d63f5711f6fb2be41736e4740",
-      "bytes": 17163
-    },
-    "results/comparison/reports/preprocessing_validation.json": {
-      "sha256": "dd696f9b1ce845a69b7f2a833859447056c6f42547a8af55277c80cb61bbfb76",
-      "bytes": 1485
+    "results/logistic_regression/output_data/fold_mean_metrics.csv": {
+      "sha256": "1a29e13fa25f0fe546616fdb7dc2e8b6549c91dd793ac65394cc464fedf12ac5",
+      "bytes": 418857
     },
     "results/logistic_regression/output_data/folds/00_A/perturbation_audit.json": {
       "sha256": "c2b2372ca112b8e0c0196405ed2d76d33890e3f717b5c4381ed9fde071533c48",
@@ -361,10 +351,6 @@
       "sha256": "c97ecb4094a9d4bf5ed11fa1340eba387f2acb8da97addaf64ac53a14118af00",
       "bytes": 54293
     },
-    "results/logistic_regression/output_data/quality_subgroups.csv": {
-      "sha256": "ea587226888c4d4f9c9010b9d5a6b17cb245c761547914c19d771d4f5a1f23ed",
-      "bytes": 3727295
-    },
     "results/logistic_regression/output_data/quality_subgroups_summary.csv": {
       "sha256": "cf49ff567c6c706f874341c55eedc8afe25fd5a01cf8c4fe9471383131955cfe",
       "bytes": 177482
@@ -388,6 +374,10 @@
     "results/logistic_regression/run_config.json": {
       "sha256": "635c4ce372c053af3f246c0f25377852d4169faa485324f9144921ba41b1250d",
       "bytes": 3281
+    },
+    "results/tabm/output_data/fold_mean_metrics.csv": {
+      "sha256": "bb8acf2fe68fce2402bf7de96da89441cda340ccb157e775740a572313f87111",
+      "bytes": 409857
     },
     "results/tabm/output_data/folds/00_A/perturbation_audit.json": {
       "sha256": "37487eb4b8674d089f0e6b98e9c5a0003bd5bd112dd753aea43be2d712f70b92",
@@ -709,10 +699,6 @@
       "sha256": "3ba1e8bb46fc1f9f74d6afef47063272e931c4dfffc6f27871a797da86c283b6",
       "bytes": 35702
     },
-    "results/tabm/output_data/majority_baseline.csv": {
-      "sha256": "a68d6894bcc94f8a60f42c26be58f60ff156f130740fcbea86ba3315268176d0",
-      "bytes": 2296
-    },
     "results/tabm/output_data/paired_method_differences.csv": {
       "sha256": "c3f7be9bf3903c9a34de8f527dca73d463c7b3895bdfaa6f91de084da33cf7ca",
       "bytes": 215628
@@ -742,5 +728,6 @@
       "bytes": 4089
     }
   },
-  "generator_sha256": "a13cb0df35b122d2cbf853ec95a77b5bcf4dbad2ae5dbdb3b14d0f908032b3a7"
+  "generator_sha256": "1e13048acd734679e3dad57e91f8d37036fa2332d06c0a7c20de65e88c7ecfa2",
+  "support_sha256": "3761f16530f345cd1dd514a7670347f61ece8e68e5187259af070c2e3f2bad4d"
 }

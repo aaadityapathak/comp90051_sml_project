@@ -7,7 +7,12 @@
 
 # Exclude generated reports and document working files.
 /reports/
-/models/
+/results/data_insights/
+/results/imputation/
+/results/comparison/evaluation/
+/results/comparison/reports/
+/notebooks/archive/
+/notebooks/legacy/
 # TabM results are published; resumable binary checkpoints stay local.
 /results/tabm/checkpoints/
 /results/tabm/pilots/*/checkpoints/

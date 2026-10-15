@@ -16,16 +16,16 @@ import pandas as pd
 
 PROJECT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(PROJECT), str(PROJECT / 'src')]
-from algorithms.tabm.data import (
+from models.tabm.data import (
     VARIANTS, identity, patient_weighted_metrics, split_ids,
     training_pipeline, transform_heldout,
 )
-from algorithms.tabm.run_experiment import (
+from models.tabm.run_experiment import (
     checked_completion, fit_seed, inner_fit, json_write, main, output_lock,
     refinement_grid, run_signature, run_variant, select_blocks, source_sha256,
 )
 from afib.preprocessing import CATEGORY_COLUMNS, RAW_COLUMNS
-from algorithms.tabm.source_verification import RUNNER_SOURCE, compatible_signature
+from models.tabm.source_verification import RUNNER_SOURCE, active_source_name, compatible_signature
 
 
 def layout_source_fixture(project):
@@ -40,10 +40,10 @@ def main():
         raise ValueError('Different experiment')
 """
     current = original.replace('models/tabm', 'results/tabm').replace(
-        'import json\n', 'import json\nfrom algorithms.tabm.source_verification import compatible_signature\n').replace(
+        'import json\n', 'import json\nfrom models.tabm.source_verification import compatible_signature\n').replace(
         "json.loads(config.read_text(encoding='utf-8')) != signature",
         "not compatible_signature(PROJECT, args.output, json.loads(config.read_text(encoding='utf-8')), signature)")
-    path = Path(project) / RUNNER_SOURCE
+    path = Path(project) / active_source_name(RUNNER_SOURCE)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(current, encoding='utf-8', newline='\n')
     output = Path(project) / 'results/tabm'
@@ -54,7 +54,8 @@ def main():
              'code': {RUNNER_SOURCE: hashlib.sha256(original.encode()).hexdigest(),
                       'algorithms/tabm/model.py': 'unchanged-model-hash'}}
     signature = json.loads(json.dumps(saved))
-    signature['code'][RUNNER_SOURCE] = source_sha256(path)
+    signature['code'] = {active_source_name(name): digest for name, digest in saved['code'].items()}
+    signature['code'][active_source_name(RUNNER_SOURCE)] = source_sha256(path)
     return output, path, snapshot, saved, signature
 
 
@@ -177,7 +178,7 @@ class TabMExperimentTests(unittest.TestCase):
     def test_completed_fit_is_reused_and_tampered_predictions_are_rejected(self):
         FakeClassifier.fits = 0
         fake_torch = SimpleNamespace(cuda=SimpleNamespace(is_available=lambda: False))
-        with patch.dict(sys.modules, {'algorithms.tabm.model': SimpleNamespace(TabMClassifier=FakeClassifier),
+        with patch.dict(sys.modules, {'models.tabm.model': SimpleNamespace(TabMClassifier=FakeClassifier),
                                       'torch': fake_torch}):
             first = inner_fit(self.package, 0, 'A', 2, 0, self.args(), {})
             second = inner_fit(self.package, 0, 'A', 2, 0, self.args(), {})
@@ -195,13 +196,13 @@ class TabMExperimentTests(unittest.TestCase):
     def test_parameter_scripts_share_signature_but_training_changes_do_not(self):
         fake_torch = SimpleNamespace(cuda=SimpleNamespace(is_available=lambda: False))
         with patch.dict(sys.modules, {'torch': fake_torch}), patch(
-                'algorithms.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
+                'models.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
             left = run_signature(self.args(phase='tune', blocks=2), self.package)
             right = run_signature(self.args(phase='tune', blocks=4), self.package)
             changed = run_signature(self.args(epochs=3), self.package)
         self.assertEqual(left, right)
         self.assertNotEqual(left, changed)
-        self.assertIn('algorithms/tabm/model.py', left['code'])
+        self.assertIn('models/tabm/model.py', left['code'])
         self.assertFalse(left['protocol_complete_requested'])
 
     def test_source_signature_ignores_git_line_endings_but_not_code_changes(self):
@@ -215,7 +216,7 @@ class TabMExperimentTests(unittest.TestCase):
     def test_device_aliases_share_signature_only_for_the_same_actual_device(self):
         fake_torch = SimpleNamespace(cuda=SimpleNamespace(is_available=lambda: True))
         with patch.dict(sys.modules, {'torch': fake_torch}), patch(
-                'algorithms.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
+                'models.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
             automatic = run_signature(self.args(device='auto'), self.package)
             gpu = run_signature(self.args(device='cuda'), self.package)
             cpu = run_signature(self.args(device='cpu'), self.package)
@@ -231,9 +232,9 @@ class TabMExperimentTests(unittest.TestCase):
         package['metadata'] = pd.DataFrame('', index=package['raw'].index,
             columns=['baseline_drift', 'static_noise', 'burst_noise', 'electrodes_problems'])
         args = self.args(no_refine=True)
-        with patch.dict(sys.modules, {'algorithms.tabm.model': SimpleNamespace(TabMClassifier=FakeClassifier),
+        with patch.dict(sys.modules, {'models.tabm.model': SimpleNamespace(TabMClassifier=FakeClassifier),
                                       'torch': fake_torch}):
-            with patch('algorithms.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
+            with patch('models.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
                 json_write(self.output / 'run_config.json', run_signature(args, package))
             run_variant(package, 0, 'A', args)
             location = self.output / 'output_data/folds/00_A'
@@ -253,7 +254,7 @@ class TabMExperimentTests(unittest.TestCase):
             run_variant(package, 0, 'A', args)
             self.assertEqual(FakeClassifier.fits, 10)
             pd.testing.assert_frame_equal(predictions, pd.read_csv(location / 'outer_predictions.csv.gz'))
-        from algorithms.tabm.check_results import check
+        from models.tabm.check_results import check
         checked = check(self.output, package=package)
         self.assertTrue(checked['requested_scope_complete'])
         self.assertEqual(checked['completed_inner_checkpoints_verified'], 9)
@@ -262,7 +263,7 @@ class TabMExperimentTests(unittest.TestCase):
     def test_full_plan_claim_requires_all_folds_controls_repeats_and_epochs(self):
         fake_torch = SimpleNamespace(cuda=SimpleNamespace(is_available=lambda: False))
         with patch.dict(sys.modules, {'torch': fake_torch}), patch(
-                'algorithms.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
+                'models.tabm.run_experiment.importlib.metadata.version', return_value='test-version'):
             full = self.args(epochs=100, repeats=3, outer_folds=list(range(10)), variants=VARIANTS)
             self.assertTrue(run_signature(full, self.package)['protocol_complete_requested'])
             full.variants = ['A', 'B', 'C', 'D']
@@ -287,17 +288,17 @@ class TabMExperimentTests(unittest.TestCase):
             changed = signature | {key: value}
             self.assertFalse(compatible_signature(self.output, output, saved, changed))
         changed = json.loads(json.dumps(signature))
-        changed['code']['algorithms/tabm/model.py'] = 'changed-model-hash'
+        changed['code']['models/tabm/model.py'] = 'changed-model-hash'
         self.assertFalse(compatible_signature(self.output, output, saved, changed))
         path.write_text(path.read_text().replace('weight * 2', 'weight * 3'), encoding='utf-8')
-        signature['code'][RUNNER_SOURCE] = source_sha256(path)
+        signature['code'][active_source_name(RUNNER_SOURCE)] = source_sha256(path)
         self.assertFalse(compatible_signature(self.output, output, saved, signature))
 
     def test_layout_migration_requires_original_evidence_and_exact_guard_call(self):
         output, path, snapshot, saved, signature = layout_source_fixture(self.output)
         path.write_text(path.read_text().replace('if not compatible_signature(', 'if compatible_signature('),
                         encoding='utf-8')
-        signature['code'][RUNNER_SOURCE] = source_sha256(path)
+        signature['code'][active_source_name(RUNNER_SOURCE)] = source_sha256(path)
         self.assertFalse(compatible_signature(self.output, output, saved, signature))
         output, path, snapshot, saved, signature = layout_source_fixture(self.output)
         snapshot.unlink()
@@ -306,7 +307,7 @@ class TabMExperimentTests(unittest.TestCase):
     def test_os_lock_prevents_second_process_then_allows_resume(self):
         source = (
             'from pathlib import Path; '
-            'from algorithms.tabm.run_experiment import output_lock; '
+            'from models.tabm.run_experiment import output_lock; '
             'import sys; '
             'context=output_lock(Path(sys.argv[1])); '
             'context.__enter__(); context.__exit__(None,None,None)'
