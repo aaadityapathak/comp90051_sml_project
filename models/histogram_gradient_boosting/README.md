@@ -3,15 +3,17 @@
 
 ## 1. Purpose
 
-This model investigates nonlinear relationships and feature interactions for binary atrial fibrillation (AFIB) classification using Histogram Gradient Boosting (HGB).
+This project investigates nonlinear relationships and feature interactions for binary atrial fibrillation (AFIB) classification using Histogram Gradient Boosting (HGB).
 
-We evaluate model performance under observed ECG conditions and under several types of signal corruption, including missing leads, noise, gain changes, and combined corruption.
+We evaluate classification performance under observed ECG conditions and robustness to missing leads, noise, gain changes, and combined corruption.
+
+The updated main experiments use a retuned maximum-depth search grid of `[7, 8, 9]`.
 
 ## 2. Model Implementation
 
 **Estimator:** `HistGradientBoostingClassifier`
 
-The original model implementation uses the following fixed hyperparameters:
+The HGB implementation uses the following fixed hyperparameters:
 
 | Hyperparameter | Value |
 |---|---|
@@ -27,7 +29,11 @@ The original model implementation uses the following fixed hyperparameters:
 
 **Selection metric:** Mean inner-validation Macro-F1
 
+**Classification threshold:** 0.50
+
 **Prediction identifier:** `hist_gradient_boosting`
+
+The same model implementation is used across the four experimental arms, with maximum depth selected separately for each outer fold.
 
 ## 3. Experimental Arms
 
@@ -40,53 +46,80 @@ Four experimental arms are evaluated:
 | C | Original ECG features | Yes |
 | D | Original and engineered ECG features | Yes |
 
-All arms follow the shared patient-grouped cross-validation splits and fold-specific preprocessing workflow.
+The original feature representation contains 504 lead-related features.
 
-For augmented arms, training-data corruption is applied to additional training copies. The held-out test folds are not used during model fitting or hyperparameter selection.
+The enhanced representation adds 63 engineered features.
+
+For Arms C and D, one corrupted training copy is added per original training recording, with the total training weight preserved across the two views.
+
+All arms use the same patient-grouped outer-fold assignments and fold-specific preprocessing.
+
+The held-out outer folds are never used for fitting the model or selecting hyperparameters.
 
 ## 4. Cross-Validation and Hyperparameter Tuning
 
-The experiments use:
+The experimental design uses:
 
 - 10 outer patient-grouped folds for evaluation
-- 3 inner folds per outer fold for hyperparameter selection
+- 3 inner patient-grouped folds for hyperparameter selection
 - Macro-F1 as the primary selection and evaluation metric
-- Fold-specific preprocessing to avoid using held-out statistics during training
+- Training-fold-specific preprocessing
+- Fold-specific hyperparameter selection
 
-### 4.1 Initial Hyperparameter Search
+### 4.1 Earlier HGB Experiments
 
-The original HGB experiment used:
+The initial HGB search used:
 
 - Initial `max_depth` grid: `[2, 3, 4]`
-- Additional boundary refinement: depth `5`
+- Additional boundary refinement that could extend the upper depth to `5`
 
-The earlier tuning results frequently selected the upper boundary of the search range, motivating an expanded search.
+In the earlier experiment, depth 5 was reported as the selected value in all 40 main arm-fold runs.
 
-The original experiments and previously reported results are retained as historical records.
+This boundary-selection pattern motivated further investigation of deeper trees.
 
-### 4.2 Retuned Hyperparameter Search
+The earlier experiments and their reported results are retained as historical records.
 
-The updated experiments use:
+### 4.2 Retuned HGB Experiments
+
+The completed retuned experiments use the fixed candidate grid:
 
 `max_depth = [7, 8, 9]`
 
-For each outer fold, the best maximum depth is selected based on the mean Macro-F1 across the three corresponding inner-validation folds.
+For each outer fold:
 
-The selected depth is then used to fit the model on the outer-training data and evaluate it on the held-out outer fold.
+1. Each candidate depth is evaluated on the three inner-validation folds.
+2. Mean inner-validation Macro-F1 is calculated for each candidate.
+3. The candidate with the highest mean Macro-F1 is selected.
+4. Exact ties favour the smaller maximum depth.
+5. The selected model is fitted on the full outer-training partition.
+6. The fitted model is evaluated on the held-out outer fold.
 
-The updated experiments have been completed for all four arms (A, B, C, and D).
+Across the 40 main arm-fold runs, the selected-depth frequencies were:
 
-The retuned results are available at:
+| Maximum Depth | Selection Count |
+|---|---:|
+| 7 | 10 |
+| 8 | 15 |
+| 9 | 15 |
+| **Total** | **40** |
+
+The middle candidate, depth 8, was tied with depth 9 for the highest selection frequency.
+
+This result is reported as observed rather than forcing any candidate to be selected more frequently.
+
+All four arms completed 10 outer-fold evaluations using the retuned configuration.
+
+The completed results are stored at:
 
 [Retuned HGB Results](../../results/histogram_gradient_boosting/retuned_7_8_9/)
 
 ## 5. Evaluation Scenarios
 
-Each model is evaluated under 11 scenarios:
+Each outer-fold model is evaluated under 11 scenarios.
 
 | Scenario | Description |
 |---|---|
-| `observed` | Original observed ECG data |
+| `observed` | Observed ECG data |
 | `missing_1` | One missing ECG lead |
 | `missing_3` | Three missing ECG leads |
 | `missing_6` | Six missing ECG leads |
@@ -102,17 +135,19 @@ The observed scenario is evaluated once per outer fold.
 
 Each corruption scenario is evaluated with three repeats.
 
-This produces:
+Therefore:
 
-- 31 evaluation records per outer fold
-- 310 evaluation records per experimental arm
-- 1,240 evaluation records across all four arms
+- 31 evaluation records are generated per outer fold.
+- 310 evaluation records are generated per arm.
+- 1,240 evaluation records are generated across the four arms.
+
+All corruption scenarios are evaluated on the held-out outer-fold data after the model has been fitted.
 
 ## 6. Final Retuned Results
 
 ### 6.1 Observed ECG Performance
 
-The following results are reported as the mean and sample standard deviation of Macro-F1 across the 10 outer folds.
+The following values are the mean and sample standard deviation of Macro-F1 across 10 outer folds.
 
 | Arm | Mean Macro-F1 | Standard Deviation |
 |---|---:|---:|
@@ -121,9 +156,11 @@ The following results are reported as the mean and sample standard deviation of 
 | C | 0.918543 | 0.013281 |
 | D | 0.917408 | 0.013316 |
 
-Arm B achieves the highest mean Macro-F1 under observed conditions, although its improvement over Arm A is very small.
+Arm B achieved the highest mean Macro-F1 under observed ECG conditions.
 
-The augmented models (Arms C and D) have slightly lower observed-data performance than their corresponding non-augmented models.
+However, the difference between Arms A and B was very small.
+
+Arms C and D had slightly lower observed-data performance than their corresponding non-augmented arms.
 
 ### 6.2 Performance Under Six Missing Leads
 
@@ -134,49 +171,113 @@ The augmented models (Arms C and D) have slightly lower observed-data performanc
 | C | 0.918543 | **0.895531** | **0.023012** |
 | D | 0.917408 | 0.882679 | 0.034729 |
 
-The augmented models (Arms C and D) retain substantially higher Macro-F1 scores when six ECG leads are missing.
+Arms C and D retained considerably higher Macro-F1 when six leads were missing.
 
-In contrast, Arms A and B show larger performance reductions.
+Arm C achieved the highest mean Macro-F1 under this severe missing-lead condition.
 
-This suggests that training augmentation improves robustness to severe missing-lead corruption, with a small trade-off in observed-data performance.
+The results suggest that training augmentation substantially improves robustness to severe missing-lead corruption, while introducing a small trade-off in observed-data performance.
 
-These values describe the experimental results and do not independently establish statistical significance.
+These are descriptive findings based on the evaluated outer folds. The summary means alone do not establish statistical significance.
+
+### 6.3 General Robustness Findings
+
+The experiments also considered lower levels of lead missingness, additive noise, gain variation, and combined corruption.
+
+All 11 scenario results are provided in:
+
+`HGB_ABCD_scenario_summary.csv`
+
+The corresponding performance changes relative to observed conditions are provided in:
+
+`HGB_ABCD_stress_drops.csv`
+
+Different corruption scenarios are reported separately rather than combined into a single overall robustness score.
 
 ## 7. Results Aggregation
 
-For each corrupted scenario, the three repeated evaluations are first averaged within each outer fold.
+The same aggregation procedure is applied to all four arms.
 
-The final scenario mean and sample standard deviation are then calculated across the 10 outer folds.
+First, the three repeats of each corruption scenario are averaged within the same outer fold.
 
-Performance drops are computed relative to the observed Macro-F1 from the same outer fold.
+Second, the resulting fold-level scores are summarized across the 10 outer folds.
 
-Paired method comparisons use matching outer folds and evaluation scenarios.
+The final results report:
+
+- Mean Macro-F1
+- Sample standard deviation across outer folds
+- Scenario-specific performance changes
+- Paired differences between arms using matching outer folds
+
+The observed scenario contains one evaluation per outer fold and does not require repeat averaging.
+
+Standard deviations describe variation across the evaluated folds. They are not confidence intervals.
 
 ## 8. Retuned Result Files
 
-The completed main-experiment results are stored under:
+The main results are stored under:
 
 `results/histogram_gradient_boosting/retuned_7_8_9/`
 
+### 8.1 Main Evaluation Results
+
 | File | Description |
 |---|---|
-| `A_selected_depths.csv` | Selected depths for Arm A |
-| `B_selected_depths.csv` | Selected depths for Arm B |
-| `C_selected_depths.csv` | Selected depths for Arm C |
-| `D_selected_depths.csv` | Selected depths for Arm D |
+| `A_selected_depths.csv` | Selected maximum depth for each Arm A outer fold |
+| `B_selected_depths.csv` | Selected maximum depth for each Arm B outer fold |
+| `C_selected_depths.csv` | Selected maximum depth for each Arm C outer fold |
+| `D_selected_depths.csv` | Selected maximum depth for each Arm D outer fold |
 | `HGB_ABCD_all_metrics.csv` | All 1,240 evaluation records |
-| `HGB_ABCD_fold_scenario_means.csv` | Mean metrics per outer fold and scenario |
-| `HGB_ABCD_scenario_summary.csv` | Across-fold means and standard deviations |
-| `HGB_ABCD_stress_drops.csv` | Performance changes relative to observed conditions |
-| `HGB_ABCD_paired_differences.csv` | Descriptive paired differences between experimental arms |
+| `HGB_ABCD_fold_scenario_means.csv` | Fold-level scenario means |
+| `HGB_ABCD_scenario_summary.csv` | Scenario means and sample standard deviations |
+| `HGB_ABCD_stress_drops.csv` | Performance changes relative to observed data |
+| `HGB_ABCD_paired_differences.csv` | Descriptive paired differences between arms |
 
-The individual outer-fold outputs and predictions were generated and checked before aggregation.
+### 8.2 Complete Inner-Cross-Validation Records
 
-The consolidated metrics listed above are the primary published artifacts for the retuned main experiments.
+The retuned experiments produced 360 inner-validation tuning records:
+
+`4 arms × 10 outer folds × 3 candidate depths × 3 inner folds = 360 records`
+
+The consolidated tuning file is:
+
+`HGB_ABCD_all_inner_tuning.csv`
+
+The complete table was reconstructed from retained fold-level tuning files and previously saved inner-CV records.
+
+All 40 selected maximum depths were checked against the mean inner-validation Macro-F1 values.
+
+This file provides the complete candidate-score evidence supporting the selected depths.
+
+### 8.3 Per-Sample Predictions
+
+The completed experiments also generated per-sample prediction records for all four arms.
+
+Each record identifies:
+
+- Experimental arm
+- Outer fold
+- Evaluation scenario
+- Corruption repeat
+- ECG identifier
+- True classification label
+- Predicted AFIB probability
+
+The corresponding local prediction files are:
+
+- `A_all_predictions.csv`
+- `B_all_predictions.csv`
+- `C_all_predictions.csv`
+- `D_all_predictions.csv`
+
+These files contain approximately 675,769 prediction rows per arm.
+
+The complete prediction CSV files were retained locally for verification and can be published separately as an archive, subject to repository size and data-sharing requirements.
+
+The historical `HGB_all_predictions.7z` file should not be treated as the new retuned prediction archive.
 
 ## 9. Earlier Reported Results
 
-The earlier HGB experiment reported the following observed-data results:
+The earlier HGB experiments reported:
 
 | Arm | Earlier Mean Macro-F1 | Earlier SD |
 |---|---:|---:|
@@ -185,68 +286,141 @@ The earlier HGB experiment reported the following observed-data results:
 | C | 0.9156 | 0.0122 |
 | D | 0.9179 | 0.0126 |
 
-These are historical reported values from the earlier maximum-depth search configuration.
+These values are retained as historical reported results from the earlier hyperparameter-search configuration.
 
-The original checkout did not contain a complete raw result bundle sufficient to independently verify all earlier scores.
+The original repository checkout did not contain a complete raw result bundle sufficient to independently recalculate all earlier metrics.
 
-The earlier HGB report is retained here:
+The historical report remains available at:
 
 [Original HGB Report](../../results/histogram_gradient_boosting/source_provenance/reported_summary.docx)
 
-The earlier reported results should not be mixed with the retuned `[7, 8, 9]` results.
+The earlier reported values are not mixed with the retuned `[7, 8, 9]` evaluation results.
 
 ## 10. Execution and Reproducibility
 
-### Original Repository Workflow
+### 10.1 Original Repository Workflow
 
-Install the HGB requirements from the project root:
+The original experiment runner is retained:
+
+`models/histogram_gradient_boosting/run_experiment.py`
+
+The original runner uses the earlier depth-search procedure and should not be assumed to reproduce the retuned experiments.
+
+### 10.2 Retuned Experiment Runner
+
+A separate retuned experiment runner is available:
+
+`models/histogram_gradient_boosting/run_experiment_retuned.py`
+
+It uses the fixed maximum-depth grid `[7, 8, 9]`.
+
+Install the retuned HGB dependencies from the project root:
 
 ```bash
-python -m pip install -r models/histogram_gradient_boosting/requirements.txt
+python -m pip install -r models/histogram_gradient_boosting/requirements_retuned.txt
 ```
 
-Run the original HGB experiment script:
+Run the retuned experiment:
 
 ```bash
-python models/histogram_gradient_boosting/run_experiment.py --arms A B C D --outer-folds 0 1 2 3 4 5 6 7 8 9
+python models/histogram_gradient_boosting/run_experiment_retuned.py --arms A B C D --outer-folds 0 1 2 3 4 5 6 7 8 9
 ```
 
-The original script expects the shared `processed_data` input package.
+The runner saves outputs in a separate location:
 
-**Important:** This is the original repository execution workflow. The existing runner must be checked or updated before claiming that this command reproduces the retuned `[7, 8, 9]` experiments.
+`results/histogram_gradient_boosting/retuned_7_8_9_runs/`
 
-### Retuned Experiment Reproducibility
+This command trains the requested models and performs inner cross-validation again. It can require substantial computing time.
 
-The retuned results use:
+The completed experimental summaries are already published separately under:
 
-- The shared processed ECG feature package
-- The same patient-grouped outer-fold assignments
-- Three inner folds for selecting the best depth
-- `max_depth` grid `[7, 8, 9]`
-- The same 11 evaluation scenarios
-- Three corruption repeats per scenario
-- scikit-learn version 1.3.0
+`results/histogram_gradient_boosting/retuned_7_8_9/`
 
-The updated experiments were completed across multiple computing environments and consolidated into a single result set.
+The new runner was added to document the retuned execution procedure. An independent full end-to-end reproduction of all 40 arm-fold runs through this repository script has not yet been performed.
 
-The following consistency checks were applied to the retuned main experiments:
+### 10.3 Retuned Experiment Environment
 
-- All 10 outer folds present for each arm
-- Correct selected maximum depths
-- Exactly 31 scenario evaluations per outer fold
-- No duplicate arm/fold/scenario/repeat metric records
-- Complete consolidated metrics for all four arms
+The completed retuned HGB experiments used the following principal package versions:
 
-The original `check_results.py` applies to the existing repository workflow and has not been confirmed to operate directly on the separate retuned result directory.
+| Software | Version |
+|---|---|
+| scikit-learn | 1.3.0 |
+| NumPy | 1.24.3 |
+| Pandas | 2.0.3 |
+| SciPy | 1.11.4 |
+| Python | 3.10 or 3.11, depending on the computing environment |
 
-The HGB results notebook is available at:
+The package versions for the retuned experiments are documented in:
+
+`models/histogram_gradient_boosting/requirements_retuned.txt`
+
+The original requirements file is retained for the historical workflow.
+
+The retuned experiments were completed across multiple computing environments, and their results were subsequently consolidated into a single set of evaluation files.
+
+The documented package versions are the primary dependencies used for the completed runs, rather than a full historical environment snapshot.
+
+Exact numerical reproduction across different hardware, operating systems, and Python versions has not been independently established.
+
+### 10.4 Result Validation
+
+The following consistency checks were completed:
+
+- All four experimental arms were present.
+- All 10 outer folds were present for each arm.
+- Each outer fold contained 31 evaluation records.
+- All selected depths belonged to the grid `[7, 8, 9]`.
+- No duplicated arm/fold/scenario/repeat metric records were found.
+- All 1,240 main evaluation records were consolidated.
+- All 360 inner-validation tuning records were recovered and validated.
+- The selected depth for every arm-fold combination matched its inner-CV results.
+
+The original `check_results.py` applies to the earlier repository workflow and has not been confirmed to operate directly on the retuned result directory.
+
+The original HGB results notebook is available at:
 
 [HGB Results Notebook](../../notebooks/06_histogram_gradient_boosting_results.ipynb)
 
-## 11. Notes
+This notebook may contain historical results and should not be assumed to display the retuned results without inspection or updating.
 
-The retuned `[7, 8, 9]` experiments represent the updated HGB main-experiment results.
+## 11. Limitations and Future Improvements
 
-The earlier maximum-depth search and its reported results remain documented for transparency and traceability.
+### Hyperparameter Search
 
-The experiment results should be interpreted with attention to the trade-off between observed-data performance and robustness under corrupted ECG conditions.
+The retuned experiments evaluated only maximum depths `[7, 8, 9]`.
+
+Other parameters, including learning rate, maximum leaf nodes, and number of boosting iterations, were held fixed.
+
+Further tuning could investigate a broader model-capacity and regularization search under a clearly defined computational budget.
+
+### Augmentation Trade-off
+
+Training augmentation improved robustness to severe missing-lead corruption but slightly reduced observed-data Macro-F1 in the evaluated experiments.
+
+Future work could explore augmentation mixtures and corruption strengths selected exclusively using inner-validation data.
+
+### Statistical Inference
+
+The reported results are descriptive summaries of the evaluated folds.
+
+Although paired differences are available, formal statistical significance claims require additional analysis and consideration of dependence between cross-validation folds.
+
+### Generalization
+
+Patient-grouped cross-validation reduces leakage between records from the same patient.
+
+However, it does not establish external clinical validity or robustness to every possible ECG measurement failure.
+
+## 12. Conclusion
+
+The retuned HGB experiments demonstrate a trade-off between observed-data classification performance and robustness under missing-lead corruption.
+
+Arm B achieved the highest observed-data mean Macro-F1 of 0.924355.
+
+Arm C achieved the highest mean Macro-F1 under six missing leads, reaching 0.895531.
+
+The augmented models maintained considerably stronger performance under severe lead missingness, whereas the non-augmented models achieved slightly better observed-data results.
+
+The updated repository records the selected maximum depths, complete inner-validation tuning scores, consolidated metrics, and the documented experimental configuration.
+
+The historical HGB results are retained separately for transparency and traceability.
