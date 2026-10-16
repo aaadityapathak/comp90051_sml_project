@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'src'))
 from afib.data_preparation import load_prepared_split
+from afib.paths import processed_directory
 from afib.evaluation import binary_metrics
 from afib.preprocessing import SCENARIOS
 from models.histogram_gradient_boosting.model import create_model
@@ -36,7 +37,7 @@ def inner_scores(arm, outer, depths, cache):
     for depth in depths:
         for inner in range(3):
             if inner not in cache:
-                cache[inner] = load_prepared_split(ROOT / 'processed_data', outer_fold=outer,
+                cache[inner] = load_prepared_split(processed_directory(ROOT), outer_fold=outer,
                                                   inner_fold=inner, arm=arm)
             split = cache[inner]
             model = create_model(max_depth=int(depth))
@@ -78,7 +79,7 @@ def run_one(arm, outer, output, refine=True, repeats=3, scenario_names=None):
     pd.DataFrame(tuning).to_csv(folder / 'inner_tuning.csv', index=False)
     del cache
 
-    base = load_prepared_split(ROOT / 'processed_data', outer_fold=outer,
+    base = load_prepared_split(processed_directory(ROOT), outer_fold=outer,
                                inner_fold=None, arm=arm, scenario='observed')
     model = create_model(max_depth=winner)
     model.fit(base['X_train'], base['y_train'], sample_weight=base['sample_weight'])
@@ -91,7 +92,7 @@ def run_one(arm, outer, output, refine=True, repeats=3, scenario_names=None):
         repeat_ids = [0] if scenario == 'observed' else list(range(repeats))
         for repeat in repeat_ids:
             split = base if scenario == 'observed' else load_prepared_split(
-                ROOT / 'processed_data', outer_fold=outer, inner_fold=None,
+                processed_directory(ROOT), outer_fold=outer, inner_fold=None,
                 arm=arm, scenario=scenario, repeat=repeat)
             if not np.array_equal(split['y_valid'].index.to_numpy(), ids):
                 raise RuntimeError('Held-out ECG order changed between scenarios.')

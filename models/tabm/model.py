@@ -3,7 +3,7 @@
 Train each of the 16 members with BCE, average losses within a record, and
 then apply the class/view weight supplied by the shared input workflow. At
 inference, average member probabilities, not logits. Architecture reference:
-https://github.com/yandex-research/tabm (pinned in algorithms/tabm/requirements.txt).
+https://github.com/yandex-research/tabm (pinned in models/tabm/requirements.txt).
 """
 from importlib.metadata import version
 from pathlib import Path

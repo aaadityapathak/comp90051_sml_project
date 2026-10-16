@@ -289,7 +289,7 @@ def main(argv=None):
         args.device = 'cpu' if args.devices == ['cpu'] else 'cuda'
         if args.device == 'cpu' and args.gpu_memory_fraction is not None:
             raise ValueError('--gpu-memory-fraction requires a CUDA device.')
-        package = serial.load_processed_data(PROJECT / 'processed_data')
+        package = serial.load_processed_data(serial.processed_directory(PROJECT))
         ensure_signature(args, parallel_signature(args, package))
         options = vars(args).copy()
         options['output'] = str(args.output)

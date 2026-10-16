@@ -1,12 +1,32 @@
 # Histogram gradient boosting results
 
-Implementation: [`models/histogram_gradient_boosting/`](../../models/histogram_gradient_boosting/).
-The historical [reported summary](source_provenance/reported_summary.docx)
-contains four-arm, ten-fold results transcribed from prior output. Its raw
-prediction and tuning bundle is absent from this checkout. Those scores are
-reported evidence, not independently recalculated results.
+The current completed experiment is in [`retuned7_8_9/`](retuned7_8_9/).
+It uses maximum-depth candidates `[7, 8, 9]`, ten patient-separated outer
+folds, three inner folds, and arms A-D. See the
+[implementation guide](../../models/histogram_gradient_boosting/README.md)
+and [current report](../../report/COMP90051_Final_Report.pdf).
 
-The runner and checker now use `formal/` beneath this folder. Fresh runs can
-generate the missing artifacts; none were regenerated during this cleanup.
-The [observations](../../docs/Histogram_Gradient_Boosting_Observations.md) explain
-the reported winner, tuning scope, missing evidence and next experiments.
+| File(s) | Contents |
+| --- | --- |
+| `HGB_ABCD_all_metrics.csv` | 1,240 fold/scenario/repeat metric rows |
+| `HGB_ABCD_all_inner_tuning.csv` | 360 inner-fold scores: four arms x ten outer folds x three depths x three inner folds |
+| `A_selected_depths.csv` through `D_selected_depths.csv` | Selected depth for each arm and outer fold |
+| `HGB_ABCD_fold_scenario_means.csv` | Stress repeats averaged within each fold |
+| `HGB_ABCD_scenario_summary.csv` | Means and sample SD across outer folds |
+| `HGB_ABCD_paired_differences.csv` | Within-model arm comparisons |
+| `HGB_ABCD_stress_drops.csv` | Within-model change from observed conditions |
+| `HGB_retuned_A_predictions.zip` through `HGB_retuned_D_predictions.zip` | Per-record held-out probabilities for all ten folds |
+
+The four top-level `final_*.csv` files retain the earlier HGB experiment.
+The report places those scores next to the retuned results instead of replacing
+them. `source_provenance/reported_summary.docx` is the earlier written summary;
+it predates the newly supplied prediction and tuning evidence. The redundant
+`retuned789/` directory contained nine byte-identical copies of current CSVs
+and has been removed.
+
+Run `python models/histogram_gradient_boosting/check_results.py` to independently
+recompute all 1,240 metric rows from 2,703,076 predictions and verify the 360
+inner-fold scores and 40 selected depths. No source dataset is required.
+`python report/analyze_results.py` regenerates the report comparisons.
+Historical code/evidence in `models/histogram_gradient_boosting/` is retained
+for traceability.

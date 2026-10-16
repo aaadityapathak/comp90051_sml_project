@@ -1,3 +1,5 @@
+> Earlier comparison: the [current four-page report](../report/COMP90051_Final_Report.pdf) adds the newly delivered HGB predictions and depth-7/8/9 tuning results alongside these original findings.
+
 # Algorithm result comparison
 
 TabM D has the best primary observed macro F1 among the main arms and the strongest reported six-lead-loss F1. LR and TabM have saved evidence that can be checked; HGB is represented by a historical summary, so the three-model ranking is descriptive and provisional.

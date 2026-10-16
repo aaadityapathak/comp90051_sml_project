@@ -10,7 +10,7 @@ The completed local run is recorded in `results/logistic_regression/reports/comp
 | Fixed settings | L2 penalty, intercept, L-BFGS, maximum 2,000 iterations |
 | Prediction identifier | `logistic_regression` |
 
-Load each training/validation partition from `processed_data/` through the
+Load each training/validation partition from the external prepared-data package through the
 [shared input workflow](../README.md). Use returned sample weights and resolve
 convergence warnings before comparing scores. Fit all four A-D arms.
 
@@ -19,6 +19,9 @@ with original features and observed-only training. Keep it separate from the
 main A-D comparison and follow the project plan.
 
 ## Run
+
+Prepared inputs default to `../afib_data/processed`. Set `AFIB_PROCESSED_DIR`
+to use a different location; the same setting is used by the runner and checker.
 
 From the project root using Python 3.12. The historical fit used Python 3.12.15,
 NumPy 2.5.3, pandas 3.0.6 and SciPy 1.18.1; these differ from TabM's environment.
@@ -118,7 +121,7 @@ results/logistic_regression/
   source_provenance/       # preserved evidence for the historical full run
   output_data/
     *.csv
-    folds/                # predictions, fitted pipelines and per-fold audits
+    folds/                # predictions and per-fold audits (pipelines are local)
   reports/
     completion.json
     *.png
@@ -137,7 +140,8 @@ results/logistic_regression/
 - `reliability.csv`: ten probability bins per fold/condition, for calibration plots.
 - `selected_hyperparameters.csv`, `tuning.csv`: grid searches and middle selections.
 - `recovery*.csv`: eligible-field MAE, training-IQR-scaled errors, coverage and groups.
-- `folds/`: inner/outer predictions, model/preprocessor pickles and audits.
+- `folds/`: inner/outer predictions and audits. Training also writes local
+  model/preprocessor pickles; these are excluded from the submission.
 
 `reports/` contains `completion.json` and `macro_f1.png`, `sensitivity.png`,
 `brier.png`: means with outer-fold SD bars. The existing `run_config.json` and
@@ -162,6 +166,16 @@ SciPy optimizer reference: https://docs.scipy.org/doc/scipy/reference/optimize.m
 ```powershell
 python models/logistic_regression/check_results.py
 ```
+
+Rebuild the three robustness figures from the saved summary alone:
+
+```powershell
+python models/logistic_regression/plot_results.py
+```
+
+This writes `results/figures/logistic_regression/{macro_f1,sensitivity,brier}.png`.
+It requires no source data, model checkpoint or training. Use `--destination`
+to choose another figure folder; the recorded run's figures remain intact.
 
 This command checks saved probabilities, patient separation, tuning choices,
 thresholds, metrics and fold summaries. It does not fit a classifier. To view the

@@ -1,3 +1,5 @@
+> Supplementary analysis: see the [current four-page report](../report/COMP90051_Final_Report.pdf) for the latest three-model comparison, including retuned HGB. Earlier evidence-availability statements describe the original analysis.
+
 # TabM observations
 
 Best main arm: D, observed F1 0.9395 (0.0122) and six-lead-loss F1 0.9142. The duplicate-enhanced control has the highest observed mean across all variants, 0.9397 (0.0120), only 0.000231 above D; its six-lead-loss F1 is 0.7555. D is the stronger choice when missing-lead robustness matters.

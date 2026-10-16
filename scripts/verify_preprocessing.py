@@ -15,11 +15,12 @@ PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT / 'src'))
 from afib.data_preparation import _write_package, load_source_data, make_patient_folds
 from afib.preprocessing import SEED
+from afib.paths import data_directory, processed_directory
 
 
-def verify(project=PROJECT):
+def verify(project=PROJECT, *, data_dir=None, processed_dir=None):
     project = Path(project).resolve()
-    source = load_source_data(project)
+    source = load_source_data(project, data_dir=data_dir)
     folds = make_patient_folds(source['targets'])
     runtime = project / '.runtime'
     runtime.mkdir(exist_ok=True)
@@ -31,7 +32,7 @@ def verify(project=PROJECT):
         rebuilt = _write_package(destination, source, folds, 10, 3, SEED)
         comparisons = {}
         expected_manifests = {
-            'processed_data': json.loads((project / 'processed_data/manifest.json').read_text(encoding='utf-8')),
+            'processed_data': json.loads((Path(processed_dir or processed_directory(project)) / 'manifest.json').read_text(encoding='utf-8')),
         }
         for model in ('logistic_regression', 'tabm'):
             config = json.loads((project / 'results' / model / 'run_config.json').read_text(encoding='utf-8'))
@@ -55,8 +56,10 @@ def verify(project=PROJECT):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--save', type=Path, help='Optional JSON verification report.')
+    parser.add_argument('--data-dir', type=Path, default=data_directory(PROJECT))
+    parser.add_argument('--processed-dir', type=Path, default=processed_directory(PROJECT))
     args = parser.parse_args(argv)
-    result = verify()
+    result = verify(data_dir=args.data_dir, processed_dir=args.processed_dir)
     text = json.dumps(result, indent=2) + '\n'
     if args.save:
         args.save.parent.mkdir(parents=True, exist_ok=True)

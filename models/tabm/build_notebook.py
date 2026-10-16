@@ -26,13 +26,13 @@ def main():
     16 members, dropout 0.1, no numerical embeddings, AdamW learning rate 0.0003,
     weight decay 0.0001, batches of 256 and **100 epochs per fit**. Choose mean observed
     inner macro-F1, with simpler ties and at most one endpoint grid refinement.
-    Aâ€“D and four availability/duplicate controls are included. A full run requires
+    A-D and four availability/duplicate controls are included. A full run requires
     at least 800 fits and can take several days on a laptop GPU.
 
-    Select the repository's `.venv` Python kernel. `RUN_TRAINING` defaults to false,
+    Select the Python environment containing the TabM requirements. `RUN_TRAINING` defaults to false,
     so Run All inspects saved results. Set `TABM_RUN_TRAINING=1` before launching
     Jupyter, or explicitly set `RUN_TRAINING=True`, to start/resume training.
-    The saved outputs are a dated snapshot, not evidence that missing folds have completed.
+    The saved completion report records fold coverage; check it before interpreting results.
     ''')
     cell('code', '''
     from pathlib import Path
@@ -153,11 +153,9 @@ def main():
             break
     ''')
     cell('code', '''
-    # Checks only available completed folds in inspection mode; full runs must pass strict checks.
+    # Verify all requested folds before interpreting a complete experiment.
     command = [sys.executable, str(PROJECT / 'models/tabm/check_results.py'),
                '--output', str(OUTPUT)]
-    if not RUN_TRAINING:
-        command.append('--allow-partial')
     if (OUTPUT / 'run_config.json').exists():
         checked = subprocess.run(command, cwd=PROJECT, text=True, capture_output=True)
         print(checked.stdout)
@@ -168,7 +166,7 @@ def main():
     cell('markdown', '''
     ## Interpretation and sources
 
-    Compare Bâˆ’A and Dâˆ’C for added feature values, Câˆ’A and Dâˆ’B for augmentation,
+    Compare B-A and D-C for added feature values, C-A and D-B for augmentation,
     and the availability/duplicate controls before attributing an improvement.
     Error bars describe variation across dependent outer folds; they are not
     clinical confidence intervals. Missing extracted measurements do not simulate

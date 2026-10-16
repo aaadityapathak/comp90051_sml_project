@@ -3,6 +3,8 @@
 Use --write-manifests once after independently validating deliberately refreshed
 results. The default verifies the recorded inventory and SHA-256 file bytes.
 This is an integrity check, not a substitute for either model's check_results.py.
+Submission copies may omit LR fitted pipelines and TabM's local course-coverage
+audit; both exclusions are reported explicitly against the unchanged manifest.
 """
 from __future__ import annotations
 
@@ -117,14 +119,36 @@ def check_manifest(output, model, write=False):
         saved = read_json(target)
         old_files, new_files = saved.get('files', {}), current['files']
         changed = sorted(name for name in old_files.keys() & new_files.keys() if old_files[name] != new_files[name])
-        missing, extra = sorted(old_files.keys() - new_files.keys()), sorted(new_files.keys() - old_files.keys())
+        # Fitted LR pipelines contain learned arrays and are unnecessary for
+        # checking saved predictions. A submission may omit these local resume
+        # files while retaining the original manifest as the historical record.
+        optional_models = {name for name in old_files if model == 'logistic_regression'
+                           and len(Path(name).parts) == 4
+                           and Path(name).parts[:2] == ('output_data', 'folds')
+                           and Path(name).name == 'pipeline.pkl'}
+        omitted_models = sorted((old_files.keys() - new_files.keys()) & optional_models)
+        # This syllabus keyword audit records personal course-file locations;
+        # it is unrelated to model predictions, metrics or experiment coverage.
+        optional_ancillary = {'reports/course_coverage.json'} if model == 'tabm' else set()
+        omitted_ancillary = sorted((old_files.keys() - new_files.keys()) & optional_ancillary)
+        missing = sorted(old_files.keys() - new_files.keys() - optional_models - optional_ancillary)
+        extra = sorted(new_files.keys() - old_files.keys())
         require(not (changed or missing or extra), f'{model}: artifact integrity failed; changed={changed[:10]}, missing={missing[:10]}, extra={extra[:10]}')
-        require(saved == current, f'{model}: manifest metadata differs')
+        comparable = dict(saved)
+        omitted = set(omitted_models + omitted_ancillary)
+        if omitted:
+            comparable['files'] = {name: record for name, record in old_files.items() if name not in omitted}
+            comparable['file_count'] = len(comparable['files'])
+            comparable['total_bytes'] = sum(record['bytes'] for record in comparable['files'].values())
+        require(comparable == current, f'{model}: manifest metadata differs')
     return {'model': model, 'status': 'manifest_written' if write else 'passed',
             'files': current['file_count'], 'bytes': current['total_bytes'],
             'outer_fold_variants': current['completed_outer_fold_variants'],
             'fits': current['fits_recorded'], 'datasets_required': False,
-            'model_training_performed': False}
+            'model_training_performed': False,
+            'omitted_local_fitted_models': 0 if write else len(omitted_models),
+            'omitted_ancillary_audits': [] if write else omitted_ancillary,
+            'original_manifest_modified': bool(write)}
 
 
 def compare_git_index(project, paths, index, object_format):
@@ -156,7 +180,7 @@ def check_git_index(results, models):
             if stage == '0':
                 index[name] = object_id
     # The staged attributes must preserve these bytes on a future checkout too.
-    paths, data_names, expected_data = [project / '.gitattributes'], set(), {}
+    paths, data_names = [project / '.gitattributes'], set()
     for model in models:
         output = (results / model).resolve()
         paths.extend(artifact_paths(output))
@@ -166,24 +190,12 @@ def check_git_index(results, models):
         names = [source['path'] for source in manifest.get('sources', {}).values()]
         names.extend(f'processed_data/{name}' for name in manifest.get('files', {}))
         names.append('processed_data/manifest.json')
-        expected = {source['path']: source['sha256'] for source in manifest.get('sources', {}).values()}
-        expected.update({f'processed_data/{name}': record['sha256'] for name, record in manifest.get('files', {}).items()})
-        for name, digest in expected.items():
-            require(name not in expected_data or expected_data[name] == digest,
-                    f'Models record different data hashes for {name}')
-            expected_data[name] = digest
-        # Previously tracked data stays tracked even when .gitignore lists it.
-        # A clone whose data was never published is also a supported layout.
+        # .gitignore alone does not remove files that were tracked previously.
+        # A submission index must exclude all raw and prepared dataset files.
         data_names.update(name for name in names if name in index)
-        if 'processed_data/manifest.json' in index:
-            require(read_json(project / 'processed_data/manifest.json') == manifest,
-                    f'{model}: tracked prepared-data manifest differs from the run configuration')
-    for name in data_names:
-        path = project / name
-        require(path.resolve().is_relative_to(project), f'Unsafe tracked input path: {name}')
-        if name in expected_data:
-            require(file_digest(path) == expected_data[name], f'Tracked input differs from recorded run hash: {name}')
-        paths.append(path)
+    data_names.update(name for name in index if name.startswith(('data/', 'processed_data/')))
+    require(not data_names, f'Dataset files remain in the Git index: {sorted(data_names)[:10]}. '
+            'Stage their removal before submitting; keep local datasets outside the repository.')
     compare_git_index(project, paths, index, object_format)
     return {'git_index': 'passed', 'staged_files_checked': len(set(paths)),
             'tracked_input_files_checked': len(data_names), 'files_staged_by_checker': 0}
@@ -195,7 +207,7 @@ def main():
     parser.add_argument('--models', nargs='+', choices=MODELS, default=list(MODELS))
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--write-manifests', action='store_true', help='Record deliberately validated outputs; changes the checksum baseline.')
-    mode.add_argument('--check-git-index', action='store_true', help='After staging, also require identical staged artifact and tracked input bytes; never stages files.')
+    mode.add_argument('--check-git-index', action='store_true', help='After staging, check artifact bytes and ensure datasets are absent; never stages files.')
     args = parser.parse_args()
     try:
         reports = [check_manifest(args.results / model, model, write=args.write_manifests) for model in args.models]

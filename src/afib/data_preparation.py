@@ -1,6 +1,6 @@
 """One portable data package and a shared, leakage-safe model-input loader.
 
-The notebook writes only ``processed_data/``. Learned preparation is delayed
+The notebook writes only an external prepared-data directory. Learned preparation is delayed
 until a training partition is chosen; all three classifiers use the same loader.
 """
 
@@ -14,6 +14,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .paths import data_directory, processed_directory
 from .preprocessing import (
     ARMS, CATEGORY_COLUMNS, RAW_COLUMNS, SCENARIOS, SEED, build_features,
     construct_training_views, perturb_measurements, transform_features,
@@ -44,16 +45,18 @@ def _codes(value):
     return dict(parsed)
 
 
-def load_source_data(project):
+def load_source_data(project, *, data_dir=None):
     """Read and validate local sources without writing or downloading files."""
     project = Path(project).resolve()
-    feature_paths = list((project / 'data').glob('**/features/ecgdeli_features.csv'))
+    raw_directory = Path(data_dir).resolve() if data_dir is not None else data_directory(project)
+    feature_paths = list(raw_directory.glob('**/features/ecgdeli_features.csv'))
     if len(feature_paths) != 1:
-        raise FileNotFoundError('Keep exactly one features/ecgdeli_features.csv under data/.')
+        raise FileNotFoundError(f'Keep exactly one features/ecgdeli_features.csv under {raw_directory}. '
+                                'Set AFIB_DATA_DIR or pass --data-dir to choose the external source folder.')
     paths = {
         'features': feature_paths[0],
         'labels': feature_paths[0].parent.parent / 'labels/ptbxl_statements.csv',
-        'metadata': project / 'data/reference/ptbxl_database.csv',
+        'metadata': raw_directory / 'reference/ptbxl_database.csv',
     }
     features = pd.read_csv(paths['features'])
     labels = pd.read_csv(paths['labels'], usecols=['ecg_id', 'scp_codes'])
@@ -82,7 +85,9 @@ def load_source_data(project):
     raw = raw.replace([np.inf, -np.inf], np.nan)
     targets = pd.DataFrame({'patient_id': metadata.patient_id, 'target_afib': target.astype('int8')})
     quality = metadata.loc[:, QUALITY_COLUMNS].copy()
-    sources = {name: {'path': str(path.relative_to(project)).replace('\\', '/'),
+    # Keep source identifiers independent of a machine's absolute storage path.
+    # The historical data/ prefix is a logical name, resolved by afib.paths.
+    sources = {name: {'path': 'data/' + path.relative_to(raw_directory).as_posix(),
                       'sha256': _sha256(path)} for name, path in paths.items()}
     return {'raw': raw, 'targets': targets, 'metadata': quality, 'sources': sources,
             'checks': {'source_fields': len(features.columns), 'excluded_global_fields': len(extra),
@@ -160,12 +165,15 @@ def _write_package(destination, source, folds, n_outer, n_inner, seed):
     return manifest
 
 
-def prepare_dataset(project):
-    """Create the notebook's sole output folder: ``project/processed_data``."""
+def prepare_dataset(project, *, data_dir=None, processed_dir=None):
+    """Build the five-file input package outside the submitted repository."""
     project = Path(project).resolve()
-    source = load_source_data(project)
+    destination = Path(processed_dir).resolve() if processed_dir is not None else processed_directory(project)
+    if destination.is_relative_to(project):
+        raise ValueError('Prepared data must be outside the repository; choose --processed-dir or AFIB_PROCESSED_DIR.')
+    source = load_source_data(project, data_dir=data_dir)
     folds = make_patient_folds(source['targets'])
-    manifest = _write_package(project / 'processed_data', source, folds, 10, 3, SEED)
+    manifest = _write_package(destination, source, folds, 10, 3, SEED)
     return manifest
 
 

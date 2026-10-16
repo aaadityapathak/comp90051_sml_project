@@ -1,7 +1,8 @@
-"""Rebuild four concise Word/Markdown reports without training any model.
+"""Rebuild the historical supplementary Word/Markdown observations.
 
 LR and TabM use saved result tables. HGB uses the retained historical document;
-its figures are explicitly reported-only because the raw bundle is unavailable.
+this original builder predates the newly supplied HGB metrics and prediction
+archives. Use the report/ sources for the current four-page research report.
 """
 from __future__ import annotations
 import argparse

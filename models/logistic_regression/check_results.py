@@ -11,6 +11,7 @@ import pandas as pd
 PROJECT = Path(__file__).absolute().parents[2]
 sys.path.insert(0, str(PROJECT / 'src'))
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import choose_sensitivity_threshold
 from afib.preprocessing import SCENARIOS
 from source_verification import verify_sources
@@ -57,7 +58,7 @@ def reference_metrics(y, scores, threshold):
 
 
 def check(output):
-    package = load_processed_data(PROJECT / 'processed_data')
+    package = load_processed_data(processed_directory(PROJECT))
     folds = package['folds']
     completion = json.loads((output / 'reports' / 'completion.json').read_text())
     config = json.loads((output / 'run_config.json').read_text())

@@ -1,8 +1,8 @@
 # Selected algorithms
 
-Each folder owns one classifier. Logistic regression and TabM training are
-implemented and their saved results are present. Histogram gradient boosting
-is implemented, but its reported result bundle is missing from this checkout.
+Each folder contains one classifier, its experiment runner, dependency list,
+result checker and model documentation. Completed results are provided for
+logistic regression, TabM and the original and retuned HGB experiments.
 
 Each algorithm keeps its implementation, runner, result checker, dependencies
 and README directly in its folder. All notebooks are in the repository's
@@ -15,13 +15,17 @@ histogram gradient boosting writes its fold artifacts under `results/histogram_g
 | Folder | Purpose | Tuning candidates |
 | --- | --- | --- |
 | [logistic_regression](logistic_regression/) | Linear baseline | C: 0.01, 0.1, 1 |
-| [histogram_gradient_boosting](histogram_gradient_boosting/) | Shallow nonlinear model | Maximum depth: 2, 3, 4 |
+| [histogram_gradient_boosting](histogram_gradient_boosting/) | Tree ensemble | Original depths: 2, 3, 4; retuned: 7, 8, 9 |
 | [tabm](tabm/) | Neural ensemble | Blocks: 2, 3, 4 |
 
 ## Shared input
 
-Run the [preprocessing notebook](../notebooks/01_preprocessing.ipynb) first. All classifiers consume the same
-`processed_data/` folder; they do not load source datasets directly.
+Run the [preprocessing notebook](../notebooks/01_preprocessing.ipynb) first. All
+classifiers consume the same external prepared-data package. By default it is
+`../afib_data/processed`; set `AFIB_PROCESSED_DIR` to use another location.
+Raw sources default to `../afib_data/raw` or `AFIB_DATA_DIR`. Dataset download
+links and the required source layout are in the [repository README](../README.md).
+Neither raw nor prepared data belongs in the submitted repository.
 
 The folder contains selected lead measurements, separate labels/IDs, patient
 folds and a manifest. Use the shared loader to obtain finite model matrices for
@@ -33,11 +37,13 @@ From the repository root:
 ```python
 import sys
 sys.path.insert(0, "src")
+from pathlib import Path
+from afib.paths import processed_directory
 from afib.data_preparation import load_prepared_split
 
 # One inner split for tuning. Use inner_fold=None for the outer refit/test.
 split = load_prepared_split(
-    "processed_data", outer_fold=0, inner_fold=0, arm="A"
+    processed_directory(Path.cwd()), outer_fold=0, inner_fold=0, arm="A"
 )
 X_train, y_train = split["X_train"], split["y_train"]
 X_valid, y_valid = split["X_valid"], split["y_valid"]
@@ -58,4 +64,4 @@ ECG. Use `train_metadata` and `valid_metadata` for IDs; never add them to X.
 - Keep labels and identifiers out of predictors. Use metadata for alignment,
   patient checks and saving held-out predictions.
 - Follow the [project plan](../docs/Project_Plan.docx) for stress tests, controls and reporting.
-  Save model artifacts/results separately from `processed_data/`.
+  Save outputs under `results/`; prepared inputs stay outside the repository.

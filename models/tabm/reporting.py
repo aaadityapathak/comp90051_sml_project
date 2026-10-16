@@ -17,6 +17,7 @@ import pandas as pd
 PROJECT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT / 'src'))
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import binary_metrics, majority_baseline
 from afib.preprocessing import SCENARIOS
 
@@ -379,7 +380,7 @@ def generate_reports(output):
             fit_keys.add((int(outer), variant, phase, int(fit['n_blocks']), int(fit.get('inner_fold', -1))))
     baseline_status = 'unavailable'
     try:
-        package = load_processed_data(PROJECT / 'processed_data')
+        package = load_processed_data(processed_directory(PROJECT))
         if package['manifest'] != config['manifest']:
             raise ValueError('Current processed-data manifest differs from this run.')
         baseline = []

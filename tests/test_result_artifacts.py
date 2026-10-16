@@ -49,6 +49,34 @@ class ResultArtifactTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'artifact integrity failed'):
             check_manifest(self.output, 'logistic_regression')
 
+    def test_submission_can_omit_local_pipeline_without_changing_manifest(self):
+        pipeline = self.fold / 'pipeline.pkl'
+        pipeline.write_bytes(b'local fitted model')
+        check_manifest(self.output, 'logistic_regression', write=True)
+        manifest_path = self.output / 'reports/artifact_manifest.json'
+        original = manifest_path.read_bytes()
+        pipeline.unlink()
+        result = check_manifest(self.output, 'logistic_regression')
+        self.assertEqual(result['omitted_local_fitted_models'], 1)
+        self.assertEqual(manifest_path.read_bytes(), original)
+
+    def test_only_named_local_course_audit_can_be_omitted(self):
+        self.write('reports/completion.json', {'complete_tabm_plan': True, 'n_fits': 1})
+        self.write('output_data/folds/00_A/complete.json', {
+            'completed': True, 'files': {'metrics.csv': hashlib.sha256(b'{}').hexdigest()}})
+        self.write('reports/course_coverage.json', {'local_syllabus_scan': True})
+        self.write('reports/experiment_audit.json', {'required_experiment_evidence': True})
+        check_manifest(self.output, 'tabm', write=True)
+        manifest_path = self.output / 'reports/artifact_manifest.json'
+        original = manifest_path.read_bytes()
+        (self.output / 'reports/course_coverage.json').unlink()
+        result = check_manifest(self.output, 'tabm')
+        self.assertEqual(result['omitted_ancillary_audits'], ['reports/course_coverage.json'])
+        self.assertEqual(manifest_path.read_bytes(), original)
+        (self.output / 'reports/experiment_audit.json').unlink()
+        with self.assertRaisesRegex(ValueError, 'artifact integrity failed'):
+            check_manifest(self.output, 'tabm')
+
     def test_missing_fold_and_failed_numerical_validation_are_rejected(self):
         self.write('run_config.json', {'outer_folds': [0, 1], 'variants': ['A']})
         with self.assertRaisesRegex(ValueError, 'fold coverage differs'):

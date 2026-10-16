@@ -1,38 +1,48 @@
-# Ignore additional datasets and course materials; existing tracked inputs remain.
+# Source and prepared datasets belong outside the submitted working files.
 /data/
 /processed_data/
+/afib_data/
 /reference_modules/
 /ptb-xl-a-comprehensive-electrocardiographic-feature-dataset-*/
-*.zip
 
-# Exclude generated reports and document working files.
-/reports/
-/results/data_insights/
-/results/imputation/
-/results/comparison/evaluation/
-/results/comparison/reports/
-/notebooks/archive/
-/notebooks/legacy/
-# TabM results are published; resumable binary checkpoints stay local.
-/results/tabm/checkpoints/
-/results/tabm/pilots/*/checkpoints/
+# Local environments, caches, and editor files.
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+/.runtime/
+.pytest_cache/
+.DS_Store
+Thumbs.db
+~$*
+
+# Rebuildable fitted models and temporary execution state.
+*.pkl
+*.joblib
+*.pt
+*.pth
 /results/**/checkpoints/
 /results/**/worker_status/
 /results/**/.run.lock
 /results/**/logs/
 /results/**/pipeline_status.json
 *.tmp
+
+# Optional local analyses and reproduction runs.
+/reports/
+/results/data_insights/
+/results/imputation/
+/results/comparison/evaluation/
+/results/*_reproduction/
+/results/figures/
+/report/preview/
+/notebooks/archive/
+/notebooks/legacy/
 /tools/
 /docs/reference/
-/requirements-documents.txt
 
-# Exclude local environments and caches.
-/.runtime/
-.venv/
-venv/
-__pycache__/
-*.py[cod]
-.ipynb_checkpoints/
-.DS_Store
-Thumbs.db
-~$*
+# Submission archives are created outside this working tree.
+*.zip
+*.7z

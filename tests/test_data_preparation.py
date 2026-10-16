@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -14,6 +15,7 @@ from afib.data_preparation import (
     load_source_data, make_patient_folds, prepare_dataset,
 )
 from afib.preprocessing import CATEGORY_COLUMNS, RAW_COLUMNS, SEED, build_features, fit_preprocessor
+from afib.paths import data_directory, processed_directory, source_path
 
 
 def source_fixture(n=120):
@@ -135,16 +137,17 @@ class PackageTests(unittest.TestCase):
         project = self.root / 'fresh_project'
         self._write_sources(project)
         before = {path.relative_to(project): path.read_bytes() for path in project.rglob('*') if path.is_file()}
-        manifest = prepare_dataset(project)
+        destination = self.root / 'external_processed'
+        manifest = prepare_dataset(project, data_dir=project / 'data', processed_dir=destination)
         after = {path.relative_to(project) for path in project.rglob('*') if path.is_file()}
-        expected = {Path('processed_data') / name for name in
-                    ['lead_features.npz', 'targets.csv', 'folds.csv', 'metadata.csv', 'manifest.json']}
-        self.assertEqual(after - set(before), expected)
+        self.assertEqual(after, set(before))
+        self.assertEqual({path.name for path in destination.iterdir()},
+                         {'lead_features.npz', 'targets.csv', 'folds.csv', 'metadata.csv', 'manifest.json'})
         for path, original in before.items():
             self.assertEqual((project / path).read_bytes(), original)
         self.assertEqual(manifest['checks']['source_fields'], 531)
         self.assertEqual(manifest['checks']['rows_removed'], 0)
-        pd.testing.assert_frame_equal(load_processed_data(project / 'processed_data')['targets'], self.source['targets'])
+        pd.testing.assert_frame_equal(load_processed_data(destination)['targets'], self.source['targets'])
 
     def test_source_annotation_disagreement_fails(self):
         dataset = self._write_sources()
@@ -153,7 +156,20 @@ class PackageTests(unittest.TestCase):
         labels.loc[0, 'scp_codes'] = "{'SR': 100}"
         labels.to_csv(path, index=False)
         with self.assertRaisesRegex(ValueError, 'disagrees'):
-            load_source_data(self.root)
+            load_source_data(self.root, data_dir=self.root / 'data')
+
+    def test_dataset_locations_are_external_and_overrides_are_stable(self):
+        project = self.root / 'repository'
+        with patch.dict('os.environ', {'AFIB_DATA_DIR': '../custom_raw',
+                                      'AFIB_PROCESSED_DIR': '../custom_prepared'}):
+            self.assertEqual(data_directory(project), self.root / 'custom_raw')
+            self.assertEqual(processed_directory(project), self.root / 'custom_prepared')
+            self.assertEqual(source_path(project, 'data/reference/ptbxl_database.csv'),
+                             self.root / 'custom_raw/reference/ptbxl_database.csv')
+        with self.assertRaisesRegex(ValueError, 'outside the repository'):
+            prepare_dataset(project, processed_dir=project / 'processed_data')
+        with self.assertRaisesRegex(ValueError, 'relative data/'):
+            source_path(project, 'data/../private.csv')
 
 
 if __name__ == '__main__':

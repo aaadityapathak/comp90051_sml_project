@@ -1,80 +1,39 @@
-# Completed TabM results
+# TabM results
 
-The canonical run is complete: **80 outer fold/variant results, 891 inner fits,
-80 outer refits and 297 tuning candidates**. All ten patient-grouped outer folds,
-the four main arms and four controls are present. Every fit used 100 epochs.
-The independent checker has recalculated all 2,480 saved outer test conditions.
+The completed run contains 80 outer fold/variant results, 891 inner fits, and
+80 outer refits. All ten patient-separated folds, four main arms, and four
+controls are included. Every fit used 100 epochs. Start with the
+[summary table](output_data/summary.csv), [experiment report](reports/report.md),
+[completion record](reports/completion.json), and
+[current combined research report](../../report/COMP90051_Final_Report.pdf).
 
-Start with the [experiment report](reports/report.md),
-[summary table](output_data/summary.csv),
-[completion record](reports/completion.json) and
-[numerical validation](reports/validation.json).
-The [detailed model observations](../../docs/Model_Observations.md) discuss both
-classifiers, limitations and follow-up experiments
-([Word copy](../../docs/Model_Observations.docx)).
-
-## Result map
-
-| Location | Purpose |
+| Location | Contents |
 | --- | --- |
-| `run_config.json` | Immutable settings, source hashes, input hashes and recorded versions |
-| `reports/` | Written report, figures, environment evidence, completion and verification |
-| `output_data/summary.csv` | Mean and sample SD across ten outer folds, after averaging stress repeats within each fold |
-| `output_data/fold_mean_metrics.csv` | Fold-level values underlying the summary |
-| `output_data/paired_method_differences.csv` | Within-TabM paired arm/control contrasts |
-| `output_data/paired_stress_drops.csv` | Paired deterioration from observed conditions |
-| `output_data/selected_hyperparameters.csv` | Selected blocks and frozen inner-OOF thresholds for each fold/variant |
-| `output_data/tuning_progress.csv` | Completed inner-fit and candidate coverage |
-| `output_data/folds/<fold>_<variant>/` | Selected inner OOF predictions, all outer predictions, metrics, audits, histories and commit marker |
-| `output_data/tuning/<fold>_<variant>/blocks_<n>/inner_<n>/` | Individual tuning predictions, history, audit and commit marker |
-| `source_provenance/layout_v1/` | Original hash-checked runner preserved before the results-folder migration |
-| `checkpoints/` | Local model/preprocessor binaries; intentionally excluded from Git |
-| `pilots/` | Execution experiments; excluded from canonical summaries and integrity manifest |
+| `run_config.json` | Settings, source/input hashes, and recorded versions |
+| `output_data/summary.csv` | Mean and sample SD across ten outer folds |
+| `output_data/fold_mean_metrics.csv` | Fold-level results underlying the summary |
+| `output_data/paired_method_differences.csv` | Paired arm/control comparisons |
+| `output_data/paired_stress_drops.csv` | Deterioration from observed conditions |
+| `output_data/selected_hyperparameters.csv` | Blocks and frozen inner-OOF thresholds |
+| `output_data/folds/` | Selected predictions, metrics, audits, and histories |
+| `output_data/tuning/` | Individual inner-fit predictions, history, and audit |
+| `reports/` | Figures, completion checks, and numerical validation |
+| `source_provenance/` | Preserved source from the original execution layout |
+| `pilots/` | Preliminary experiments excluded from final comparisons |
 
-`A` is original features/observed training, `B` enhanced/observed, `C`
-original/augmented and `D` enhanced/augmented. The other four variants are
-availability and duplicate controls. The secondary sensitivity threshold is
-chosen using inner OOF predictions; outer labels never choose the threshold.
-Sample SD is descriptive and is not a confidence interval.
-
-## Verify and reproduce
-
-Run these commands from the repository root. The first needs only Python's
-standard library and the published outputs; the second additionally requires
-the prepared data and analysis dependencies, but never trains a model.
+Stress repeats are averaged within folds before reporting mean and sample SD.
+The secondary sensitivity threshold uses inner OOF predictions only. Fitted
+checkpoints are not required to inspect results and are not submitted.
 
 ```powershell
 python scripts/verify_result_artifacts.py --models tabm
-python algorithms/tabm/check_results.py
+python models/tabm/check_results.py
 ```
 
-To deliberately rebuild derived TabM tables and figures from completed folds:
-
-```powershell
-python algorithms/tabm/reporting.py
-python algorithms/tabm/check_results.py --save results/tabm/reports/validation.json
-python scripts/verify_result_artifacts.py --models tabm --write-manifests
-python scripts/verify_result_artifacts.py --models tabm
-```
-
-Report rebuilding changes generation timestamps, so update the manifest only
-after checking the new outputs. The manifest detects missing, added or changed
-evidence and also checks the original TabM commit-marker hashes. It does not
-replace numerical validation.
-
-For a new training run, dependency setup and faster execution choices, follow
-the [TabM implementation guide](../../algorithms/tabm/README.md) and
-[analysis notebook](../../algorithms/tabm/notebooks/05_tabm_tuning.ipynb).
-Use a separate output directory for changed settings or new runtime experiments.
-Keep this completed run as the historical baseline. Source compatibility checks
-allow only the documented output-path migration for its saved training sources.
-
-Seeds, splits and source versions are recorded. Numerical reproducibility is
-checked against saved predictions; exact fresh GPU-training bytes are not
-guaranteed across hardware, drivers and library versions. A Git clone contains
-prediction evidence for validation, not the local TabM model checkpoints needed
-to resume an interrupted fit without refitting it. The full canonical bundle is
-about 248 MiB; local checkpoint binaries add about 1.12 GiB.
-
-See the [shared results guide](../README.md) for the optional staged-byte check
-before pushing; existing tracked datasets remain tracked despite ignore rules.
+The first command needs no dataset or ML libraries. The second requires
+externally prepared data and analysis dependencies and recalculates the 2,480
+saved outer test conditions without training. Follow the
+[model guide](../../models/tabm/README.md) for fresh training and use a new
+output folder. See [notebook 05](../../notebooks/05_tabm_tuning.ipynb) for tuning
+analysis. Original hashes and configuration records remain unchanged; a new
+GPU training run may differ across hardware, drivers, and software versions.

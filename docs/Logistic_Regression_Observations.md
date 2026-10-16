@@ -1,3 +1,5 @@
+> Supplementary analysis: see the [current four-page report](../report/COMP90051_Final_Report.pdf) for the latest three-model comparison, including retuned HGB. Earlier evidence-availability statements describe the original analysis.
+
 # Logistic regression observations
 
 Best primary observed result: D, macro F1 0.9032 (0.0147). It has the highest observed mean across all saved variants. B performs better under severe lead loss; there is no single best arm for every condition.

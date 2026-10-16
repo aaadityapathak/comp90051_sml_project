@@ -130,7 +130,7 @@ def initialize_worker(options: dict, slot_queue):
         args.output = output
         args.device = device
         _worker.update(serial=serial, args=args)
-        _worker['package'] = serial.load_processed_data(serial.PROJECT / 'processed_data')
+        _worker['package'] = serial.load_processed_data(serial.processed_directory(serial.PROJECT))
         _record('ready', 'idle', threads_per_worker=threads,
                 gpu_memory_fraction=memory_fraction)
     except BaseException as error:

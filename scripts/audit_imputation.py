@@ -19,6 +19,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT / 'src'))
 from afib.preprocessing import RAW_COLUMNS, CATEGORY_COLUMNS, transform_features, fit_preprocessor
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import assert_patient_disjoint, source_quality_groups
 from afib.imputation import (
     DEFAULT_IMPUTATION_TARGETS, fit_imputer, impute_measurements,
@@ -68,7 +69,7 @@ def run_audit(output_dir=None, validation_limit=256, *, processed_dir=None):
     if int(validation_limit) != validation_limit or validation_limit < 1:
         raise ValueError('Choose a positive number of diagnostic validation ECGs.')
     output = Path(output_dir or PROJECT / 'results' / 'imputation').resolve()
-    prepared = Path(processed_dir or PROJECT / 'processed_data').resolve()
+    prepared = Path(processed_dir or processed_directory(PROJECT)).resolve()
     package = load_processed_data(prepared)
     package_hashes = {name: digest(prepared / name)
                       for name in [*package['manifest']['files'], 'manifest.json']}
@@ -171,7 +172,7 @@ def run_audit(output_dir=None, validation_limit=256, *, processed_dir=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--output-dir', type=Path)
-    parser.add_argument('--processed-dir', type=Path, default=PROJECT / 'processed_data')
+    parser.add_argument('--processed-dir', type=Path, default=processed_directory(PROJECT))
     parser.add_argument('--validation-limit', type=int, default=256)
     args = parser.parse_args()
     run_audit(args.output_dir, args.validation_limit, processed_dir=args.processed_dir)

@@ -14,10 +14,11 @@ PROJECT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT))
 sys.path.insert(0, str(PROJECT / 'src'))
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import choose_sensitivity_threshold, source_quality_groups
 from models.tabm.reporting import (FOLD_FILES, METRICS, completed_locations,
                                       expected_conditions, full_protocol_settings, read_json)
-from models.tabm.source_verification import RUNNER_SOURCE, active_source_name, verify_runner_migration
+from models.tabm.source_verification import active_source_name, verify_source_migration
 
 
 def require(condition, message):
@@ -153,7 +154,7 @@ def check(output, allow_partial=False, package=None):
     output = Path(output)
     config = read_json(output / 'run_config.json')
     require(config.get('model') == 'tabm', 'This checker validates TabM only')
-    package = load_processed_data(PROJECT / 'processed_data') if package is None else package
+    package = load_processed_data(processed_directory(PROJECT)) if package is None else package
     require(package['manifest'] == config['manifest'], 'Processed-data manifest differs from saved run')
     source_count = 0
     preserved_sources = {}
@@ -167,8 +168,7 @@ def check(output, allow_partial=False, package=None):
         if normalization == 'LF':
             source = source.replace(b'\r\n', b'\n')
         if hashlib.sha256(source).hexdigest() != digest:
-            require(name == RUNNER_SOURCE, f'Training source changed since saved run: {name}')
-            preserved_sources[name] = verify_runner_migration(PROJECT, output, digest, normalization)
+            preserved_sources[name] = verify_source_migration(PROJECT, output, name, digest, normalization)
         source_count += 1
     locations, pending = completed_locations(output, config)
     if not allow_partial:

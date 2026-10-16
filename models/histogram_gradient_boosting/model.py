@@ -1,6 +1,11 @@
+"""Fixed HGB estimator shared by the original and retuned depth searches."""
+
 from sklearn.ensemble import HistGradientBoostingClassifier
 
+
 def create_model(max_depth=2):
+    """Vary tree depth only; keep the remaining recorded settings unchanged."""
+    # Early stopping is disabled so every candidate receives all 150 iterations.
     return HistGradientBoostingClassifier(
         max_depth=max_depth,
         max_iter=150,

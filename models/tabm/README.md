@@ -6,11 +6,22 @@ status; the implementation alone does not mean the full experiment is complete.
 
 ## Inspect the completed run quickly
 
+Regenerate figures using saved tables only, without data or retraining:
+
+```powershell
+python models/tabm/plot_results.py
+```
+
+The progress, robustness, calibration and training-curve PNGs are written to
+`results/figures/tabm/`. Use `--destination` for another folder. This adapter
+calls the same plotting functions as `reporting.py` and preserves the original
+saved reports.
+
 The saved experiment can be inspected without retraining. From the repository
 root, regenerate its tables/figures and run the independent prediction checker:
 
 ```powershell
-.venv/Scripts/python models/tabm/run_full_pipeline.py --report-only --skip-notebook
+python models/tabm/run_full_pipeline.py --report-only --skip-notebook
 ```
 
 This strict command requires the complete plan to pass verification, writes
@@ -36,16 +47,18 @@ to `run_full_pipeline.py`.
 From the repository root with Python 3.12:
 
 ```powershell
-python -m venv .venv
+python -m venv ../afib_envs/tabm
+../afib_envs/tabm/Scripts/Activate.ps1
 # NVIDIA GPU build used for the recorded runs:
-.venv/Scripts/python -m pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128
-.venv/Scripts/python -m pip install -r models/tabm/requirements.txt
-.venv/Scripts/python -m ipykernel install --prefix .venv --name tabm --display-name 'Python 3 (TabM)'
-.venv/Scripts/python models/tabm/run_experiment.py --device cuda
+python -m pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+python -m pip install -r models/tabm/requirements.txt
+python -m ipykernel install --sys-prefix --name tabm --display-name 'Python 3 (TabM)'
+python models/tabm/run_experiment.py --device cuda --output results/tabm_reproduction
 ```
 
 For a CPU machine, install the requirements directly and use `--device cpu`.
-The verified `processed_data/` package must exist first. The default serial runner
+The verified external prepared-data package must exist first. Its default
+location is `../afib_data/processed`; set `AFIB_PROCESSED_DIR` to override it. The default serial runner
 trains sequentially on one GPU; the optional parallel runner below schedules
 independent fits concurrently. Completed candidate fits are cached; rerun the
 identical command to resume. An interrupted fit restarts that fit from epoch one. Changes to data,
@@ -55,7 +68,7 @@ The notebook [05_tabm_tuning.ipynb](../../notebooks/05_tabm_tuning.ipynb) contai
 the same runnable tuning workflow and result displays. `RUN_TRAINING=False`
 is the default; explicitly set it to `True` to start or resume training. Inspection
 leaves saved reports unchanged; set `TABM_REFRESH_REPORTS=1` to regenerate them. Open Jupyter with
-`.venv/Scripts/python -m jupyterlab notebooks/05_tabm_tuning.ipynb` and select
+`python -m jupyterlab notebooks/05_tabm_tuning.ipynb` and select
 the registered `Python 3 (TabM)` kernel.
 
 ## Optional parallel runner
@@ -71,15 +84,15 @@ Inspect a plan first without loading models or data, accessing CUDA, spawning
 workers or writing output:
 
 ```powershell
-.venv/Scripts/python models/tabm/run_parallel.py --device cuda --workers 2 --dry-run
+python models/tabm/run_parallel.py --device cuda --workers 2 --dry-run
 ```
 
 For a future run on one GPU:
 
 ```powershell
-.venv/Scripts/python models/tabm/run_parallel.py --device cuda --workers 2
+python models/tabm/run_parallel.py --device cuda --workers 2
 # Alternatively, parallelize inner splits and reuse preparation across their candidates:
-.venv/Scripts/python models/tabm/run_parallel.py --device cuda --workers 2 --parallel-level inner
+python models/tabm/run_parallel.py --device cuda --workers 2 --parallel-level inner
 ```
 
 The defaults are two workers, `--parallel-level outer`, `--device auto`, and one
@@ -98,8 +111,8 @@ For multiple GPUs or CPU execution:
 
 ```powershell
 # Assign workers to GPUs round-robin:
-.venv/Scripts/python models/tabm/run_parallel.py --devices cuda:0 cuda:1 --workers 2 --output results/tabm_parallel_multi_gpu
-.venv/Scripts/python models/tabm/run_parallel.py --device cpu --workers 4 --threads-per-worker 1 --output results/tabm_parallel_cpu
+python models/tabm/run_parallel.py --devices cuda:0 cuda:1 --workers 2 --output results/tabm_parallel_multi_gpu
+python models/tabm/run_parallel.py --device cpu --workers 4 --threads-per-worker 1 --output results/tabm_parallel_cpu
 ```
 
 Each CUDA worker defaults to a PyTorch allocator allowance of
@@ -133,7 +146,7 @@ full experiment. This example fits a single candidate on three inner splits
 for one variant/fold at two epochs; it is **not a scientific result**:
 
 ```powershell
-.venv/Scripts/python models/tabm/run_parallel.py --phase tune --blocks 2 --variants A --outer-folds 0 --epochs 2 --repeats 1 --device cpu --workers 1 --output results/tabm_parallel/pilots/smoke
+python models/tabm/run_parallel.py --phase tune --blocks 2 --variants A --outer-folds 0 --epochs 2 --repeats 1 --device cpu --workers 1 --output results/tabm_parallel/pilots/smoke
 ```
 
 For a fresh full serial reproduction, add
@@ -166,10 +179,10 @@ Each script fits one setting on all three inner splits of all ten outer folds
 and all eight variants, sharing the full experiment cache:
 
 ```powershell
-.venv/Scripts/python models/tabm/run_blocks_2.py
-.venv/Scripts/python models/tabm/run_blocks_3.py
-.venv/Scripts/python models/tabm/run_blocks_4.py
-.venv/Scripts/python models/tabm/run_experiment.py --phase run
+python models/tabm/run_blocks_2.py
+python models/tabm/run_blocks_3.py
+python models/tabm/run_blocks_4.py
+python models/tabm/run_experiment.py --phase run
 ```
 
 The final command reuses the initial candidates, performs any permitted endpoint
@@ -188,10 +201,10 @@ Do not launch concurrent trainers against the same output folder.
 | Optimiser | AdamW, learning rate 0.0003, weight decay 0.0001 |
 | Batch size / epochs | 256 / 100, no early stopping |
 | Selection | Mean observed inner macro-F1, simpler exact ties |
-| Validation | Shared manual 10 outer Ãƒâ€” 3 inner patient folds |
+| Validation | Shared manual 10 outer x 3 inner patient folds |
 | Primary threshold | 0.5 |
-| Exploratory threshold | Maximum specificity at inner OOF sensitivity Ã¢â€°Â¥ 0.90 |
-| Stress evaluation | Observed once; 10 corruption conditions Ãƒâ€” 3 matched repeats |
+| Exploratory threshold | Maximum specificity at inner OOF sensitivity >= 0.90 |
+| Stress evaluation | Observed once; 10 corruption conditions x 3 matched repeats |
 
 Arms A/B use original/enhanced features with observed training. C/D use the same
 features with one corrupted training copy per ECG. Availability controls retain
@@ -228,18 +241,20 @@ and live logs remain local. No source data is copied into this folder. Full
 experiments and short pilots cannot silently overwrite one another.
 
 The former `models/tabm/` directory has moved intact to `results/tabm/`.
-Existing configurations, predictions, checkpoints and histories are preserved.
+The submission preserves configurations, predictions and histories. Binary
+resume checkpoints are local training artifacts and are excluded from it.
 The runner and independent checker validate the recorded source hash against
 `source_provenance/layout_v1/`, then compare the current runner's syntax with
 that source, allowing only the exact output-path changes and compatibility
 call. Training code, data, runtime and configuration changes still fail the
-signature guard. Existing runs can resume without rewriting their configuration.
+signature guard. A local run with its checkpoints can resume without rewriting
+its configuration; use a fresh output directory to reproduce the submitted run.
 
 ```powershell
-.venv/Scripts/python models/tabm/run_experiment.py --phase report
-.venv/Scripts/python models/tabm/check_results.py --allow-partial
+python models/tabm/run_experiment.py --phase report
+python models/tabm/check_results.py --allow-partial
 # Require every requested result to be complete:
-.venv/Scripts/python models/tabm/check_results.py
+python models/tabm/check_results.py
 ```
 
 Reports average repeats within each outer fold, then calculate mean and sample
@@ -256,3 +271,9 @@ These are research measurements, not evidence of clinical benefit.
 - [PyTorch CUDA install instructions](https://pytorch.org/get-started/previous-versions/).
 - [PTB-XL+ 1.0.1](https://physionet.org/content/ptb-xl-plus/1.0.1/) and
   [PTB-XL 1.0.3](https://physionet.org/content/ptb-xl/1.0.3/), CC BY 4.0.
+
+The original data-loading source is preserved in `historical_sources/`. Its
+recorded hash is checked before the source guard accepts the two reviewed
+external-directory changes. Training, patient folds, labels and metrics must
+still match the preserved calculations. These snapshots are provenance, not
+alternative runners.

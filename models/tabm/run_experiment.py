@@ -35,6 +35,7 @@ from models.tabm.data import (
     reliability_bins, split_ids, training_pipeline, transform_heldout,
 )
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import (
     binary_metrics, choose_sensitivity_threshold, majority_baseline,
     quality_subgroup_metrics, source_quality_groups, validate_scenario_repeats,
@@ -483,7 +484,7 @@ def main(argv=None):
         os.environ.setdefault(variable, str(PROJECT / '.runtime' / folder))
     with output_lock(args.output):
         try:
-            package = load_processed_data(PROJECT / 'processed_data')
+            package = load_processed_data(processed_directory(PROJECT))
             signature = run_signature(args, package)
             config = args.output / 'run_config.json'
             if config.exists():

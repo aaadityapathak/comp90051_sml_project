@@ -105,13 +105,11 @@ Across the 40 main arm-fold runs, the selected-depth frequencies were:
 
 The middle candidate, depth 8, was tied with depth 9 for the highest selection frequency.
 
-This result is reported as observed rather than forcing any candidate to be selected more frequently.
-
 All four arms completed 10 outer-fold evaluations using the retuned configuration.
 
 The completed results are stored at:
 
-[Retuned HGB Results](../../results/histogram_gradient_boosting/retuned_7_8_9/)
+[Retuned HGB Results](../../results/histogram_gradient_boosting/retuned7_8_9/)
 
 ## 5. Evaluation Scenarios
 
@@ -216,7 +214,7 @@ Standard deviations describe variation across the evaluated folds. They are not 
 
 The main results are stored under:
 
-`results/histogram_gradient_boosting/retuned_7_8_9/`
+`results/histogram_gradient_boosting/retuned7_8_9/`
 
 ### 8.1 Main Evaluation Results
 
@@ -273,7 +271,9 @@ Each arm contains 675,769 prediction records, covering all 10 outer folds and 31
 
 These prediction archives correspond to the retuned maximum-depth search grid `[7, 8, 9]`.
 
-The historical `HGB_all_predictions.7z` belongs to the earlier HGB experiments and should not be confused with the retuned prediction archives.
+The earlier HGB aggregate tables are kept at the HGB results root. The four
+ZIP files above contain predictions only; they are experiment outputs, not
+source ECG measurements.
 
 ## 9. Earlier Reported Results
 
@@ -314,7 +314,12 @@ A separate retuned experiment runner is available:
 
 It uses the fixed maximum-depth grid `[7, 8, 9]`.
 
-Install the retuned HGB dependencies from the project root:
+Prepare the external input package first using the preprocessing notebook.
+The runner reads `AFIB_PROCESSED_DIR` or `../afib_data/processed`; use
+`--processed <directory>` to choose a package explicitly.
+
+Use Python 3.11 for this repository runner and its pinned retuned dependencies.
+Install them from the project root:
 
 ```bash
 python -m pip install -r models/histogram_gradient_boosting/requirements_retuned.txt
@@ -334,7 +339,7 @@ This command trains the requested models and performs inner cross-validation aga
 
 The completed experimental summaries are already published separately under:
 
-`results/histogram_gradient_boosting/retuned_7_8_9/`
+`results/histogram_gradient_boosting/retuned7_8_9/`
 
 The new runner was added to document the retuned execution procedure. An independent full end-to-end reproduction of all 40 arm-fold runs through this repository script has not yet been performed.
 
@@ -375,13 +380,21 @@ The following consistency checks were completed:
 - All 360 inner-validation tuning records were recovered and validated.
 - The selected depth for every arm-fold combination matched its inner-CV results.
 
-The original `check_results.py` applies to the earlier repository workflow and has not been confirmed to operate directly on the retuned result directory.
+Run the independent checker without data or retraining:
+
+```powershell
+python models/histogram_gradient_boosting/check_results.py
+```
+
+It recomputes every saved outer metric from the four prediction archives and
+checks all 360 tuning scores and 40 selected depths. Pass `--output <folder>`
+to check a fresh runner output containing per-fold files.
 
 The original HGB results notebook is available at:
 
 [HGB Results Notebook](../../notebooks/06_histogram_gradient_boosting_results.ipynb)
 
-This notebook may contain historical results and should not be assumed to display the retuned results without inspection or updating.
+The notebook compares original HGB and retuned HGB results side by side.
 
 ## 11. Limitations and Future Improvements
 

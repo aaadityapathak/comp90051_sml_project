@@ -1,8 +1,10 @@
-"""Rebuild the model observation documents and comparison tables from saved results.
+"""Support the original supplementary observation-document builder.
 
 No training, source data, GPU, or pickle loading is required. Install
 ``requirements-docs.txt`` and run this file from any working directory. Source
 tables are read only. Both document formats are generated from the same content.
+These historical observations predate the HGB retuning evidence; report/ holds
+the current research report and its reproducible analysis.
 """
 
 from __future__ import annotations

@@ -1,3 +1,10 @@
+"""Run the fixed-depth [7, 8, 9] HGB experiment on external prepared inputs.
+
+Each outer fold selects depth using its three inner folds, then evaluates one
+outer refit under observed inputs and ten corruptions with three repeats each.
+Completed folds are stored separately from the supplied consolidated results.
+"""
+
 import argparse
 import gc
 import json
@@ -14,6 +21,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from afib.data_preparation import load_prepared_split
+from afib.paths import processed_directory
 from afib.evaluation import binary_metrics
 from afib.preprocessing import SCENARIOS
 from models.histogram_gradient_boosting.model import create_model
@@ -22,7 +30,7 @@ from models.histogram_gradient_boosting.model import create_model
 GRID = [7, 8, 9]
 REPEATS = 3
 SCENARIO_NAMES = list(SCENARIOS)
-PROCESSED = ROOT / "processed_data"
+PROCESSED = processed_directory(ROOT)
 
 DEFAULT_OUTPUT = (
     ROOT / "results"
@@ -32,13 +40,14 @@ DEFAULT_OUTPUT = (
 
 
 def save_csv(df, path):
+    """Replace a CSV only after the complete table has been written."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(".tmp")
     df.to_csv(temp, index=False)
     os.replace(temp, path)
 
 
-def inner_cv(arm, outer):
+def inner_cv(arm, outer, processed=PROCESSED):
     """Select depth using inner folds only."""
 
     rows = []
@@ -46,7 +55,7 @@ def inner_cv(arm, outer):
 
     for inner in range(3):
         splits[inner] = load_prepared_split(
-            PROCESSED,
+            processed,
             outer_fold=outer,
             inner_fold=inner,
             arm=arm,
@@ -114,7 +123,8 @@ def inner_cv(arm, outer):
     return winner, tuning
 
 
-def run_one(arm, outer, output):
+def run_one(arm, outer, output, processed=PROCESSED):
+    """Tune, refit and evaluate one arm on one held-out patient fold."""
 
     folder = output / f"{arm}_fold{outer}"
     folder.mkdir(parents=True, exist_ok=True)
@@ -145,17 +155,17 @@ def run_one(arm, outer, output):
         )
 
         if valid:
-            m = pd.read_csv(metrics_file)
-            p = pd.read_csv(predictions_file)
-            t = pd.read_csv(tuning_file)
+            saved_metrics = pd.read_csv(metrics_file)
+            saved_predictions = pd.read_csv(predictions_file)
+            saved_tuning = pd.read_csv(tuning_file)
 
             valid = (
-                len(m) == expected_rows
-                and len(p) > 0
-                and len(t) == 9
-                and (m["arm"] == arm).all()
-                and (m["outer_fold"] == outer).all()
-                and (m["max_depth"] == info["best_depth"]).all()
+                len(saved_metrics) == expected_rows
+                and len(saved_predictions) > 0
+                and len(saved_tuning) == 9
+                and (saved_metrics["arm"] == arm).all()
+                and (saved_metrics["outer_fold"] == outer).all()
+                and (saved_metrics["max_depth"] == info["best_depth"]).all()
             )
 
         if valid:
@@ -175,7 +185,7 @@ def run_one(arm, outer, output):
     )
 
     # Step 1: tune only on inner folds
-    winner, tuning = inner_cv(arm, outer)
+    winner, tuning = inner_cv(arm, outer, processed)
 
     print(
         f"Selected max_depth={winner}",
@@ -184,7 +194,7 @@ def run_one(arm, outer, output):
 
     # Step 2: prepare outer train/test data
     base = load_prepared_split(
-        PROCESSED,
+        processed,
         outer_fold=outer,
         inner_fold=None,
         arm=arm,
@@ -220,7 +230,7 @@ def run_one(arm, outer, output):
                 split = base
             else:
                 split = load_prepared_split(
-                    PROCESSED,
+                    processed,
                     outer_fold=outer,
                     inner_fold=None,
                     arm=arm,
@@ -271,14 +281,14 @@ def run_one(arm, outer, output):
                 del split
 
     # Step 5: save results
-    mdf = pd.DataFrame(metrics_rows)
-    pdf = pd.DataFrame(prediction_rows)
+    metrics_frame = pd.DataFrame(metrics_rows)
+    predictions_frame = pd.DataFrame(prediction_rows)
 
-    assert len(mdf) == expected_rows
-    assert len(pdf) == expected_rows * len(ids)
+    assert len(metrics_frame) == expected_rows
+    assert len(predictions_frame) == expected_rows * len(ids)
 
-    save_csv(mdf, metrics_file)
-    save_csv(pdf, predictions_file)
+    save_csv(metrics_frame, metrics_file)
+    save_csv(predictions_frame, predictions_file)
     save_csv(tuning, tuning_file)
 
     metadata = {
@@ -305,14 +315,16 @@ def run_one(arm, outer, output):
         flush=True
     )
 
-    del model, base, tuning, mdf, pdf
+    del model, base, tuning, metrics_frame, predictions_frame
     del metrics_rows, prediction_rows
     gc.collect()
 
 
 def main():
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--processed", type=Path, default=PROCESSED,
+                        help="Prepared inputs; defaults to AFIB_PROCESSED_DIR or ../afib_data/processed.")
 
     parser.add_argument(
         "--arms",
@@ -346,8 +358,8 @@ def main():
         exist_ok=True
     )
 
-    assert PROCESSED.is_dir(), (
-        f"Missing processed_data: {PROCESSED}"
+    assert args.processed.is_dir(), (
+        f"Missing prepared data: {args.processed}"
     )
 
     print("=== HGB RETUNED EXPERIMENT ===")
@@ -358,7 +370,7 @@ def main():
 
     for arm in args.arms:
         for outer in args.outer_folds:
-            run_one(arm, outer, args.output)
+            run_one(arm, outer, args.output, args.processed)
 
     print("\nREQUESTED FOLDS FINISHED")
     print("Results saved to:", args.output)

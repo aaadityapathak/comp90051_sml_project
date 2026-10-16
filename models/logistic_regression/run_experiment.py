@@ -26,6 +26,7 @@ sys.path.insert(0, str(PROJECT / 'src'))
 from afib.preprocessing import (ARMS, SCENARIOS, RAW_COLUMNS, build_features,
     construct_training_views, transform_features, perturb_measurements, fit_preprocessor)
 from afib.data_preparation import load_processed_data
+from afib.paths import processed_directory
 from afib.evaluation import (binary_metrics, choose_sensitivity_threshold,
     assert_patient_disjoint, source_quality_groups, quality_subgroup_metrics,
     majority_baseline, summarise_paired_drops, validate_scenario_repeats)
@@ -434,14 +435,14 @@ def summarise(output, args, package):
         'max_gradient':max(x['max_abs_gradient'] for x in audits),'middle_selection_counts':tuning_status,
         'all_variants':args.variants,'outer_folds':args.outer_folds,'stress_repeats':args.repeats,
         'error_bars':'sample SD of outer-fold means; descriptive, not clinical confidence intervals',
-        'data_unchanged':load_processed_data(PROJECT/'processed_data')['manifest']==package['manifest']})
+        'data_unchanged':load_processed_data(processed_directory(PROJECT))['manifest']==package['manifest']})
     print('Observed primary results:',flush=True)
     print(summary[(summary.scenario=='observed')&(summary.threshold_policy=='fixed_0.50')
                   & summary.metric.isin(['macro_f1','sensitivity','specificity'])].to_string(index=False),flush=True)
 
 
 def run_fold(outer, args):
-    package = load_processed_data(PROJECT/'processed_data')
+    package = load_processed_data(processed_directory(PROJECT))
     for variant in args.variants:
         run_variant(package, outer, variant, args, args.output)
 
@@ -464,7 +465,7 @@ def main():
     args.output.mkdir(parents=True,exist_ok=True)
     for var,folder in [('MPLCONFIGDIR','matplotlib'),('IPYTHONDIR','ipython')]:
         os.environ[var]=str(PROJECT/'.runtime'/folder)
-    package=load_processed_data(PROJECT/'processed_data')
+    package=load_processed_data(processed_directory(PROJECT))
     signature={'variants':args.variants,'outer_folds':args.outer_folds,'c_grid':args.c_grid,
         'refine':not args.no_refine,'repeats':args.repeats,'manifest':package['manifest'],
         'code':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in

@@ -1,8 +1,9 @@
-"""Check that published observation documents reproduce byte-for-byte.
+"""Check the original supplementary observation documents byte-for-byte.
 
 Requires requirements-docs.txt. Uses a temporary directory; does not train,
 modify existing documents, or load model checkpoints. This checks contents and
-deterministic generation, not Word page rendering.
+deterministic generation, not Word page rendering. It predates the updated
+four-page report and any historical-context banners added to the old documents.
 """
 from __future__ import annotations
 import argparse

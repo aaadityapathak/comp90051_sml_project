@@ -1,3 +1,5 @@
+> Supplementary analysis: see the [current four-page report](../report/COMP90051_Final_Report.pdf) for the latest three-model comparison, including retuned HGB. Earlier evidence-availability statements describe the original analysis.
+
 
 # Histogram Gradient Boosting Observations
 

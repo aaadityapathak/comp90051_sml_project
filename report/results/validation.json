@@ -1,0 +1,99 @@
+{
+  "training_performed": false,
+  "raw_data_required": false,
+  "aggregation": "Average repeats within fold, then ten-fold mean and sample SD.",
+  "prediction_checks": {
+    "logistic_regression": {
+      "prediction_rows": 5493348,
+      "conditions": 2520,
+      "maximum_absolute_metric_difference": 1.1102230246251565e-16
+    },
+    "tabm": {
+      "prediction_rows": 5406152,
+      "conditions": 2480,
+      "maximum_absolute_metric_difference": 1.1102230246251565e-16
+    },
+    "histogram_gradient_boosting_retuned": {
+      "prediction_rows": 2703076,
+      "conditions": 1240,
+      "maximum_absolute_metric_difference": 1.1102230246251565e-16
+    }
+  },
+  "hgb_tuning": {
+    "inner_scores": 360,
+    "verified_selections": 40,
+    "selected_depth_counts": {
+      "7": 10,
+      "8": 15,
+      "9": 15
+    },
+    "mean_inner_f1_by_arm_depth": [
+      {
+        "arm": "A",
+        "max_depth": 7,
+        "macro_f1": 0.9269722216018967
+      },
+      {
+        "arm": "A",
+        "max_depth": 8,
+        "macro_f1": 0.9276834816922843
+      },
+      {
+        "arm": "A",
+        "max_depth": 9,
+        "macro_f1": 0.9278696303071341
+      },
+      {
+        "arm": "B",
+        "max_depth": 7,
+        "macro_f1": 0.9282749775979081
+      },
+      {
+        "arm": "B",
+        "max_depth": 8,
+        "macro_f1": 0.9287430649875388
+      },
+      {
+        "arm": "B",
+        "max_depth": 9,
+        "macro_f1": 0.928873550607676
+      },
+      {
+        "arm": "C",
+        "max_depth": 7,
+        "macro_f1": 0.9234718281105316
+      },
+      {
+        "arm": "C",
+        "max_depth": 8,
+        "macro_f1": 0.9232455519220915
+      },
+      {
+        "arm": "C",
+        "max_depth": 9,
+        "macro_f1": 0.9232390450260336
+      },
+      {
+        "arm": "D",
+        "max_depth": 7,
+        "macro_f1": 0.9233685659701006
+      },
+      {
+        "arm": "D",
+        "max_depth": 8,
+        "macro_f1": 0.924107050335236
+      },
+      {
+        "arm": "D",
+        "max_depth": 9,
+        "macro_f1": 0.9238600009040582
+      }
+    ]
+  },
+  "limitations": [
+    "Prediction labels and folds are checked against the LR result bundle, not raw source data.",
+    "Historical HGB metrics are retained as published; this script does not recover its 7z predictions.",
+    "Matching ECG/fold keys do not prove identical HGB stress realizations; historical perturbation manifests are absent.",
+    "Scores verify the saved outputs, not an independent retraining of the published experiments."
+  ]
+}

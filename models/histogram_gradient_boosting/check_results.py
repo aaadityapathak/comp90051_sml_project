@@ -2,11 +2,15 @@
 import argparse
 import json
 from pathlib import Path
+import sys
 import numpy as np
 import pandas as pd
 
 PROJECT = Path(__file__).resolve().parents[2]
-ROOT = PROJECT / "results/histogram_gradient_boosting/formal"
+sys.path.insert(0, str(PROJECT / 'src'))
+from afib.evaluation import binary_metrics
+
+ROOT = PROJECT / "results/histogram_gradient_boosting/retuned7_8_9"
 METRICS = ["macro_f1", "sensitivity", "specificity", "precision", "npv",
            "balanced_accuracy", "auroc", "average_precision", "brier"]
 STRESSES = ["missing_1", "missing_3", "missing_6", "noise_0.05",
@@ -15,12 +19,97 @@ STRESSES = ["missing_1", "missing_3", "missing_6", "noise_0.05",
 EXPECTED = {("observed", 0)} | {(s, r) for s in STRESSES for r in range(3)}
 
 
+def check_retuned(root):
+    """Recompute the consolidated retuned metrics from its saved predictions.
+
+    This check needs no dataset or fitted estimator. It checks every held-out
+    ECG, scenario and repeat, then checks the selected depth against all inner
+    scores using the experiment's smaller-depth tie rule.
+    """
+    metrics = pd.read_csv(root / 'HGB_ABCD_all_metrics.csv')
+    tuning = pd.read_csv(root / 'HGB_ABCD_all_inner_tuning.csv')
+    metric_keys = ['arm', 'outer_fold', 'scenario', 'repeat']
+    tuning_keys = ['arm', 'outer_fold', 'max_depth', 'inner_fold']
+    if len(metrics) != 1240 or metrics.duplicated(metric_keys).any():
+        raise ValueError('Expected 1,240 distinct outer evaluation records.')
+    if len(tuning) != 360 or tuning.duplicated(tuning_keys).any():
+        raise ValueError('Expected 360 distinct inner tuning records.')
+    if set(metrics.arm) != set('ABCD') or set(tuning.arm) != set('ABCD'):
+        raise ValueError('Both metric and tuning tables must cover arms A-D.')
+    if not np.isfinite(tuning.macro_f1).all():
+        raise ValueError('Inner tuning scores must be finite.')
+
+    reference_folds = {}
+    prediction_count = 0
+    for arm in 'ABCD':
+        predictions = pd.read_csv(root / f'HGB_retuned_{arm}_predictions.zip')
+        selected = pd.read_csv(root / f'{arm}_selected_depths.csv')
+        if (len(selected) != 10 or set(selected.outer_fold) != set(range(10))
+                or not selected.arm.eq(arm).all()):
+            raise ValueError(f'{arm}: selected-depth table must cover all ten folds.')
+        if (not predictions.arm.eq(arm).all()
+                or set(predictions.outer_fold) != set(range(10))
+                or predictions.duplicated(metric_keys + ['ecg_id']).any()
+                or not predictions.prob_afib.between(0, 1).all()
+                or not predictions.y_true.isin([0, 1]).all()):
+            raise ValueError(f'{arm}: invalid prediction coverage, labels or probabilities.')
+        for fold in range(10):
+            label = f'{arm}/fold{fold}'
+            fold_metrics = metrics[metrics.arm.eq(arm) & metrics.outer_fold.eq(fold)]
+            fold_tuning = tuning[tuning.arm.eq(arm) & tuning.outer_fold.eq(fold)]
+            fold_predictions = predictions[predictions.outer_fold.eq(fold)]
+            if set(zip(fold_metrics.scenario, fold_metrics.repeat)) != EXPECTED:
+                raise ValueError(f'{label}: missing evaluation condition.')
+            candidates = {(depth, inner) for depth in (7, 8, 9) for inner in range(3)}
+            if set(zip(fold_tuning.max_depth, fold_tuning.inner_fold)) != candidates:
+                raise ValueError(f'{label}: incomplete depth search.')
+            means = fold_tuning.groupby('max_depth').macro_f1.mean()
+            winner = min((7, 8, 9), key=lambda depth: (-means[depth], depth))
+            chosen = selected[selected.outer_fold.eq(fold)].iloc[0]
+            if not fold_metrics.max_depth.eq(winner).all() or int(chosen.max_depth) != winner:
+                raise ValueError(f'{label}: depth differs from inner-CV selection.')
+            np.testing.assert_allclose(chosen.macro_f1, means[winner], rtol=1e-10, atol=1e-12)
+            observed = fold_predictions[fold_predictions.scenario.eq('observed')]
+            reference = observed[['ecg_id', 'y_true']].sort_values('ecg_id').reset_index(drop=True)
+            if reference.empty or reference.ecg_id.duplicated().any():
+                raise ValueError(f'{label}: observed ECGs are missing or duplicated.')
+            if arm == 'A':
+                reference_folds[fold] = reference
+            elif not reference.equals(reference_folds[fold]):
+                raise ValueError(f'{label}: held-out patients differ between arms.')
+            grouped = fold_predictions.groupby(['scenario', 'repeat'])
+            if set(grouped.groups) != EXPECTED:
+                raise ValueError(f'{label}: prediction conditions do not match the protocol.')
+            saved = fold_metrics.set_index(['scenario', 'repeat'])
+            for condition, rows in grouped:
+                identities = rows[['ecg_id', 'y_true']].sort_values('ecg_id').reset_index(drop=True)
+                if not identities.equals(reference):
+                    raise ValueError(f'{label}/{condition}: ECG IDs or labels changed under corruption.')
+                calculated = binary_metrics(rows.y_true.to_numpy(), rows.prob_afib.to_numpy())
+                for metric, value in calculated.items():
+                    np.testing.assert_allclose(value, saved.loc[condition, metric],
+                                               rtol=1e-10, atol=1e-12, equal_nan=True,
+                                               err_msg=f'{label}/{condition}/{metric}')
+        prediction_count += len(predictions)
+        print(f'Verified retuned arm {arm}: 10 folds, {len(predictions):,} predictions.')
+    combined_ids = pd.concat(reference_folds.values(), ignore_index=True).ecg_id
+    if combined_ids.duplicated().any():
+        raise ValueError('An ECG appears in more than one held-out outer fold.')
+    observed = metrics[metrics.scenario.eq('observed')].groupby('arm').macro_f1.agg(['mean', 'std'])
+    print('\nObserved macro-F1 (mean and sample SD):\n', observed.to_string())
+    return {'outer_metric_records': len(metrics), 'inner_tuning_records': len(tuning),
+            'prediction_records': prediction_count, 'all_metrics_recomputed': True}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=ROOT,
-                        help='Saved run folder containing A_fold0 through D_fold9.')
+                        help='Consolidated retuned results, or runner output with A_fold0 through D_fold9.')
     args = parser.parse_args()
     root = args.output.resolve()
+    if (root / 'HGB_ABCD_all_inner_tuning.csv').is_file():
+        print(json.dumps(check_retuned(root), indent=2))
+        return
     records = []
     for arm in "ABCD":
         for fold in range(10):
@@ -40,7 +129,10 @@ def main():
             pairs = list(zip(m["scenario"], m["repeat"]))
             if len(pairs) != 31 or set(pairs) != EXPECTED or len(set(pairs)) != 31:
                 raise ValueError(f"{location}: incomplete or duplicate scenario/repeat rows")
-            if len(t) != 12 or set(t["inner_fold"]) != {0, 1, 2}:
+            candidates = set(t['max_depth'])
+            expected_tuning = {(depth, inner) for depth in candidates for inner in range(3)}
+            if (len(t) not in (9, 12) or len(t) != len(expected_tuning)
+                    or set(zip(t.max_depth, t.inner_fold)) != expected_tuning):
                 raise ValueError(f"{location}: unexpected tuning coverage")
             n = int(m.loc[m["scenario"].eq("observed"), "n"].iloc[0])
             if n <= 0 or len(p) != 31 * n:

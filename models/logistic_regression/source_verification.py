@@ -108,6 +108,18 @@ def calculation_tree(path):
             return node
     tree = StripDocumentation().visit(tree)
     if Path(path).name == 'run_experiment.py':
+        # Dataset relocation changes only the input directory. The manifest
+        # remains checked separately, including every prepared-file hash.
+        path_import = _syntax(ast.parse('from afib.paths import processed_directory').body[0])
+        tree.body = [node for node in tree.body if _syntax(node) != path_import]
+
+        class RestoreInputDirectory(ast.NodeTransformer):
+            def visit_Call(self, node):
+                if _syntax(node) == _syntax(ast.parse('processed_directory(PROJECT)', mode='eval').body):
+                    return ast.parse("PROJECT / 'processed_data'", mode='eval').body
+                return self.generic_visit(node)
+
+        tree = RestoreInputDirectory().visit(tree)
         tree = _normalise_reviewed_exports(tree)
         tree = _normalise_runner_paths(tree)
     return _syntax(tree)
@@ -133,5 +145,5 @@ def verify_sources(project, output, config):
         assert calculation_tree(baseline) == calculation_tree(directory / name), name + ': calculation changed'
         checked.append(name)
     return {'mode': 'preserved_training_sources', 'files_checked': checked,
-            'allowed_changes': 'documentation, exact reviewed prediction export code, and explicit output path relocations only',
+            'allowed_changes': 'documentation, exact reviewed prediction export code, and explicit input/output path relocations only',
             'training_and_metric_calculations_unchanged': True}
