@@ -1,0 +1,8 @@
+# HGB retuned experiments: max_depth = [7, 8, 9]
+# Main package versions used for the completed runs.
+# Python 3.10 / 3.11
+
+numpy==1.24.3
+pandas==2.0.3
+scipy==1.11.4
+scikit-learn==1.3.0
