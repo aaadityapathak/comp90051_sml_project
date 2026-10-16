@@ -1,7 +1,9 @@
 # AFIB identification with missing and perturbed ECG measurements 
 
-Group 64 - Aaditya Pathak | Siwen Wang | Jiayi Huang
 COMP90051 Statistical Machine Learning, University of Melbourne
+
+Group 64 - Aaditya Pathak | Siwen Wang | Jiayi Huang
+
 
 We study whether cross-lead feature construction and corrupted training views
 improve atrial fibrillation classification when ECG measurements are noisy or
@@ -25,11 +27,6 @@ the same manually constructed, patient-separated nested cross-validation folds.
 - [Saved results](results/README.md): original metrics, predictions, tuning records, and validation evidence.
 - [Model guides](models/README.md): dependencies and training commands for each classifier.
 
-The latest HGB bundle is `results/histogram_gradient_boosting/retuned7_8_9/`.
-It includes all four arms, ten outer folds, the depth grid `[7, 8, 9]`,
-inner-fold tuning scores, and compressed held-out predictions. Earlier HGB
-results are retained separately so the change in tuning range remains visible.
-
 ## Repository layout
 
 ```text
@@ -42,13 +39,6 @@ results/         saved experiment outputs; no source or prepared datasets
 report/          final PDF, editable builder, and comparison tables/figures
 docs/            supplementary project notes and earlier detailed observations
 ```
-
-All original modelling methods and experimental outputs are retained. The
-duplicate HGB summary folder, fitted pipeline binaries, local environments,
-and caches are excluded from the submission. Saved configurations and source
-snapshots keep their historical paths and hashes; active code resolves current
-paths independently. Supplementary notes describe stages of the project; the
-four-page report is the current combined analysis.
 
 ## Inspect the results without downloading data
 
