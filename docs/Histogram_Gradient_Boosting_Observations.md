@@ -1,47 +1,239 @@
-# Histogram gradient boosting observations
 
-Best reported observed arm: B, F1 0.9230 (SD 0.0143). Best reported six-lead-loss arm: C, F1 0.8892. The retained report contains transcribed results; underlying predictions, fold metrics and tuning files are absent, so these figures cannot currently be independently recalculated.
+# Histogram Gradient Boosting Observations
 
-## Experiment and reported results
+## 1. Overview
 
-The cohort contains 21,799 ECGs from 18,869 patients; 6.95% are AFIB-labelled. This class imbalance makes macro F1 and class-specific errors more informative than accuracy alone.
+This report presents the updated Histogram Gradient Boosting (HGB) results for binary atrial fibrillation (AFIB) classification.
 
-A: original measurements; B: original plus engineered fields; C: A with augmentation; D: B with augmentation. There are 504 original lead fields and 63 engineered fields. Augmentation adds one corrupted training view per ECG with total weight preserved.
+The original HGB experiments used an initial maximum-depth grid of `[2, 3, 4]`, with a boundary refinement that could extend the search to depth 5.
 
-Primary results use threshold 0.50, 10 outer patient folds and 3 inner folds. Filling, scaling and selection use training patients only. Three stress repeats are averaged within each fold, then summarized by mean and sample SD. SD is not a confidence interval.
+Following the initial experiments, an additional hyperparameter search was conducted using `[7, 8, 9]`. The results presented below correspond to this retuned configuration.
 
-| Arm | Macro F1 (SD) | Sensitivity | Specificity | AUROC |
-| --- | --- | --- | --- | --- |
-| A | 0.9213 (0.0158) | 0.9514 | 0.9795 | 0.9930 |
-| B | 0.9230 (0.0143) | 0.9496 | 0.9803 | 0.9935 |
-| C | 0.9156 (0.0122) | 0.9549 | 0.9771 | 0.9931 |
-| D | 0.9179 (0.0126) | 0.9583 | 0.9776 | 0.9934 |
+The earlier results are retained as historical records and should not be confused with the updated results.
 
-B improves observed F1 over A by a reported paired mean 0.0018 (SD 0.0047), with higher specificity and slightly lower sensitivity. Its best F1 reflects this error balance. Trees can capture nonlinear feature interactions; the report does not isolate which interactions or engineered fields produce the gain.
+## 2. Dataset and Experimental Design
 
-## Tuning and evidence limits
+The dataset contains 21,799 ECG recordings from 18,869 patients, with approximately 6.95% AFIB-labelled recordings.
 
-Initial maximum depths were 2, 3 and 4 with one boundary refinement. The current runner permits depth 1 or 5 depending on the boundary winner; the historical report describes upper refinement to 5. Mean inner observed F1 selects depth; ties prefer shallower trees.
+The experiments use:
 
-Fixed settings: 150 iterations, learning rate 0.05, maximum 16 leaves, minimum 30 samples per leaf, L2 penalty 1, no early stopping and seed 42. These constrain complexity; they do not establish an optimal tuning budget.
+- 504 original ECG lead features
+- 63 engineered features
+- 10 patient-grouped outer folds
+- 3 inner folds for hyperparameter selection
+- Macro-F1 as the primary evaluation metric
+- Classification threshold of 0.50
+- Training-fold-specific preprocessing
 
-The report states 40 completed arm-fold runs and 31 condition/repeat evaluations per run. Candidate scores, selected-depth counts, run versions and source hashes are unavailable. No specific depth can be called the winner from the retained evidence.
+Four experimental arms were evaluated:
 
-## Missing leads and augmentation
+| Arm | Feature Set | Training Augmentation |
+|---|---|---|
+| A | Original ECG features | No |
+| B | Original and engineered ECG features | No |
+| C | Original ECG features | Yes |
+| D | Original and engineered ECG features | Yes |
 
-| Arm | Observed | 1 missing | 3 missing | 6 missing |
-| --- | --- | --- | --- | --- |
-| A | 0.9213 | 0.9226 | 0.8524 | 0.5912 |
-| B | 0.9230 | 0.9237 | 0.8935 | 0.7356 |
-| C | 0.9156 | 0.9119 | 0.9069 | 0.8892 |
-| D | 0.9179 | 0.9149 | 0.9035 | 0.8771 |
+For Arms C and D, one corrupted training copy was added per original training recording, with the combined sample weight preserved.
 
-Augmentation lowers reported observed F1: C minus A is -0.0057; D minus B is -0.0051. With six leads removed, C and D strongly outperform A and B. C exceeds D under three and six missing leads, so enhancement adds no robustness gain in these augmented comparisons.
+The same outer patient-grouped folds were used across all arms.
 
-Under combined three-lead loss and noise 0.10, reported F1 is A 0.8493, B 0.8876, C 0.9062 and D 0.9019. The source describes smaller effects for isolated noise and gain but omits their complete numerical tables. Brier, average precision, availability/duplication controls and subgroup results are not available in the report.
+## 3. HGB Model and Hyperparameter Tuning
 
-## Next improvements and rationale
+The classifier is `HistGradientBoostingClassifier`.
 
-1. Retain predictions, selections, data/source hashes and package versions on a future authorized run so scores can be independently checked. 2. Tune augmentation mixtures in inner folds to retain robustness with less observed F1 loss. 3. Study depth, leaves, learning rate and iterations within a declared budget to balance capacity and overfitting. 4. Add the same controls, probability metrics and patient-level comparisons as the other algorithms to complete the comparison.
+The fixed model hyperparameters are:
 
-Source: results/histogram_gradient_boosting/source_provenance/reported_summary.docx. Future output: results/histogram_gradient_boosting/formal/. Runner and checker: models/histogram_gradient_boosting/. This review does not regenerate HGB results.
+| Parameter | Value |
+|---|---|
+| `max_iter` | 150 |
+| `learning_rate` | 0.05 |
+| `max_leaf_nodes` | 16 |
+| `min_samples_leaf` | 30 |
+| `l2_regularization` | 1.0 |
+| `early_stopping` | False |
+| `random_state` | 42 |
+
+### 3.1 Initial Experiments
+
+The initial maximum-depth search grid was `[2, 3, 4]`.
+
+An additional boundary refinement was permitted. The earlier report described upper-boundary refinement to depth 5.
+
+The earlier experiments motivated further investigation of deeper trees.
+
+### 3.2 Retuned Experiments
+
+The updated experiments use:
+
+`max_depth = [7, 8, 9]`
+
+For each outer fold, the best depth was selected using the mean Macro-F1 across the three inner-validation folds.
+
+The selected depth was then used to train the HGB classifier on the outer-training data and evaluate it on the held-out outer fold.
+
+All four arms completed 10 outer folds.
+
+## 4. Final Observed-Data Results
+
+The following results represent the mean Macro-F1 and sample standard deviation across the 10 outer folds using the retuned depth grid.
+
+| Arm | Mean Macro-F1 | Standard Deviation |
+|---|---:|---:|
+| A | 0.924192 | 0.013804 |
+| B | **0.924355** | 0.012939 |
+| C | 0.918543 | 0.013281 |
+| D | 0.917408 | 0.013316 |
+
+Arm B achieved the highest mean observed-data Macro-F1, although the difference between Arms A and B was small.
+
+Compared with their corresponding non-augmented arms, Arms C and D had slightly lower observed-data Macro-F1.
+
+These results indicate that the augmentation strategy did not improve observed-data performance in the main experiments.
+
+## 5. Missing-Lead Robustness
+
+The models were evaluated when 1, 3, or 6 ECG leads were missing.
+
+The following table presents the verified retuned results for the observed and six-missing-lead scenarios.
+
+| Arm | Observed Macro-F1 | Missing 6 Macro-F1 | Performance Drop |
+|---|---:|---:|---:|
+| A | 0.924192 | 0.587080 | 0.337112 |
+| B | 0.924355 | 0.730876 | 0.193479 |
+| C | 0.918543 | **0.895531** | **0.023012** |
+| D | 0.917408 | 0.882679 | 0.034729 |
+
+### Key Observations
+
+**First, augmentation substantially improved robustness to severe lead missingness.**
+
+Arms C and D maintained considerably higher Macro-F1 scores than Arms A and B when six leads were missing.
+
+**Second, Arm C achieved the highest performance in the six-missing-lead condition.**
+
+Arm C obtained a mean Macro-F1 of 0.895531, compared with 0.882679 for Arm D.
+
+**Third, there was a trade-off between observed-data performance and missing-lead robustness.**
+
+The non-augmented arms had slightly better observed-data performance, while the augmented arms exhibited much smaller performance reductions under severe missingness.
+
+These findings are descriptive comparisons across the shared outer folds. Statistical significance is not established by the mean scores alone.
+
+## 6. Noise, Gain, and Combined Corruption
+
+In addition to missing leads, the models were evaluated under the following test scenarios:
+
+- Noise levels: 0.05, 0.10, and 0.20
+- Gain changes: 0.05, 0.10, and 0.20
+- Combined three-lead missingness and noise level 0.10
+
+Each corruption scenario was repeated three times per outer fold.
+
+Across the four experimental arms, a total of 11 evaluation scenarios were considered, including observed data.
+
+Each arm produced 31 evaluation records per outer fold and 310 records across 10 folds.
+
+The complete noise, gain, and combined-corruption results are available in the retuned scenario-summary CSV rather than being selectively reproduced in this report.
+
+## 7. Evaluation and Statistical Aggregation
+
+The experiments used a consistent aggregation procedure:
+
+1. For each outer fold and corrupted scenario, the three repeated evaluations were averaged.
+2. The resulting fold-level Macro-F1 scores were summarized across 10 outer folds.
+3. The mean and sample standard deviation were reported.
+4. Stress-performance drops were calculated by comparing each corrupted scenario with the observed condition within the same outer fold.
+5. Paired method differences were calculated using matching outer folds and scenarios.
+
+The reported standard deviations describe variation between outer folds and should not be interpreted as confidence intervals.
+
+## 8. Comparison With Earlier HGB Results
+
+The earlier HGB report presented the following observed-data Macro-F1 scores:
+
+| Arm | Earlier Mean Macro-F1 | Earlier SD | Retuned Mean Macro-F1 |
+|---|---:|---:|---:|
+| A | 0.9213 | 0.0158 | 0.924192 |
+| B | 0.9230 | 0.0143 | 0.924355 |
+| C | 0.9156 | 0.0122 | 0.918543 |
+| D | 0.9179 | 0.0126 | 0.917408 |
+
+The previous report consisted of transcribed results without a complete retained source bundle for independent verification.
+
+The new retuned experiment has complete consolidated metrics and recorded outer-fold depth selections.
+
+Because the two results originate from different hyperparameter search configurations, they are documented separately.
+
+The updated experiments should not be interpreted as proving that the new depth search is statistically superior to the earlier configuration.
+
+## 9. Reproducibility and Result Files
+
+The updated results are stored at:
+
+`results/histogram_gradient_boosting/retuned_7_8_9/`
+
+The directory contains:
+
+- `A_selected_depths.csv`
+- `B_selected_depths.csv`
+- `C_selected_depths.csv`
+- `D_selected_depths.csv`
+- `HGB_ABCD_all_metrics.csv`
+- `HGB_ABCD_fold_scenario_means.csv`
+- `HGB_ABCD_scenario_summary.csv`
+- `HGB_ABCD_stress_drops.csv`
+- `HGB_ABCD_paired_differences.csv`
+
+The consolidated metric dataset contains 1,240 evaluation records across Arms A, B, C, and D.
+
+All four arms were checked for:
+
+- Complete outer-fold coverage (10 folds per arm)
+- 31 evaluation records per outer fold
+- Consistent arm and fold identifiers
+- No duplicated arm/fold/scenario/repeat metric records
+
+The HGB implementation is available at:
+
+`models/histogram_gradient_boosting/model.py`
+
+The original experiment runner is:
+
+`models/histogram_gradient_boosting/run_experiment.py`
+
+A separate runner for the retuned search grid is:
+
+`models/histogram_gradient_boosting/run_experiment_retuned.py`
+
+The separate retuned runner has been added to the repository, but full end-to-end reproduction through that runner has not yet been independently verified.
+
+## 10. Limitations and Future Improvements
+
+Several limitations remain.
+
+**Hyperparameter search:** Only a limited maximum-depth grid was investigated in the retuned experiments. Other hyperparameters, including learning rate, tree complexity, and number of iterations, may also affect performance.
+
+**Augmentation trade-off:** While training augmentation improved robustness to missing leads, it slightly reduced observed-data performance. Future work could investigate alternative corruption probabilities and augmentation strengths.
+
+**Statistical inference:** Descriptive means and paired differences are provided. Formal uncertainty analysis would be needed before making stronger statistical claims.
+
+**Additional evaluation:** Further investigation could include patient-level subgroup analysis, calibration, and additional robustness scenarios.
+
+## 11. Conclusion
+
+The retuned HGB experiments demonstrate that the choice of training strategy affects the balance between classification accuracy under observed conditions and robustness under missing-lead corruption.
+
+Arm B achieved the highest observed-data mean Macro-F1 of 0.924355.
+
+Arm C achieved the highest mean Macro-F1 under six missing leads, reaching 0.895531.
+
+Overall, augmentation showed its greatest benefit under severe missing-lead conditions, while the non-augmented arms retained slightly higher observed-data performance.
+
+The updated results provide a reproducible record of the selected hyperparameters and consolidated evaluation metrics for subsequent comparison with other classification methods.
+
+## References and Provenance
+
+- Historical reported HGB summary: `results/histogram_gradient_boosting/source_provenance/reported_summary.docx`
+- Retuned experiment results: `results/histogram_gradient_boosting/retuned_7_8_9/`
+- HGB model and runners: `models/histogram_gradient_boosting/`
