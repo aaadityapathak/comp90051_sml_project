@@ -250,9 +250,16 @@ This file provides the complete candidate-score evidence supporting the selected
 
 ### 8.3 Per-Sample Predictions
 
-The completed experiments also generated per-sample prediction records for all four arms.
+The complete per-sample prediction records for all four HGB arms are provided in the retuned results directory:
 
-Each record identifies:
+- `HGB_retuned_A_predictions.zip`
+- `HGB_retuned_B_predictions.zip`
+- `HGB_retuned_C_predictions.zip`
+- `HGB_retuned_D_predictions.zip`
+
+Each ZIP archive contains the corresponding arm's `all_predictions.csv`.
+
+Each prediction record includes:
 
 - Experimental arm
 - Outer fold
@@ -262,18 +269,11 @@ Each record identifies:
 - True classification label
 - Predicted AFIB probability
 
-The corresponding local prediction files are:
+Each arm contains 675,769 prediction records, covering all 10 outer folds and 31 evaluation settings per fold.
 
-- `A_all_predictions.csv`
-- `B_all_predictions.csv`
-- `C_all_predictions.csv`
-- `D_all_predictions.csv`
+These prediction archives correspond to the retuned maximum-depth search grid `[7, 8, 9]`.
 
-These files contain approximately 675,769 prediction rows per arm.
-
-The complete prediction CSV files were retained locally for verification and can be published separately as an archive, subject to repository size and data-sharing requirements.
-
-The historical `HGB_all_predictions.7z` file should not be treated as the new retuned prediction archive.
+The historical `HGB_all_predictions.7z` belongs to the earlier HGB experiments and should not be confused with the retuned prediction archives.
 
 ## 9. Earlier Reported Results
 
