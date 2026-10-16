@@ -1,5 +1,6 @@
-# AFIB classification with noisy or missing ECG measurements
+# AFIB identification with missing and perturbed ECG measurements 
 
+Group 64 - Aaditya Pathak | Siwen Wang | Jiayi Huang
 COMP90051 Statistical Machine Learning, University of Melbourne
 
 We study whether cross-lead feature construction and corrupted training views
