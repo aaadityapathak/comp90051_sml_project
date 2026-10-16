@@ -21,8 +21,7 @@ the same manually constructed, patient-separated nested cross-validation folds.
 
 ## Start here
 
-- [Four-page research report](report/COMP90051_Final_Report.pdf): methods, results, side-by-side comparisons, and limitations.
-- [Editable Word report](report/COMP90051_Final_Report.docx): the same content, tables, and figure.
+- [Editable Report](report/COMP90051_Final_Report_Team_64.docx): the same content, tables, and figure.
 - [Readme.txt](Readme.txt): short execution instructions for the code submission.
 - [Saved results](results/README.md): original metrics, predictions, tuning records, and validation evidence.
 - [Model guides](models/README.md): dependencies and training commands for each classifier.
