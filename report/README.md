@@ -3,6 +3,8 @@
 [`COMP90051_Final_Report.pdf`](COMP90051_Final_Report.pdf) is the four-page
 submission report: A4, single column, 10-point text, and 16 mm page margins.
 The editable narrative and layout are in [`build_report.py`](build_report.py).
+An editable [Word version](COMP90051_Final_Report.docx) is also included, with
+native paragraphs and tables, the same figure, and clickable references.
 
 Run these commands from the repository root:
 
@@ -10,6 +12,7 @@ Run these commands from the repository root:
 python -m pip install -r report/requirements.txt
 python report/analyze_results.py
 python report/build_report.py
+python report/build_word_report.py
 ```
 
 The analysis reads retained model results and requires no downloaded or
@@ -17,6 +20,10 @@ processed dataset. It does not train models. It checks 13,602,576 saved LR,
 TabM and retuned HGB prediction rows against the recorded metrics, verifies
 all 360 retuned HGB inner scores and 40 depth choices, and then rebuilds the
 tables and figure. The prediction check can take several minutes.
+
+The PDF and Word builders share the content blocks in `build_report.py`, so
+rebuilding either version uses the same text and numerical tables. Word
+pagination can vary slightly with the fonts and document viewer in use.
 
 | Report item | Generated file | Code |
 | --- | --- | --- |

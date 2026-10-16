@@ -19,6 +19,7 @@ the same manually constructed, patient-separated nested cross-validation folds.
 ## Start here
 
 - [Four-page research report](report/COMP90051_Final_Report.pdf): methods, results, side-by-side comparisons, and limitations.
+- [Editable Word report](report/COMP90051_Final_Report.docx): the same content, tables, and figure.
 - [Readme.txt](Readme.txt): short execution instructions for the code submission.
 - [Saved results](results/README.md): original metrics, predictions, tuning records, and validation evidence.
 - [Model guides](models/README.md): dependencies and training commands for each classifier.
@@ -176,6 +177,7 @@ The report builder reads saved results and performs no model training:
 python -m pip install -r report/requirements.txt
 python report/analyze_results.py
 python report/build_report.py
+python report/build_word_report.py
 ```
 
 Submit the four-page PDF separately from the code working files. Include

@@ -36,11 +36,13 @@ TABLE_MODELS = {'LR':'logistic_regression',
                 'TabM':'tabm'}
 report_elements = []
 text_blocks = []
+content_blocks = []
 
 def add_paragraph(text, style='body'):
     """Record the narrative alongside the flowable used for PDF layout."""
     report_elements.append(Paragraph(text, paragraph_styles[style]))
     text_blocks.append(text)
+    content_blocks.append({'type': 'paragraph', 'text': text, 'style': style})
 
 
 def add_heading(text):
@@ -69,11 +71,14 @@ def add_table(headers, data, widths):
     report_elements.append(table)
     report_elements.append(Spacer(1, 4))
     text_blocks.append('\n'.join(' | '.join(map(str,row)) for row in [headers]+data))
+    content_blocks.append({'type': 'table', 'headers': headers, 'data': data,
+                           'widths': widths})
 
 
 def add_page_break():
     report_elements.append(PageBreak())
     text_blocks.append('\n[PAGE BREAK]\n')
+    content_blocks.append({'type': 'page_break'})
 
 add_paragraph('AFIB classification under missing and perturbed ECG measurements','title')
 add_paragraph('Jiayi Huang 1668763  |  Siwen Wang 1721961  |  Aaditya Pathak 1703474')
@@ -116,6 +121,8 @@ add_table(['Input','Arm','LR','HGB earlier','HGB 7-9','TabM'],data,[.145,.07,.19
 add_paragraph('<b>Construction helps most under severe lead loss.</b> B minus A observed F1 gains are 0.0053 ± 0.0070 for LR, 0.0002 ± 0.0031 for HGB and 0.0067 ± 0.0076 for TabM. With six hidden leads, gains rise to 0.1259 ± 0.0338, 0.1438 ± 0.0213 and 0.1155 ± 0.0332. Pooling surviving measurements plausibly reduces dependence on one lead; explicit interactions also help LR. These are pipeline contrasts because tuning may change capacity, not proof that one feature family caused the gain. HGB construction helps mainly under severe missingness.')
 img=Image(str(REPORT_DIRECTORY/'results/augmentation_effect.png'),width=174*mm,height=36.8*mm)
 img.hAlign='CENTER'; report_elements.append(img)
+content_blocks.append({'type': 'image', 'path': 'results/augmentation_effect.png',
+                       'width_mm': 174, 'height_mm': 36.8})
 add_paragraph('<b>Figure 1.</b> Enhanced-feature augmentation effect (D minus B), using latest HGB. Points are paired fold means; bars are sample SD. Panels use different scales.','caption')
 add_paragraph('<b>Augmentation is model dependent.</b> Observed D minus B F1 is +0.0028 for LR, -0.0069 for HGB and +0.0006 for TabM. Under six-lead loss it is -0.0104, +0.1518 and +0.1629 (Figure 1). Exposure to corrupted views may reduce reliance on fragile inputs. Flexibility alone is insufficient: unaugmented TabM A falls from 0.932 to 0.636, below LR A at 0.735. A smaller performance drop also does not make a low-scoring model preferable.')
 add_paragraph('<b>Retuning preserves the main HGB trade-off.</b> Earlier/new observed F1 is 0.9230/0.9244 for B and six-lead F1 is 0.8892/0.8955 for C. Gains are modest: new A/B six-lead F1 falls by 0.0041/0.0047, and observed D falls by 0.0005. Thus deeper search is not uniformly better. In the latest run, C exceeds D by 0.0129 under six-lead loss; construction and augmentation are not uniformly additive. Derived fields may repeat tree interactions. Cross-run changes are descriptive because exact stress draws and historical software environments are not fully established.')
@@ -149,9 +156,10 @@ def footer(canvas, doc):
     canvas.drawRightString(A4[0]-16*mm, 18*mm, str(doc.page))
     canvas.restoreState()
 
-doc=SimpleDocTemplate(str(OUTPUT_PDF),pagesize=A4,rightMargin=16*mm,leftMargin=16*mm,topMargin=16*mm,bottomMargin=16*mm,title='AFIB classification under missing and perturbed ECG measurements',author='Jiayi Huang; Siwen Wang; Aaditya Pathak',pageCompression=1)
-doc.build(report_elements,onFirstPage=footer,onLaterPages=footer)
-if doc.page != 4:
-    raise RuntimeError(f'The report must be four pages; generated {doc.page}. Review the layout.')
-print(OUTPUT_PDF)
-print('Approximate words:',len(re.sub('<[^>]+>',' ',' '.join(text_blocks)).split()))
+if __name__ == '__main__':
+    doc=SimpleDocTemplate(str(OUTPUT_PDF),pagesize=A4,rightMargin=16*mm,leftMargin=16*mm,topMargin=16*mm,bottomMargin=16*mm,title='AFIB classification under missing and perturbed ECG measurements',author='Jiayi Huang; Siwen Wang; Aaditya Pathak',pageCompression=1)
+    doc.build(report_elements,onFirstPage=footer,onLaterPages=footer)
+    if doc.page != 4:
+        raise RuntimeError(f'The report must be four pages; generated {doc.page}. Review the layout.')
+    print(OUTPUT_PDF)
+    print('Approximate words:',len(re.sub('<[^>]+>',' ',' '.join(text_blocks)).split()))
